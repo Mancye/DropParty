@@ -5,13 +5,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+
 public class DropCommand implements CommandExecutor {
 	
-	private Main plugin;
-	
-	public DropCommand(Main plugin) {
-		this.plugin = plugin;
-	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -23,6 +19,10 @@ public class DropCommand implements CommandExecutor {
 				if (p.hasPermission("dropparty.drop") || p.hasPermission("dropparty.*")) {
 				p.openInventory(DropGUI.getDropGUI());
 				}
+			} else if (args.length == 1) {
+				
+			} else if (args.length == 2) {
+				
 			}
 		}
 		
