@@ -6,3 +6,5 @@ commands:
   drop:
     description: Opens the drop party GUI
     usage: /drop
+  testloc:
+  

@@ -10,22 +10,21 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class DropGUI implements Listener {
+public class DropGUI implements Listener, Runnable {
 	
 	private Main plugin;
-	
+	public static Inventory dropGUI;
 	public DropGUI(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	public static Inventory getDropGUI() {
-		Inventory dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
+	public static void fillDropGUi() {
+		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
 		
 		ItemStack tierOne = new ItemStack(Material.COAL_ORE);
 		ItemMeta tierOneMeta = tierOne.getItemMeta();
@@ -67,27 +66,10 @@ public class DropGUI implements Listener {
 		tierFour.setItemMeta(tierFourMeta);
 		dropGUI.setItem(16, tierFour);
 		
-		return dropGUI;
+		
 	}
 	
-	@EventHandler
-	private void showTokens(InventoryOpenEvent event) {
-		if (event.getInventory() == getDropGUI()) {
-			if (event.getPlayer() instanceof Player) {
-				Player p = (Player) event.getPlayer();
-				
-				ItemStack tokens = new ItemStack(Material.BOOK);
-				ItemMeta tokensMeta = tokens.getItemMeta();
-				List<String> tokensLore = new ArrayList<String>();
-				tokensMeta.setDisplayName(ChatColor.GRAY + "Your Tokens:");
-				tokensLore.add(ChatColor.GREEN + ChatColor.ITALIC.toString() + TokenManager.getTokens(p));
-				tokensMeta.setLore(tokensLore);
-				tokens.setItemMeta(tokensMeta);
-				getDropGUI().setItem(26, tokens);
-				
-			}
-		}
-	}
+	
 	
 	@EventHandler
 	private void handleClicks(InventoryClickEvent event) {
@@ -127,6 +109,12 @@ public class DropGUI implements Listener {
 			
 			event.setCancelled(true);
 		} 
+		
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
 		
 	}
 	

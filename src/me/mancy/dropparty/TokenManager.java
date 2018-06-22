@@ -32,7 +32,7 @@ public class TokenManager implements Listener, Runnable {
 				Player p = event.getPlayer();
 				
 				if (!tokens.containsKey(p.getUniqueId())) {
-					
+				  setTokens(p, 0);
 				}
 				
 			}
