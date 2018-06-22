@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,8 +19,8 @@ public class Main extends JavaPlugin {
 	File tokensFile = new File(this.getDataFolder()+"/tokens.yml");
 	FileConfiguration tokensConfig = YamlConfiguration.loadConfiguration(tokensFile);
 	
-	File dropLocsFile = new File(this.getDataFolder()+"/droplocations.yml");
-	FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
+	public static File dropLocsFile = new File(this.getDataFolder()+"/droplocations.yml");
+	public static FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
 	
 	@Override
 	public void onEnable() {
@@ -34,7 +35,6 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		saveTokens();
-		saveLocations();
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
 	}
 	
@@ -69,20 +69,21 @@ public class Main extends JavaPlugin {
 		saveCustomYml(tokensConfig, tokensFile);
 	}
 	
-	private void saveLocations() {
-		for (Location loc : DropParty.dropLocations.values()) {
-			dropLocsConfig.set("Drop Locations." + ".X" , loc.getX());
-			dropLocsConfig.set("Drop Locations." + ".Y" , loc.getY());
-			dropLocsConfig.set("Drop Locations." + ".Z" , loc.getZ());
-			dropLocsConfig.set("Drop Locations." + ".World" , loc.getWorld().getName());
-		}
-	}
-	
 	private void loadLocations() {
-		Set<String> locs = dropLocsConfig.getConfigurationSection("Drop Locations.").getKeys(false);
-		for (String s : locs) {
+		DropParty.numDropLocs = dropLocsConfig.getInt("Number Of Drop Locations");
+		
+		for (int x = 0; x <= DropParty.numDropLocs; x++) {
 			
+			
+			double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". X");
+			double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". Y");
+			double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". Z");
+			String worldName = dropLocsConfig.getString("Drop Locations." + x + ". World");
+			
+			Location loc = new Location(Bukkit.getServer().getWorld(worldName), zCoord, zCoord, zCoord);
+			DropParty.dropLocations.put(x, loc);
 		}
+		
 	}
 	
 

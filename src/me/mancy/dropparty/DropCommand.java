@@ -32,6 +32,12 @@ public class DropCommand implements CommandExecutor {
 									return false;
 								} else {
 									DropParty.dropLocations.put(selectedIndex, p.getLocation());
+									Main.dropLocsConfig.set("Drop Locations." + selectedIndex + ". X", p.getLocation().getX());
+									Main.dropLocsConfig.set("Drop Locations." + selectedIndex + ". Y", p.getLocation().getX());
+									Main.dropLocsConfig.set("Drop Locations." + selectedIndex + ". Z", p.getLocation().getX());
+									Main.dropLocsConfig.set("Drop Location." + selectedIndex + ". World", p.getWorld().getName());
+									DropParty.numDropLocs++;
+									Main.dropLocsConfig.set("Number Of Drop Locations.", DropParty.numDropLocs);
 									p.sendMessage(ChatColor.GREEN + "Drop Location #" + selectedIndex + " Set At Current Location!");
 									return true;
 								}

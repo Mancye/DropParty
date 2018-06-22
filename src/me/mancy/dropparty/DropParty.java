@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 public class DropParty implements Listener {
 	
 	public static Map<Integer, Location> dropLocations = new HashMap<Integer, Location>();
+	public static int numDropLocs;
 	
 	private Main plugin;
 	
