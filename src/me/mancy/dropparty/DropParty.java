@@ -18,6 +18,23 @@ public class DropParty implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
+
+	public static void startTierOneDrop() {
+		
+	}
 	
+	public static void startTierTwoDrop() {
+		
+	}
+	
+	public static void startTierThreeDrop() {
+		
+	}
+
+	public static void startTierFourDrop() {
+	
+	}
+
+
 	
 }
