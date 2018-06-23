@@ -13,26 +13,20 @@ public class DropParty implements Listener {
 	
 	private Main plugin;
 	
+	public enum DropPartyType {TierOne, TierTwo, TierThree, TierFour};
+	
 	public DropParty(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
 
-	public static void startTierOneDrop() {
-		
-	}
-	
-	public static void startTierTwoDrop() {
-		
-	}
-	
-	public static void startTierThreeDrop() {
-		
-	}
-
-	public static void startTierFourDrop() {
-	
+	public void dropParty(DropPartyType type) {
+		if (type == DropPartyType.TierOne) {
+			
+		} else if (type == DropPartyType.TierTwo) {
+			
+		}
 	}
 
 
