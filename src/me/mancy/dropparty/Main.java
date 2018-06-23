@@ -27,6 +27,7 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		this.getCommand("drop").setExecutor(new DropCommand());
 		new DropGUI(this);
+		new TokenManager(this);
 		
 		loadTokens();
 		loadLocations();
@@ -41,33 +42,29 @@ public class Main extends JavaPlugin {
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
 	}
 
-	public void saveTokens() {
-		List<String> tokens = getConfig().getStringList("tokens");
-
-		for (UUID player : TokenManager.tokens.keySet()) {
-
-			if (!(tokens.contains(player.toString()))) {
-				tokens.add(player.toString() + ":" + TokenManager.tokens.get(player));
-			} else {
-				tokens.remove(player.toString());
-				tokens.add(player.toString() + ":" + TokenManager.tokens.get(player));
-			}
-
+	
+	private void saveTokens() {
+		List<String> tokens = getConfig().getStringList("Tokens");
+		
+		for (UUID tokensP : TokenManager.tokens.keySet()) {
+			
+			tokens.add(tokensP.toString() + ":" + TokenManager.tokens.get(tokensP));
+			
 		}
-		tokensConfig.set("tokens", tokens);
+		tokensConfig.set("Tokens", tokens);
 		saveCustomYml(tokensConfig, tokensFile);
 	}
 
-	public void loadTokens() {
-		List<String> tokens = getConfig().getStringList("tokens");
-
-		for (String amount : tokens) {
-
-			String[] words = amount.split(":");
+	private void loadTokens() {
+		List<String> tokens = getConfig().getStringList("Tokens");
+		
+		for (String tokensP : tokens) {
+			
+			String[] words = tokensP.split(":");
 			TokenManager.tokens.put(UUID.fromString(words[0]), Integer.parseInt(words[1]));
-
+			
 		}
-		tokensConfig.set("tokens", tokens);
+		tokensConfig.set("Tokens", tokens);
 		saveCustomYml(tokensConfig, tokensFile);
 	}
 
@@ -75,28 +72,19 @@ public class Main extends JavaPlugin {
 		DropParty.numDropLocs = dropLocsConfig.getInt("Number Of Drop Locations");
 		if (DropParty.numDropLocs > 0) {
 
-			for (int x = 0; x <= DropParty.numDropLocs; x++) {
+			for (int x = 1; x <= DropParty.numDropLocs; x++) {
 
-				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". X");
-				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". Y");
-				double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + ". Z");
-				String worldName = dropLocsConfig.getString("Drop Locations." + x + ". World");
+				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
+				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
+				double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Z");
+				String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 				
 				Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
 				DropParty.dropLocations.put(x, loc);
 				
-				dropLocsConfig.set("Drop Locations." + x + ". X", xCoord);
-				dropLocsConfig.set("Drop Locations." + x + ". Y", yCoord);
-				dropLocsConfig.set("Drop Locations." + x + ". Z", zCoord);
-				dropLocsConfig.set("Drop Locations." + x + ". World", worldName);
-				saveCustomYml(dropLocsConfig, dropLocsFile);
+				
+				
 			}
-		} else {
-			dropLocsConfig.set("Drop Locations." + 0 + ". X", 0);
-			dropLocsConfig.set("Drop Locations." + 0 + ". Y", 0);
-			dropLocsConfig.set("Drop Locations." + 0 + ". Z", 0);
-			dropLocsConfig.set("Drop Locations." + 0 + ". World", "default");
-			saveCustomYml(dropLocsConfig, dropLocsFile);
 		}
 	}
 
@@ -108,15 +96,25 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	public boolean onCommand(Command command, CommandSender sender, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return false;
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (!(sender instanceof Player)) return false;
+
 		Player p = (Player) sender;
 
 		if (label.equalsIgnoreCase("testloc")) {
+			p.sendMessage("Num Of Locations: " + DropParty.numDropLocs);
 			for (Location loc : DropParty.dropLocations.values()) {
 				p.sendMessage(loc.getX() + " " + loc.getY() + " " + loc.getZ());
 				return true;
+			}
+		}
+		
+		if (label.equalsIgnoreCase("go")) {
+			if (args.length == 0) {
+				
+			} else if (args.length == 1) {
+				int selected = Integer.parseInt(args[0]);
+				p.teleport(DropParty.dropLocations.get(selected));
 			}
 		}
 

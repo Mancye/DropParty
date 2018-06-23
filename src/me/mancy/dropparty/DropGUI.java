@@ -15,17 +15,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class DropGUI implements Listener, Runnable {
-	
+
 	private Main plugin;
 	public static Inventory dropGUI;
+
 	public DropGUI(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		fillDropGUI();
 	}
 
-	public static void fillDropGUi() {
+	private void fillDropGUI() {
 		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
-		
+
 		ItemStack tierOne = new ItemStack(Material.COAL_ORE);
 		ItemMeta tierOneMeta = tierOne.getItemMeta();
 		List<String> tierOneLore = new ArrayList<String>();
@@ -35,7 +37,7 @@ public class DropGUI implements Listener, Runnable {
 		tierOneMeta.setLore(tierOneLore);
 		tierOne.setItemMeta(tierOneMeta);
 		dropGUI.setItem(10, tierOne);
-		
+
 		ItemStack tierTwo = new ItemStack(Material.IRON_BLOCK);
 		ItemMeta tierTwoMeta = tierTwo.getItemMeta();
 		List<String> tierTwoLore = new ArrayList<String>();
@@ -45,7 +47,7 @@ public class DropGUI implements Listener, Runnable {
 		tierTwoMeta.setLore(tierTwoLore);
 		tierTwo.setItemMeta(tierTwoMeta);
 		dropGUI.setItem(12, tierTwo);
-		
+
 		ItemStack tierThree = new ItemStack(Material.GOLD_BLOCK);
 		ItemMeta tierThreeMeta = tierThree.getItemMeta();
 		List<String> tierThreeLore = new ArrayList<String>();
@@ -55,7 +57,7 @@ public class DropGUI implements Listener, Runnable {
 		tierThreeMeta.setLore(tierThreeLore);
 		tierThree.setItemMeta(tierThreeMeta);
 		dropGUI.setItem(14, tierThree);
-		
+
 		ItemStack tierFour = new ItemStack(Material.DIAMOND_BLOCK);
 		ItemMeta tierFourMeta = tierFour.getItemMeta();
 		List<String> tierFourLore = new ArrayList<String>();
@@ -65,58 +67,68 @@ public class DropGUI implements Listener, Runnable {
 		tierFourMeta.setLore(tierFourLore);
 		tierFour.setItemMeta(tierFourMeta);
 		dropGUI.setItem(16, tierFour);
+
 		
-		
+
 	}
-	
-	
-	
+
+	public static void updateDisplayWithTokens(Player p) {
+		
+		ItemStack tokens = new ItemStack(Material.BOOK);
+		ItemMeta tokensMeta = tokens.getItemMeta();
+		List<String> tokensLore = new ArrayList<String>();
+		tokensMeta.setDisplayName(ChatColor.GRAY + "Your Tokens:");
+		tokensLore.add(ChatColor.GREEN + ChatColor.ITALIC.toString() + TokenManager.getTokens(p));
+		tokensMeta.setLore(tokensLore);
+		tokens.setItemMeta(tokensMeta);
+		dropGUI.setItem(26, tokens);
+
+	}
+
 	@EventHandler
 	private void handleClicks(InventoryClickEvent event) {
-		
+
 		if (event.getInventory().getName().contains("Drop Menu")) {
-			
+
 			if (event.getWhoClicked() instanceof Player) {
-				
+
 				Player p = (Player) event.getWhoClicked();
-				
+
 				int slot = event.getSlot();
-				
+
 				switch (slot) {
-				
+
 				case 10:
 					if (TokenManager.getTokens(p) >= 1) {
-						
+
 					}
-					
+
 				case 12:
 					if (TokenManager.getTokens(p) >= 5) {
-						
+
 					}
 				case 14:
 					if (TokenManager.getTokens(p) >= 10) {
-						
+
 					}
 				case 16:
 					if (TokenManager.getTokens(p) >= 15) {
-						
+
 					}
-				
-				
+
 				}
-				
+
 			}
-			
+
 			event.setCancelled(true);
-		} 
-		
+		}
+
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
 }

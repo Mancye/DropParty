@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,18 +34,19 @@ public class TokenManager implements Listener, Runnable {
 				
 				if (!tokens.containsKey(p.getUniqueId())) {
 				  setTokens(p, 0);
+				  
 				}
-				
+				p.sendMessage(ChatColor.AQUA + "[Drop Party]" + ChatColor.GREEN + "You have " + tokens.get(p.getUniqueId()) + " Tokens!");
 			}
 			
 		}, 20L);
 	}
 	
 	public static int getTokens(Player p) {
-		if (tokens.containsKey(p.getUniqueId())) {
-			return tokens.get(p.getUniqueId());
+		if (!(tokens.containsKey(p.getUniqueId()))) {
+			setTokens(p, 0);
 		}
-		return -1;
+		return tokens.get(p.getUniqueId());
 	}
 	
 	public static void addTokens(Player p, int amount) {
@@ -54,10 +56,7 @@ public class TokenManager implements Listener, Runnable {
 	}
 	
 	public static void setTokens(Player p, int amount) {
-		if (tokens.containsKey(p.getUniqueId())) {
-			tokens.remove(p.getUniqueId());
-			tokens.put(p.getUniqueId(), amount);
-		}
+		tokens.put(p.getUniqueId(), amount);
 	}
 	
 	public static void subtractTokens(Player p, int amount) {
