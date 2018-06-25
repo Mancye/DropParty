@@ -2,6 +2,7 @@ package me.mancy.dropparty;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -81,36 +82,25 @@ public class Main extends JavaPlugin {
 	}
 
 	private void saveTokens() {
-		List<String> tokens = tokensConfig.getStringList("tokens");
-		
-		for (UUID tokenP : TokenManager.tokens.keySet()) {
-			
-			if (!(tokens.contains(tokenP.toString()))) {
-			tokens.add(tokenP.toString() + ":" +  TokenManager.tokens.get(tokenP));
-			saveCustomYml(tokensConfig, tokensFile);
-			} else {
-				tokens.remove(tokenP.toString());
-				tokens.add(tokenP.toString() + ":" + TokenManager.tokens.get(tokenP));
-				saveCustomYml(tokensConfig, tokensFile);
-			}
-			
+		List<String> tokensData = new ArrayList<String>();
+		for(UUID uuid: TokenManager.tokens.keySet()) {
+
+			String data = uuid.toString() + ":" + TokenManager.tokens.get(uuid);
+		    tokensData.add(data);
+
 		}
-		tokensConfig.set("tokens", tokens);
-		saveCustomYml(tokensConfig, tokensFile);
+
+		    tokensConfig.set("tokens", tokensData);
+		    saveCustomYml(tokensConfig, tokensFile);
 	}
 
 	private void loadTokens() {
-		
-		List<String> tokens = tokensConfig.getStringList("tokens");
-		
-		for (String tokensP : tokens) {
-			
-			String[] words = tokensP.split(":");
-			TokenManager.tokens.put(UUID.fromString(words[0]), Integer.parseInt(words[1]));
-			
+		for(String rawData : tokensConfig.getStringList("tokens")) {
+
+		    String[] raw = rawData.split(":");
+		    TokenManager.tokens.put(UUID.fromString(raw[0]), Integer.valueOf(raw[1]));
+
 		}
-		tokensConfig.set("tokens", tokens);
-		saveCustomYml(tokensConfig, tokensFile);
 	}
 
 	private void loadLocations() {
