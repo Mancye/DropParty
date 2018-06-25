@@ -10,10 +10,11 @@ public class DropParty implements Listener {
 	
 	public static Map<Integer, Location> dropLocations = new HashMap<Integer, Location>();
 	public static int numDropLocs;
+	public static boolean isActiveDropParty;
+	
+
 	
 	private Main plugin;
-	
-	public enum DropPartyType {TierOne, TierTwo, TierThree, TierFour};
 	
 	public DropParty(Main main) {
 		this.plugin = main;
@@ -21,14 +22,18 @@ public class DropParty implements Listener {
 	}
 	
 
-	public void dropParty(DropPartyType type) {
-		if (type == DropPartyType.TierOne) {
-			
-		} else if (type == DropPartyType.TierTwo) {
-			
+	public static void startDropParty(int type) {
+		switch (type) {
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
 		}
 	}
-
 
 	
 }

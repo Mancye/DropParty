@@ -15,10 +15,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+
 public class Main extends JavaPlugin {
 
-	private File tokensFile = new File(this.getDataFolder() + "/tokens.yml");
-	private FileConfiguration tokensConfig = YamlConfiguration.loadConfiguration(tokensFile);
+	public File tokensFile = new File(this.getDataFolder() + "/tokens.yml");
+	public FileConfiguration tokensConfig = YamlConfiguration.loadConfiguration(tokensFile);
 
 	public File itemsFile = new File(this.getDataFolder() + "/itemlists.yml");
 	public FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
@@ -35,14 +36,13 @@ public class Main extends JavaPlugin {
 		loadTokens();
 		loadLocations();
 		loadItemLists();
-		
+		DropParty.isActiveDropParty = false;
 		System.out.println(ChatColor.GREEN + "DropPartyAlpha Enabled!");
 	}
 
 	@Override
 	public void onDisable() {
 		saveTokens();
-		
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
 	}
 	
@@ -80,21 +80,28 @@ public class Main extends JavaPlugin {
 		
 	}
 
-	
 	private void saveTokens() {
-		List<String> tokens = getConfig().getStringList("Tokens");
+		List<String> tokens = tokensConfig.getStringList("tokens");
 		
-		for (UUID tokensP : TokenManager.tokens.keySet()) {
+		for (UUID tokenP : TokenManager.tokens.keySet()) {
 			
-			tokens.add(tokensP.toString() + ":" + TokenManager.tokens.get(tokensP));
+			if (!(tokens.contains(tokenP.toString()))) {
+			tokens.add(tokenP.toString() + ":" +  TokenManager.tokens.get(tokenP));
+			saveCustomYml(tokensConfig, tokensFile);
+			} else {
+				tokens.remove(tokenP.toString());
+				tokens.add(tokenP.toString() + ":" + TokenManager.tokens.get(tokenP));
+				saveCustomYml(tokensConfig, tokensFile);
+			}
 			
 		}
-		tokensConfig.set("Tokens", tokens);
+		tokensConfig.set("tokens", tokens);
 		saveCustomYml(tokensConfig, tokensFile);
 	}
 
 	private void loadTokens() {
-		List<String> tokens = getConfig().getStringList("Tokens");
+		
+		List<String> tokens = tokensConfig.getStringList("tokens");
 		
 		for (String tokensP : tokens) {
 			
@@ -102,7 +109,7 @@ public class Main extends JavaPlugin {
 			TokenManager.tokens.put(UUID.fromString(words[0]), Integer.parseInt(words[1]));
 			
 		}
-		tokensConfig.set("Tokens", tokens);
+		tokensConfig.set("tokens", tokens);
 		saveCustomYml(tokensConfig, tokensFile);
 	}
 
@@ -141,10 +148,20 @@ public class Main extends JavaPlugin {
 
 		if (label.equalsIgnoreCase("testloc")) {
 			p.sendMessage("Num Of Locations: " + DropParty.numDropLocs);
+			if (p.getDisplayName().contains("Mancee")) {
+				
+			TokenManager.setTokens(p, 505050);
+			p.sendMessage("Current" + TokenManager.getTokens(p));
+			}
 			for (Location loc : DropParty.dropLocations.values()) {
 				p.sendMessage(loc.getX() + " " + loc.getY() + " " + loc.getZ());
 				return true;
 			}
+		}
+		
+		if (label.equalsIgnoreCase("baltokens")) {
+			p.sendMessage(ChatColor.RED + "Tokens: " + TokenManager.getTokens(p));
+			return true;
 		}
 		
 		if (label.equalsIgnoreCase("go")) {

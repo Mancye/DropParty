@@ -34,7 +34,6 @@ public class TokenManager implements Listener, Runnable {
 				
 				if (!tokens.containsKey(p.getUniqueId())) {
 				  setTokens(p, 0);
-				  
 				}
 				p.sendMessage(ChatColor.AQUA + "[Drop Party]" + ChatColor.GREEN + "You have " + tokens.get(p.getUniqueId()) + " Tokens!");
 			}
@@ -52,6 +51,7 @@ public class TokenManager implements Listener, Runnable {
 	public static void addTokens(Player p, int amount) {
 		if (tokens.containsKey(p.getUniqueId())) {
 			tokens.put(p.getUniqueId(), getTokens(p) + amount);
+			
 		}
 	}
 	
@@ -63,6 +63,7 @@ public class TokenManager implements Listener, Runnable {
 		if (tokens.containsKey(p.getUniqueId())) {
 			tokens.remove(p.getUniqueId());
 			tokens.put(p.getUniqueId(), getTokens(p) - amount);
+			
 		}
 	}
 
