@@ -70,6 +70,17 @@ public class DropCommand implements CommandExecutor {
 						}
 					}
 				}
+			} else if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("edititems")) {
+					if (p.hasPermission("dropparty.edititems")) {
+						p.openInventory(DropItems.openCategoriesMenu());
+						return true;
+					} else {
+						p.sendMessage(ChatColor.RED + "Sorry, you don't have permission to do this!");
+						return false;
+					}
+				}
+				
 			}
 		}
 

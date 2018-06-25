@@ -17,9 +17,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-	File tokensFile = new File(this.getDataFolder() + "/tokens.yml");
-	FileConfiguration tokensConfig = YamlConfiguration.loadConfiguration(tokensFile);
+	private File tokensFile = new File(this.getDataFolder() + "/tokens.yml");
+	private FileConfiguration tokensConfig = YamlConfiguration.loadConfiguration(tokensFile);
 
+	public File itemsFile = new File(this.getDataFolder() + "/itemlists.yml");
+	public FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
+	
 	public File dropLocsFile = new File(this.getDataFolder() + "/droplocations.yml");
 	public FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
 
@@ -28,9 +31,10 @@ public class Main extends JavaPlugin {
 		this.getCommand("drop").setExecutor(new DropCommand());
 		new DropGUI(this);
 		new TokenManager(this);
-		
+		new DropItems(this);
 		loadTokens();
 		loadLocations();
+		loadItemLists();
 		
 		System.out.println(ChatColor.GREEN + "DropPartyAlpha Enabled!");
 	}
@@ -40,6 +44,40 @@ public class Main extends JavaPlugin {
 		saveTokens();
 		
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
+	}
+	
+	private void loadItemLists() {
+		if (itemsConfig.contains("common")) {
+			if (InventorySerializer.StringToInventory(itemsConfig.getString("common")) != null) {
+				DropItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents()); 
+			}	
+		}
+		if (itemsConfig.contains("uncommon")) {
+
+			if (InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")) != null) {
+				DropItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents()); 
+			}
+		}
+		if (itemsConfig.contains("rare")) {
+		
+			if (InventorySerializer.StringToInventory(itemsConfig.getString("rare")) != null) {
+				DropItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents()); 
+			}
+		}
+		
+		if (itemsConfig.contains("epic")) {
+			if (InventorySerializer.StringToInventory(itemsConfig.getString("epic")) != null) {
+				DropItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents()); 
+			}
+		}
+		if (itemsConfig.contains("legendary")) {
+			
+		
+			if (InventorySerializer.StringToInventory(itemsConfig.getString("legendary")) != null) {
+				DropItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents()); 
+			}
+		}
+		
 	}
 
 	
