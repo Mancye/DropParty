@@ -7,8 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class DropCommand implements CommandExecutor {
-
+	private Main plugin;
 	
+	public DropCommand(Main main) {
+		this.plugin = main;
+	}
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player))
@@ -19,9 +22,9 @@ public class DropCommand implements CommandExecutor {
 			if (args.length == 0) {
 				if (p.hasPermission("dropparty.drop") || p.hasPermission("dropparty.*")) {
 					
-					DropGUI.updateDisplayWithTokens(p);
-					p.openInventory(DropGUI.dropGUI);
-					for (int index : DropParty.dropLocations.keySet()) {
+					DropGUI.dropgui.updateDisplayWithTokens(p);
+					p.openInventory(DropGUI.dropgui.dropGUI);
+					for (int index : DropParty.dropParty.dropLocations.keySet()) {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] " + "Location #" + index + "");
 					}
 					return true;
@@ -33,23 +36,23 @@ public class DropCommand implements CommandExecutor {
 						if (args[1].equalsIgnoreCase("add")) {
 							if (Integer.parseInt(args[2]) >= 1) {
 								int selectedIndex = Integer.parseInt(args[2]);
-								if (DropParty.dropLocations.containsKey(selectedIndex)) {
+								if (DropParty.dropParty.dropLocations.containsKey(selectedIndex)) {
 									p.sendMessage(ChatColor.RED + "There is already a location set for this index! See all drop locations with " + ChatColor.ITALIC +  "/drop locations");
 									return false;
 								} else {
 									
-									DropParty.dropLocations.put(selectedIndex, p.getLocation());
-									Main.getPlugin(Main.class).dropLocsConfig.set("Drop Locations." + selectedIndex + " X", p.getLocation().getX());
-									Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).dropLocsConfig, Main.getPlugin(Main.class).dropLocsFile);
-									Main.getPlugin(Main.class).dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", p.getLocation().getY());
-									Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).dropLocsConfig, Main.getPlugin(Main.class).dropLocsFile);
-									Main.getPlugin(Main.class).dropLocsConfig.set("Drop Locations." + selectedIndex + " Z", p.getLocation().getZ());
-									Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).dropLocsConfig, Main.getPlugin(Main.class).dropLocsFile);
-									Main.getPlugin(Main.class).dropLocsConfig.set("Drop Locations." + selectedIndex + " World", p.getWorld().getName());
-									Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).dropLocsConfig, Main.getPlugin(Main.class).dropLocsFile);
-									DropParty.numDropLocs++;
-									Main.getPlugin(Main.class).dropLocsConfig.set("Number Of Drop Locations", DropParty.numDropLocs);
-									Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).dropLocsConfig, Main.getPlugin(Main.class).dropLocsFile);
+									DropParty.dropParty.dropLocations.put(selectedIndex, p.getLocation());
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", p.getLocation().getX());
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", p.getLocation().getY());
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Z", p.getLocation().getZ());
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " World", p.getWorld().getName());
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									DropParty.dropParty.numDropLocs++;
+									plugin.dropLocsConfig.set("Number Of Drop Locations", DropParty.dropParty.numDropLocs);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									p.sendMessage(ChatColor.GREEN + "Drop Location #" + selectedIndex + " Set At Current Location!");
 									return true;
 								}
@@ -60,8 +63,8 @@ public class DropCommand implements CommandExecutor {
 						} else if (args[1].equalsIgnoreCase("remove")) {
 							if (Integer.parseInt(args[2]) >= 1) {
 								int selectedIndex = Integer.parseInt(args[2]);
-								if (DropParty.dropLocations.get(selectedIndex) != null) {
-									DropParty.dropLocations.remove(selectedIndex);
+								if (DropParty.dropParty.dropLocations.get(selectedIndex) != null) {
+									DropParty.dropParty.dropLocations.remove(selectedIndex);
 									p.sendMessage(ChatColor.AQUA + "[Drop Party] " + ChatColor.GREEN + "Successfully Removed Drop Location #" + selectedIndex);
 								} else {
 									p.sendMessage(ChatColor.AQUA + "[Drop Party] " + ChatColor.RED + "Selected Location Does Not Exist!");
@@ -73,7 +76,7 @@ public class DropCommand implements CommandExecutor {
 			} else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("edititems")) {
 					if (p.hasPermission("dropparty.edititems")) {
-						p.openInventory(DropItems.openCategoriesMenu());
+						p.openInventory(DropItems.dropItems.openCategoriesMenu());
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "Sorry, you don't have permission to do this!");

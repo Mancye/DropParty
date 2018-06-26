@@ -33,7 +33,8 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.getCommand("drop").setExecutor(new DropCommand());
+		new DropCommand(this);
+		this.getCommand("drop").setExecutor(new DropCommand(this));
 		new DropGUI(this);
 		new TokenManager(this);
 		new DropItems(this);
@@ -41,7 +42,7 @@ public class Main extends JavaPlugin {
 		loadLocations();
 		loadItemLists();
 		loadDropChanceLists();
-		DropParty.isActiveDropParty = false;
+		DropParty.dropParty.isActiveDropParty = false;
 		System.out.println(ChatColor.GREEN + "DropPartyAlpha Enabled!");
 	}
 
@@ -55,36 +56,36 @@ public class Main extends JavaPlugin {
 		if (dropChancesConfig.contains("common")) {
 			for (String s : dropChancesConfig.getStringList("common")) {
 				Double d = Double.parseDouble(s);
-				if (!(DropParty.commonChances.contains(d))) {
-				DropParty.commonChances.add(d);
+				if (!(DropParty.dropParty.commonChances.contains(d))) {
+				DropParty.dropParty.commonChances.add(d);
 				}
 			}
 		} else if (dropChancesConfig.contains("uncommon")) {
 			for (String s : dropChancesConfig.getStringList("uncommon")) {
 				Double d = Double.parseDouble(s);
-				if (!(DropParty.uncommonChances.contains(d))) {
-				DropParty.uncommonChances.add(d);
+				if (!(DropParty.dropParty.uncommonChances.contains(d))) {
+				DropParty.dropParty.uncommonChances.add(d);
 				}
 			}
 		} else if (dropChancesConfig.contains("rare")) {
 			for (String s : dropChancesConfig.getStringList("rare")) {
 				Double d = Double.parseDouble(s);
-				if (!(DropParty.rareChances.contains(d))) {
-				DropParty.rareChances.add(d);
+				if (!(DropParty.dropParty.rareChances.contains(d))) {
+				DropParty.dropParty.rareChances.add(d);
 				}
 			}
 		} else if (dropChancesConfig.contains("epic")) {
 			for (String s : dropChancesConfig.getStringList("epic")) {
 				Double d = Double.parseDouble(s);
-				if (!(DropParty.epicChances.contains(d))) {
-				DropParty.epicChances.add(d);
+				if (!(DropParty.dropParty.epicChances.contains(d))) {
+				DropParty.dropParty.epicChances.add(d);
 				}
 			}
 		} else if (dropChancesConfig.contains("legendary")) {
 			for (String s : dropChancesConfig.getStringList("legendary")) {
 				Double d = Double.parseDouble(s);
-				if (!(DropParty.legendaryChances.contains(d))) {
-				DropParty.legendaryChances.add(d);
+				if (!(DropParty.dropParty.legendaryChances.contains(d))) {
+				DropParty.dropParty.legendaryChances.add(d);
 				}
 			}
 		}
@@ -93,32 +94,32 @@ public class Main extends JavaPlugin {
 	private void loadItemLists() {
 		if (itemsConfig.contains("common")) {
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("common")) != null) {
-				DropItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents()); 
+				DropItems.dropItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents()); 
 			}	
 		}
 		if (itemsConfig.contains("uncommon")) {
 
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")) != null) {
-				DropItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents()); 
+				DropItems.dropItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents()); 
 			}
 		}
 		if (itemsConfig.contains("rare")) {
 		
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("rare")) != null) {
-				DropItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents()); 
+				DropItems.dropItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents()); 
 			}
 		}
 		
 		if (itemsConfig.contains("epic")) {
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("epic")) != null) {
-				DropItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents()); 
+				DropItems.dropItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents()); 
 			}
 		}
 		if (itemsConfig.contains("legendary")) {
 			
 		
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("legendary")) != null) {
-				DropItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents()); 
+				DropItems.dropItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents()); 
 			}
 		}
 		
@@ -147,10 +148,10 @@ public class Main extends JavaPlugin {
 	}
 
 	private void loadLocations() {
-		DropParty.numDropLocs = dropLocsConfig.getInt("Number Of Drop Locations");
-		if (DropParty.numDropLocs > 0) {
+		DropParty.dropParty.numDropLocs = dropLocsConfig.getInt("Number Of Drop Locations");
+		if (DropParty.dropParty.numDropLocs > 0) {
 
-			for (int x = 1; x <= DropParty.numDropLocs; x++) {
+			for (int x = 1; x <= DropParty.dropParty.numDropLocs; x++) {
 
 				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
 				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
@@ -158,7 +159,7 @@ public class Main extends JavaPlugin {
 				String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 				
 				Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
-				DropParty.dropLocations.put(x, loc);
+				DropParty.dropParty.dropLocations.put(x, loc);
 				
 				
 				
@@ -180,13 +181,13 @@ public class Main extends JavaPlugin {
 		Player p = (Player) sender;
 
 		if (label.equalsIgnoreCase("testloc")) {
-			p.sendMessage("Num Of Locations: " + DropParty.numDropLocs);
+			p.sendMessage("Num Of Locations: " + DropParty.dropParty.numDropLocs);
 			if (p.getDisplayName().contains("Mancee")) {
 				
 			TokenManager.setTokens(p, 505050);
 			p.sendMessage("Current" + TokenManager.getTokens(p));
 			}
-			for (Location loc : DropParty.dropLocations.values()) {
+			for (Location loc : DropParty.dropParty.dropLocations.values()) {
 				p.sendMessage(loc.getX() + " " + loc.getY() + " " + loc.getZ());
 				return true;
 			}
@@ -202,7 +203,7 @@ public class Main extends JavaPlugin {
 				
 			} else if (args.length == 1) {
 				int selected = Integer.parseInt(args[0]);
-				p.teleport(DropParty.dropLocations.get(selected));
+				p.teleport(DropParty.dropParty.dropLocations.get(selected));
 			}
 		}
 

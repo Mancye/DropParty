@@ -17,17 +17,24 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class DropGUI implements Listener, Runnable {
 
+	public static DropGUI dropgui = new DropGUI();
+	
 	private Main plugin;
-	public static Inventory dropGUI;
+	public Inventory dropGUI;
 
 	int time;
 	int taskID;
+	
+	public DropGUI() {
+	}
 	
 	public DropGUI(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		fillDropGUI();
 	}
+
+	
 
 	private void fillDropGUI() {
 		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
@@ -76,7 +83,7 @@ public class DropGUI implements Listener, Runnable {
 
 	}
 	
-	public static Inventory getDropChancesMenu() {
+	public Inventory getDropChancesMenu() {
 		Inventory dropChances = Bukkit.createInventory(null, 27, ChatColor.RED + "Edit Drop Chances");
 	
 		ItemStack common = new ItemStack(Material.COAL_ORE);
@@ -193,72 +200,72 @@ public class DropGUI implements Listener, Runnable {
 		
 		switch (selected) {
 		case "common":
-			increaseOneLore.add("Current: " + DropParty.commonChances.get(0));
-			decreaseOneLore.add("Current: " + DropParty.commonChances.get(0));
+			increaseOneLore.add("Current: " + DropParty.dropParty.commonChances.get(0));
+			decreaseOneLore.add("Current: " + DropParty.dropParty.commonChances.get(0));
 			
-			increaseTwoLore.add("Current: " + DropParty.commonChances.get(1));
-			decreaseTwoLore.add("Current: " + DropParty.commonChances.get(1));
+			increaseTwoLore.add("Current: " + DropParty.dropParty.commonChances.get(1));
+			decreaseTwoLore.add("Current: " + DropParty.dropParty.commonChances.get(1));
 			
-			increaseThreeLore.add("Current: " + DropParty.commonChances.get(2));
-			decreaseThreeLore.add("Current: " + DropParty.commonChances.get(2));
+			increaseThreeLore.add("Current: " + DropParty.dropParty.commonChances.get(2));
+			decreaseThreeLore.add("Current: " + DropParty.dropParty.commonChances.get(2));
 			
-			increaseFourLore.add("Current: " + DropParty.commonChances.get(3));
-			decreaseFourLore.add("Current: " + DropParty.commonChances.get(3));
+			increaseFourLore.add("Current: " + DropParty.dropParty.commonChances.get(3));
+			decreaseFourLore.add("Current: " + DropParty.dropParty.commonChances.get(3));
 			break;
 		case "uncommon":
-			increaseOneLore.add("Current: " + DropParty.uncommonChances.get(0));
-			decreaseOneLore.add("Current: " + DropParty.uncommonChances.get(0));
+			increaseOneLore.add("Current: " + DropParty.dropParty.uncommonChances.get(0));
+			decreaseOneLore.add("Current: " + DropParty.dropParty.uncommonChances.get(0));
 			
-			increaseTwoLore.add("Current: " + DropParty.uncommonChances.get(1));
-			decreaseTwoLore.add("Current: " + DropParty.uncommonChances.get(1));
+			increaseTwoLore.add("Current: " + DropParty.dropParty.uncommonChances.get(1));
+			decreaseTwoLore.add("Current: " + DropParty.dropParty.uncommonChances.get(1));
 			
-			increaseThreeLore.add("Current: " + DropParty.uncommonChances.get(2));
-			decreaseThreeLore.add("Current: " + DropParty.uncommonChances.get(2));
+			increaseThreeLore.add("Current: " + DropParty.dropParty.uncommonChances.get(2));
+			decreaseThreeLore.add("Current: " + DropParty.dropParty.uncommonChances.get(2));
 			
-			increaseFourLore.add("Current: " + DropParty.uncommonChances.get(3));
-			decreaseFourLore.add("Current: " + DropParty.uncommonChances.get(3));
+			increaseFourLore.add("Current: " + DropParty.dropParty.uncommonChances.get(3));
+			decreaseFourLore.add("Current: " + DropParty.dropParty.uncommonChances.get(3));
 			break;
 			
 		case "rare":
-			increaseOneLore.add("Current: " + DropParty.rareChances.get(0));
-			decreaseOneLore.add("Current: " + DropParty.rareChances.get(0));
+			increaseOneLore.add("Current: " + DropParty.dropParty.rareChances.get(0));
+			decreaseOneLore.add("Current: " + DropParty.dropParty.rareChances.get(0));
 			
-			increaseTwoLore.add("Current: " + DropParty.rareChances.get(1));
-			decreaseTwoLore.add("Current: " + DropParty.rareChances.get(1));
+			increaseTwoLore.add("Current: " + DropParty.dropParty.rareChances.get(1));
+			decreaseTwoLore.add("Current: " + DropParty.dropParty.rareChances.get(1));
 			
-			increaseThreeLore.add("Current: " + DropParty.rareChances.get(2));
-			decreaseThreeLore.add("Current: " + DropParty.rareChances.get(2));
+			increaseThreeLore.add("Current: " + DropParty.dropParty.rareChances.get(2));
+			decreaseThreeLore.add("Current: " + DropParty.dropParty.rareChances.get(2));
 			
-			increaseFourLore.add("Current: " + DropParty.rareChances.get(3));
-			decreaseFourLore.add("Current: " + DropParty.rareChances.get(3));
+			increaseFourLore.add("Current: " + DropParty.dropParty.rareChances.get(3));
+			decreaseFourLore.add("Current: " + DropParty.dropParty.rareChances.get(3));
 			break;
 			
 		case "epic":
-			increaseOneLore.add("Current: " + DropParty.epicChances.get(0));
-			decreaseOneLore.add("Current: " + DropParty.epicChances.get(0));
+			increaseOneLore.add("Current: " + DropParty.dropParty.epicChances.get(0));
+			decreaseOneLore.add("Current: " + DropParty.dropParty.epicChances.get(0));
 			
-			increaseTwoLore.add("Current: " + DropParty.epicChances.get(1));
-			decreaseTwoLore.add("Current: " + DropParty.epicChances.get(1));
+			increaseTwoLore.add("Current: " + DropParty.dropParty.epicChances.get(1));
+			decreaseTwoLore.add("Current: " + DropParty.dropParty.epicChances.get(1));
 			
-			increaseThreeLore.add("Current: " + DropParty.epicChances.get(2));
-			decreaseThreeLore.add("Current: " + DropParty.epicChances.get(2));
+			increaseThreeLore.add("Current: " + DropParty.dropParty.epicChances.get(2));
+			decreaseThreeLore.add("Current: " + DropParty.dropParty.epicChances.get(2));
 			
-			increaseFourLore.add("Current: " + DropParty.epicChances.get(3));
-			decreaseFourLore.add("Current: " + DropParty.epicChances.get(3));
+			increaseFourLore.add("Current: " + DropParty.dropParty.epicChances.get(3));
+			decreaseFourLore.add("Current: " + DropParty.dropParty.epicChances.get(3));
 			break;
 			
 		case "legendary":
-			increaseOneLore.add("Current: " + DropParty.legendaryChances.get(0));
-			decreaseOneLore.add("Current: " + DropParty.legendaryChances.get(0));
+			increaseOneLore.add("Current: " + DropParty.dropParty.legendaryChances.get(0));
+			decreaseOneLore.add("Current: " + DropParty.dropParty.legendaryChances.get(0));
 			
-			increaseTwoLore.add("Current: " + DropParty.legendaryChances.get(1));
-			decreaseTwoLore.add("Current: " + DropParty.legendaryChances.get(1));
+			increaseTwoLore.add("Current: " + DropParty.dropParty.legendaryChances.get(1));
+			decreaseTwoLore.add("Current: " + DropParty.dropParty.legendaryChances.get(1));
 			
-			increaseThreeLore.add("Current: " + DropParty.legendaryChances.get(2));
-			decreaseThreeLore.add("Current: " + DropParty.legendaryChances.get(2));
+			increaseThreeLore.add("Current: " + DropParty.dropParty.legendaryChances.get(2));
+			decreaseThreeLore.add("Current: " + DropParty.dropParty.legendaryChances.get(2));
 			
-			increaseFourLore.add("Current: " + DropParty.legendaryChances.get(3));
-			decreaseFourLore.add("Current: " + DropParty.legendaryChances.get(3));
+			increaseFourLore.add("Current: " + DropParty.dropParty.legendaryChances.get(3));
+			decreaseFourLore.add("Current: " + DropParty.dropParty.legendaryChances.get(3));
 			break;
 		}
 		
@@ -319,19 +326,19 @@ public class DropGUI implements Listener, Runnable {
 		Player p = (Player) event.getWhoClicked();
 		
 		if (inv.getName().contains("COMMON DROP CHANCES") && !inv.getName().contains("UNCOMMON")) {
-			dropChancesList = DropParty.commonChances;
+			dropChancesList = DropParty.dropParty.commonChances;
 			selected = "common";
 		} else if (inv.getName().contains("UNCOMMON DROP CHANCES")) {
-			dropChancesList = DropParty.uncommonChances;
+			dropChancesList = DropParty.dropParty.uncommonChances;
 			selected = "uncommon";
 		} else if (inv.getName().contains("RARE DROP CHANCES")) {
-			dropChancesList = DropParty.rareChances;
+			dropChancesList = DropParty.dropParty.rareChances;
 			selected = "rare";
 		} else if (inv.getName().contains("EPIC DROP CHANCES")) {
-			dropChancesList = DropParty.epicChances;
+			dropChancesList = DropParty.dropParty.epicChances;
 			selected = "epic";
 		} else if (inv.getName().contains("LEGENDARY DROP CHANCES")) {
-			dropChancesList = DropParty.legendaryChances;
+			dropChancesList = DropParty.dropParty.legendaryChances;
 			selected = "legendary";
 		}
 		
@@ -339,42 +346,42 @@ public class DropGUI implements Listener, Runnable {
 		
 		switch (slot) {
 		case 0:
-			DropParty.modifyChances(dropChancesList, 1, 1);
+			DropParty.dropParty.modifyChances(dropChancesList, 1, 1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 9:
-			DropParty.modifyChances(dropChancesList, 1, -1);
+			DropParty.dropParty.modifyChances(dropChancesList, 1, -1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 1:
-			DropParty.modifyChances(dropChancesList, 2, 1);
+			DropParty.dropParty.modifyChances(dropChancesList, 2, 1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 10:
-			DropParty.modifyChances(dropChancesList, 2, -1);
+			DropParty.dropParty.modifyChances(dropChancesList, 2, -1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 2:
-			DropParty.modifyChances(dropChancesList, 3, 1);
+			DropParty.dropParty.modifyChances(dropChancesList, 3, 1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 11:
-			DropParty.modifyChances(dropChancesList, 3, -1);
+			DropParty.dropParty.modifyChances(dropChancesList, 3, -1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 3:
-			DropParty.modifyChances(dropChancesList, 4, 1);
+			DropParty.dropParty.modifyChances(dropChancesList, 4, 1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 12:
-			DropParty.modifyChances(dropChancesList, 4, -1);
+			DropParty.dropParty.modifyChances(dropChancesList, 4, -1);
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
@@ -411,7 +418,7 @@ public class DropGUI implements Listener, Runnable {
 		}
 	}
 	
-	public static void updateDisplayWithTokens(Player p) {
+	public void updateDisplayWithTokens(Player p) {
 		
 		ItemStack tokens = new ItemStack(Material.BOOK);
 		ItemMeta tokensMeta = tokens.getItemMeta();
@@ -469,7 +476,7 @@ public class DropGUI implements Listener, Runnable {
 
 				case 10:
 					if (TokenManager.getTokens(p) >= 1) {
-						DropParty.startDropParty(1);
+						DropParty.dropParty.startDropParty(1);
 						TokenManager.subtractTokens(p, 1);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
 						setTimer(900);
@@ -487,7 +494,7 @@ public class DropGUI implements Listener, Runnable {
 					}
 				case 12:
 					if (TokenManager.getTokens(p) >= 5) {
-						DropParty.startDropParty(2);
+						DropParty.dropParty.startDropParty(2);
 						TokenManager.subtractTokens(p, 5);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
 						setTimer(900);
@@ -505,7 +512,7 @@ public class DropGUI implements Listener, Runnable {
 					}
 				case 14:
 					if (TokenManager.getTokens(p) >= 10) {
-						DropParty.startDropParty(3);
+						DropParty.dropParty.startDropParty(3);
 						TokenManager.subtractTokens(p, 10);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
 						setTimer(900);
@@ -523,7 +530,7 @@ public class DropGUI implements Listener, Runnable {
 					}
 				case 16:
 					if (TokenManager.getTokens(p) >= 15) {
-						DropParty.startDropParty(4);
+						DropParty.dropParty.startDropParty(4);
 						TokenManager.subtractTokens(p, 15);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
 						setTimer(900);

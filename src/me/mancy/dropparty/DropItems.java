@@ -16,21 +16,27 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class DropItems implements Listener {
-
+	public static DropItems dropItems = new DropItems();
+	
 	private Main plugin;
 
-	public static Inventory commonItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Common Items");
-	public static Inventory uncommonItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Uncommon Items");
-	public static Inventory rareItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Rare Items");
-	public static Inventory epicItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Epic Items");
-	public static Inventory legendaryItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Legendary Items");
+	public Inventory commonItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Common Items");
+	public Inventory uncommonItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Uncommon Items");
+	public Inventory rareItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Rare Items");
+	public Inventory epicItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Epic Items");
+	public Inventory legendaryItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Legendary Items");
 
+	public DropItems() {
+	}
+	
 	public DropItems(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	public static Inventory openCategoriesMenu() {
+	
+
+	public Inventory openCategoriesMenu() {
 		Inventory categories = Bukkit.getServer().createInventory(null, 54, "Select Category");
 
 		ItemStack common = new ItemStack(Material.COAL_ORE);
@@ -91,20 +97,20 @@ public class DropItems implements Listener {
 		Inventory inv = event.getInventory();
 		
 		if (inv.getName().contains("Common Items")) {
-			Main.getPlugin(Main.class).itemsConfig.set("common", InventorySerializer.InventoryToString(commonItems));
-			Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).itemsConfig, Main.getPlugin(Main.class).itemsFile);
+			plugin.itemsConfig.set("common", InventorySerializer.InventoryToString(commonItems));
+			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
 		} else if (inv.getName().contains("Uncommon Items")) {
-			Main.getPlugin(Main.class).itemsConfig.set("uncommon", InventorySerializer.InventoryToString(uncommonItems));
-			Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).itemsConfig, Main.getPlugin(Main.class).itemsFile);
+			plugin.itemsConfig.set("uncommon", InventorySerializer.InventoryToString(uncommonItems));
+			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
 		} else if (inv.getName().contains("Rare Items")) {
-			Main.getPlugin(Main.class).itemsConfig.set("rare", InventorySerializer.InventoryToString(rareItems));
-			Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).itemsConfig, Main.getPlugin(Main.class).itemsFile);
+			plugin.itemsConfig.set("rare", InventorySerializer.InventoryToString(rareItems));
+			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
 		} else if (inv.getName().contains("Epic Items")) {
-			Main.getPlugin(Main.class).itemsConfig.set("epic", InventorySerializer.InventoryToString(epicItems));
-			Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).itemsConfig, Main.getPlugin(Main.class).itemsFile);
+			plugin.itemsConfig.set("epic", InventorySerializer.InventoryToString(epicItems));
+			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
 		} else if (inv.getName().contains("Legendary Items")) {
-			Main.getPlugin(Main.class).itemsConfig.set("legendary", InventorySerializer.InventoryToString(legendaryItems));
-			Main.getPlugin(Main.class).saveCustomYml(Main.getPlugin(Main.class).itemsConfig, Main.getPlugin(Main.class).itemsFile);
+			plugin.itemsConfig.set("legendary", InventorySerializer.InventoryToString(legendaryItems));
+			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
 		}
 	}
 
