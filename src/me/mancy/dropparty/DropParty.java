@@ -10,7 +10,7 @@ import org.bukkit.event.Listener;
 
 public class DropParty implements Listener {
 	
-	public static DropParty dropParty = new DropParty();
+	public static DropParty dropParty;
 	
 	public Map<Integer, Location> dropLocations = new HashMap<Integer, Location>();
 	public int numDropLocs;
@@ -24,13 +24,10 @@ public class DropParty implements Listener {
 	
 	private Main plugin;
 	
-	public DropParty() {
-		
-	}
-	
 	public DropParty(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		dropParty = this;
 	}
 
 

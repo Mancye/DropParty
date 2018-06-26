@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class DropItems implements Listener {
-	public static DropItems dropItems = new DropItems();
+	public static DropItems dropItems;
 	
 	private Main plugin;
 
@@ -26,12 +26,11 @@ public class DropItems implements Listener {
 	public Inventory epicItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Epic Items");
 	public Inventory legendaryItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Legendary Items");
 
-	public DropItems() {
-	}
 	
 	public DropItems(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		dropItems = this;
 	}
 
 	

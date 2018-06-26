@@ -38,6 +38,7 @@ public class Main extends JavaPlugin {
 		new DropGUI(this);
 		new TokenManager(this);
 		new DropItems(this);
+		new DropParty(this);
 		loadTokens();
 		loadLocations();
 		loadItemLists();

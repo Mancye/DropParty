@@ -16,22 +16,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class DropGUI implements Listener, Runnable {
-
-	public static DropGUI dropgui = new DropGUI();
-	
 	private Main plugin;
+	public static DropGUI dropgui;
 	public Inventory dropGUI;
 
 	int time;
 	int taskID;
-	
+
 	public DropGUI() {
-	}
+
+    }
 	
 	public DropGUI(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		fillDropGUI();
+		dropgui = this;
 	}
 
 	
