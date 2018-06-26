@@ -98,25 +98,25 @@ public class DropGUI implements Listener, Runnable {
 		ItemStack uncommon = new ItemStack(Material.IRON_BLOCK);
 		ItemMeta uncommonMeta = uncommon.getItemMeta();
 		List<String> uncommonLore = new ArrayList<String>();
-		uncommonMeta.setDisplayName(ChatColor.GRAY + "Tier 2");
+		uncommonMeta.setDisplayName(ChatColor.GRAY + "Uncommon");
 		uncommonLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Edit Uncommon Item Drop chances");
 		uncommonMeta.setLore(uncommonLore);
-		uncommon.setItemMeta(commonMeta);
+		uncommon.setItemMeta(uncommonMeta);
 		dropChances.setItem(11, uncommon);
 
 		ItemStack rare = new ItemStack(Material.GOLD_BLOCK);
 		ItemMeta rareMeta = rare.getItemMeta();
 		List<String> rareLore = new ArrayList<String>();
-		rareMeta.setDisplayName(ChatColor.GOLD + "Tier 3");
+		rareMeta.setDisplayName(ChatColor.GOLD + "Rare");
 		rareLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Edit Rare Item Drop Chances");
 		rareMeta.setLore(rareLore);
 		rare.setItemMeta(rareMeta);
 		dropChances.setItem(12, rare);
 
-		ItemStack epic = new ItemStack(Material.DIAMOND_BLOCK);
+		ItemStack epic = new ItemStack(Material.EMERALD_BLOCK);
 		ItemMeta epicMeta = epic.getItemMeta();
 		List<String> epicLore = new ArrayList<String>();
-		epicMeta.setDisplayName(ChatColor.AQUA + "Tier 4");
+		epicMeta.setDisplayName(ChatColor.AQUA + "Epic");
 		epicLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Edit Epic Item Drop Chances");
 		epicMeta.setLore(epicLore);
 		epic.setItemMeta(epicMeta);
@@ -125,7 +125,7 @@ public class DropGUI implements Listener, Runnable {
 		ItemStack legendary = new ItemStack(Material.DIAMOND_BLOCK);
 		ItemMeta legendaryMeta = legendary.getItemMeta();
 		List<String> legendaryLore = new ArrayList<String>();
-		legendaryMeta.setDisplayName(ChatColor.AQUA + "Tier 4");
+		legendaryMeta.setDisplayName(ChatColor.AQUA + "Legendary");
 		legendaryLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Edit Legendary Item Drop Chances");
 		legendaryMeta.setLore(legendaryLore);
 		legendary.setItemMeta(legendaryMeta);
@@ -136,12 +136,7 @@ public class DropGUI implements Listener, Runnable {
 	
 	private Inventory editChances(String selected) {
 		Inventory menu = Bukkit.createInventory(null, 18, selected.toUpperCase() + " DROP CHANCES");
-		/*
-		 * Increase1 Increase2 Increase3 Increase4 
-		 * Decrease1 Decrease2 Decrease3 Decrease4
-		 * 0, 1, 2, 3
-		 * 9, 10, 11, 12
-		 */
+
 		ItemStack increaseOne = new ItemStack(Material.COAL_ORE);
 		ItemMeta increaseOneMeta = increaseOne.getItemMeta();
 		List<String> increaseOneLore = new ArrayList<String>();
@@ -271,35 +266,35 @@ public class DropGUI implements Listener, Runnable {
 		
 		increaseOneMeta.setLore(increaseOneLore);
 		increaseOne.setItemMeta(increaseOneMeta);
-		dropGUI.setItem(0, increaseOne);
+		menu.setItem(0, increaseOne);
 		
 		decreaseOneMeta.setLore(decreaseOneLore);
 		decreaseOne.setItemMeta(decreaseOneMeta);
-		dropGUI.setItem(9, decreaseOne);
+		menu.setItem(9, decreaseOne);
 		
 		increaseTwoMeta.setLore(increaseTwoLore);
 		increaseTwo.setItemMeta(increaseTwoMeta);
-		dropGUI.setItem(1, increaseTwo);
+		menu.setItem(1, increaseTwo);
 		
 		decreaseTwoMeta.setLore(decreaseTwoLore);
 		decreaseTwo.setItemMeta(decreaseTwoMeta);
-		dropGUI.setItem(10, decreaseTwo);
+		menu.setItem(10, decreaseTwo);
 		
 		increaseThreeMeta.setLore(increaseThreeLore);
 		increaseThree.setItemMeta(increaseThreeMeta);
-		dropGUI.setItem(2, increaseThree);
+		menu.setItem(2, increaseThree);
 		
 		decreaseThreeMeta.setLore(decreaseThreeLore);
 		decreaseThree.setItemMeta(decreaseThreeMeta);
-		dropGUI.setItem(11, decreaseThree);
+		menu.setItem(11, decreaseThree);
 		
 		increaseFourMeta.setLore(increaseFourLore);
 		increaseFour.setItemMeta(increaseFourMeta);
-		dropGUI.setItem(3, increaseFour);
+		menu.setItem(3, increaseFour);
 		
 		decreaseFourMeta.setLore(decreaseFourLore);
 		decreaseFour.setItemMeta(decreaseFourMeta);
-		dropGUI.setItem(12, decreaseFour);
+		menu.setItem(12, decreaseFour);
 		
 		return menu;
 
@@ -310,40 +305,35 @@ public class DropGUI implements Listener, Runnable {
 		List<Double> dropChancesList = null;
 		String selected = null;
 		
-		if (!(event.getInventory().getName().contains("COMMON DROP CHANCES"))) {
-			return;
-		} else if (!(event.getInventory().getName().contains("RARE DROP CHANCES"))) {
-			return;
-		} else if (!(event.getInventory().getName().contains("EPIC DROP CHANCES"))) {
-			return;
-		} else if (!(event.getInventory().getName().contains("LEGENDARY DROP CHANCES"))) {
-			return;
-		}
-		
 		if (!(event.getWhoClicked() instanceof Player)) return;
-		
-		Inventory inv = event.getInventory();
+        Inventory inv = event.getInventory();
+
+        if (inv.getName().contains("COMMON DROP CHANCES") && !inv.getName().contains("UNCOMMON")) {
+            dropChancesList = DropParty.dropParty.commonChances;
+            selected = "common";
+        } else if (inv.getName().contains("UNCOMMON DROP CHANCES")) {
+            dropChancesList = DropParty.dropParty.uncommonChances;
+            selected = "uncommon";
+        } else if (inv.getName().contains("RARE DROP CHANCES")) {
+            dropChancesList = DropParty.dropParty.rareChances;
+            selected = "rare";
+        } else if (inv.getName().contains("EPIC DROP CHANCES")) {
+            dropChancesList = DropParty.dropParty.epicChances;
+            selected = "epic";
+        } else if (inv.getName().contains("LEGENDARY DROP CHANCES")) {
+            dropChancesList = DropParty.dropParty.legendaryChances;
+            selected = "legendary";
+        } else {
+            return;
+        }
+
+
 		Player p = (Player) event.getWhoClicked();
 		
-		if (inv.getName().contains("COMMON DROP CHANCES") && !inv.getName().contains("UNCOMMON")) {
-			dropChancesList = DropParty.dropParty.commonChances;
-			selected = "common";
-		} else if (inv.getName().contains("UNCOMMON DROP CHANCES")) {
-			dropChancesList = DropParty.dropParty.uncommonChances;
-			selected = "uncommon";
-		} else if (inv.getName().contains("RARE DROP CHANCES")) {
-			dropChancesList = DropParty.dropParty.rareChances;
-			selected = "rare";
-		} else if (inv.getName().contains("EPIC DROP CHANCES")) {
-			dropChancesList = DropParty.dropParty.epicChances;
-			selected = "epic";
-		} else if (inv.getName().contains("LEGENDARY DROP CHANCES")) {
-			dropChancesList = DropParty.dropParty.legendaryChances;
-			selected = "legendary";
-		}
+
 		
 		int slot = event.getSlot();
-		
+		event.setCancelled(true);
 		switch (slot) {
 		case 0:
 			DropParty.dropParty.modifyChances(dropChancesList, 1, 1);
@@ -397,6 +387,7 @@ public class DropGUI implements Listener, Runnable {
 		if (!(event.getWhoClicked() instanceof Player)) return;
 		int slot = event.getSlot();
 		Player p = (Player) event.getWhoClicked();
+		event.setCancelled(true);
 		switch (slot) {
 		case 10:
 			p.openInventory(editChances("common"));

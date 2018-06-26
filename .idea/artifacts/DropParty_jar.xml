@@ -4,7 +4,6 @@
     <root id="archive" name="DropParty.jar">
       <element id="module-output" name="DropParty" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/spigot-1.12.2.jar" path-in-jar="/" />
-      <element id="library" level="module" name="spigot-1.12.2.jar" module-name="DropParty" />
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
     </root>
   </artifact>

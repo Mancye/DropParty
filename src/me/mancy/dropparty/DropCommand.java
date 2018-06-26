@@ -29,6 +29,9 @@ public class DropCommand implements CommandExecutor {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] " + "Location #" + index + "");
 					}
 					return true;
+				} else {
+					p.sendMessage(ChatColor.RED + "Sorry, you don't have permission to do this!");
+					return true;
 				}
 			} else if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("loc") || args[0].equalsIgnoreCase("location")) {
@@ -39,7 +42,7 @@ public class DropCommand implements CommandExecutor {
 								int selectedIndex = Integer.parseInt(args[2]);
 								if (DropParty.dropParty.dropLocations.containsKey(selectedIndex)) {
 									p.sendMessage(ChatColor.RED + "There is already a location set for this index! See all drop locations with " + ChatColor.ITALIC +  "/drop locations");
-									return false;
+									return true;
 								} else {
 									
 									DropParty.dropParty.dropLocations.put(selectedIndex, p.getLocation());
@@ -59,7 +62,7 @@ public class DropCommand implements CommandExecutor {
 								}
 							} else {
 								p.sendMessage(ChatColor.RED + "Select a drop location index greater than 0 " + ChatColor.ITALIC + "/drop (loc/location) (add/remove) (#)");
-								return false;
+								return true;
 							}
 						} else if (args[1].equalsIgnoreCase("remove")) {
 							if (Integer.parseInt(args[2]) >= 1) {
@@ -76,14 +79,19 @@ public class DropCommand implements CommandExecutor {
 				}
 			} else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("edititems")) {
-					if (p.hasPermission("dropparty.edititems")) {
+					if (p.hasPermission("dropparty.edititems") || p.hasPermission("dropparty.*")) {
 						p.openInventory(DropItems.dropItems.openCategoriesMenu());
 						return true;
 					} else {
 						p.sendMessage(ChatColor.RED + "Sorry, you don't have permission to do this!");
-						return false;
+						return true;
 					}
-				}
+				} else if (args[0].equalsIgnoreCase("editchances")) {
+				    if (p.hasPermission("dropparty.editchances") || p.hasPermission("dropparty.*")) {
+				        p.openInventory(DropGUI.dropgui.getDropChancesMenu());
+				        return true;
+                    }
+                }
 				
 			}
 		}
