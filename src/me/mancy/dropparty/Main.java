@@ -33,7 +33,6 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		new DropCommand(this);
 		this.getCommand("drop").setExecutor(new DropCommand(this));
 		new DropGUI(this);
 		new TokenManager(this);
@@ -55,39 +54,29 @@ public class Main extends JavaPlugin {
 	
 	private void loadDropChanceLists() {
 		if (dropChancesConfig.contains("common")) {
-			for (String s : dropChancesConfig.getStringList("common")) {
-				Double d = Double.parseDouble(s);
-				if (!(DropParty.dropParty.commonChances.contains(d))) {
+			for (Double d : dropChancesConfig.getDoubleList("common")) {
 				DropParty.dropParty.commonChances.add(d);
-				}
+
 			}
-		} else if (dropChancesConfig.contains("uncommon")) {
-			for (String s : dropChancesConfig.getStringList("uncommon")) {
-				Double d = Double.parseDouble(s);
-				if (!(DropParty.dropParty.uncommonChances.contains(d))) {
+		}
+		if (dropChancesConfig.contains("uncommon")) {
+			for (Double d : dropChancesConfig.getDoubleList("uncommon")) {
 				DropParty.dropParty.uncommonChances.add(d);
-				}
 			}
-		} else if (dropChancesConfig.contains("rare")) {
-			for (String s : dropChancesConfig.getStringList("rare")) {
-				Double d = Double.parseDouble(s);
-				if (!(DropParty.dropParty.rareChances.contains(d))) {
+		}
+		if (dropChancesConfig.contains("rare")) {
+			for (Double d : dropChancesConfig.getDoubleList("rare")) {
 				DropParty.dropParty.rareChances.add(d);
-				}
 			}
-		} else if (dropChancesConfig.contains("epic")) {
-			for (String s : dropChancesConfig.getStringList("epic")) {
-				Double d = Double.parseDouble(s);
-				if (!(DropParty.dropParty.epicChances.contains(d))) {
+		}
+		if (dropChancesConfig.contains("epic")) {
+			for (Double d : dropChancesConfig.getDoubleList("epic")) {
 				DropParty.dropParty.epicChances.add(d);
-				}
 			}
-		} else if (dropChancesConfig.contains("legendary")) {
-			for (String s : dropChancesConfig.getStringList("legendary")) {
-				Double d = Double.parseDouble(s);
-				if (!(DropParty.dropParty.legendaryChances.contains(d))) {
+		}
+		if (dropChancesConfig.contains("legendary")) {
+			for (Double d : dropChancesConfig.getDoubleList("legendary")) {
 				DropParty.dropParty.legendaryChances.add(d);
-				}
 			}
 		}
 	}

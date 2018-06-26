@@ -16,11 +16,11 @@ public class DropParty implements Listener {
 	public int numDropLocs;
 	public boolean isActiveDropParty;
 	
-	public List<Double> commonChances = new ArrayList<>();
-	public List<Double> uncommonChances = new ArrayList<>();
-	public List<Double> rareChances = new ArrayList<>();
-	public List<Double> epicChances = new ArrayList<>();
-	public List<Double> legendaryChances = new ArrayList<>();
+	public List<Double> commonChances;
+	public List<Double> uncommonChances;
+	public List<Double> rareChances;
+	public List<Double> epicChances;
+	public List<Double> legendaryChances;
 	
 	private Main plugin;
 	
@@ -28,38 +28,12 @@ public class DropParty implements Listener {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		dropParty = this;
-		setDefaultChances();
+		commonChances = new ArrayList<>();
+		uncommonChances = new ArrayList<>();
+		rareChances = new ArrayList<>();
+		epicChances = new ArrayList<>();
+		legendaryChances = new ArrayList<>();
 	}
-
-	private void setDefaultChances() {
-	    modifyChances(commonChances, 1, 25);
-	    modifyChances(commonChances, 2, 25);
-	    modifyChances(commonChances, 3, 25);
-	    modifyChances(commonChances, 4, 25);
-
-
-	    modifyChances(uncommonChances, 1, 25);
-	    modifyChances(uncommonChances, 2, 25);
-	    modifyChances(uncommonChances, 3, 25);
-	    modifyChances(uncommonChances, 4, 25);
-
-
-	    modifyChances(rareChances, 1, 25);
-	    modifyChances(rareChances, 2, 25);
-	    modifyChances(rareChances, 3, 25);
-	    modifyChances(rareChances, 4, 25);
-
-	    modifyChances(epicChances, 1, 25);
-	    modifyChances(epicChances, 2, 25);
-	    modifyChances(epicChances, 3, 25);
-	    modifyChances(epicChances, 4, 25);
-
-	    modifyChances(legendaryChances, 1, 25);
-	    modifyChances(legendaryChances, 2, 25);
-	    modifyChances(legendaryChances, 3, 25);
-	    modifyChances(legendaryChances, 4, 25);
-
-    }
 
 	public void modifyChances(List<Double> typeChances, int tier, double amount) {
 		if (typeChances == commonChances) {
@@ -68,47 +42,44 @@ public class DropParty implements Listener {
             } else {
 		        commonChances.add(amount);
             }
-            commonChances.set(tier - 1, commonChances.get(tier - 1) + amount);
             plugin.dropChancesConfig.set("common", commonChances);
             plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
-		} else if (!(uncommonChances.size() <= (tier - 1))) {
-            if (!(uncommonChances.get(tier - 1) == null)) {
-                uncommonChances.set(tier - 1, uncommonChances.get(tier - 1) + amount);
-            } else {
-                uncommonChances.add(amount);
-            }
-            uncommonChances.set(tier - 1, uncommonChances.get(tier - 1) + amount);
-            plugin.dropChancesConfig.set("uncommon", commonChances);
-            plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
-		} else if (!(rareChances.size() <= (tier - 1))) {
-            if (!(rareChances.get(tier - 1) == null)) {
-                rareChances.set(tier - 1, rareChances.get(tier - 1) + amount);
-            } else {
-                rareChances.add(amount);
-            }
-            rareChances.set(tier - 1, rareChances.get(tier - 1) + amount);
-            plugin.dropChancesConfig.set("rare", rareChances);
-            plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
-		} else if (!(epicChances.size() <= (tier - 1))) {
-            if (!(epicChances.get(tier - 1) == null)) {
-                epicChances.set(tier - 1, epicChances.get(tier - 1) + amount);
-            } else {
-                epicChances.add(amount);
-            }
-            epicChances.set(tier - 1, epicChances.get(tier - 1) + amount);
-            plugin.dropChancesConfig.set("epic", epicChances);
-            plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
-		} else if (!(legendaryChances.size() <= (tier - 1))) {
-            if (!(legendaryChances.get(tier - 1) == null)) {
-                legendaryChances.set(tier - 1, legendaryChances.get(tier - 1) + amount);
-            } else {
-                legendaryChances.add(amount);
-            }
-            legendaryChances.set(tier - 1, legendaryChances.get(tier - 1) + amount);
-            plugin.dropChancesConfig.set("legendary", legendaryChances);
-            plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
-		} else {
-			return;
+
+		} else if (typeChances == uncommonChances) {
+			if (!(uncommonChances.size() <= (tier - 1))) {
+				uncommonChances.set(tier - 1, uncommonChances.get(tier - 1) + amount);
+			} else {
+				uncommonChances.add(amount);
+			}
+			plugin.dropChancesConfig.set("uncommon", uncommonChances);
+			plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
+
+		} else if (typeChances == rareChances) {
+			if (!(rareChances.size() <= (tier - 1))) {
+				rareChances.set(tier - 1, rareChances.get(tier - 1) + amount);
+			} else {
+				rareChances.add(amount);
+			}
+			plugin.dropChancesConfig.set("rare", rareChances);
+			plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
+
+		} else if (typeChances == epicChances) {
+			if (!(epicChances.size() <= (tier - 1))) {
+				epicChances.set(tier - 1, epicChances.get(tier - 1) + amount);
+			} else {
+				epicChances.add(amount);
+			}
+			plugin.dropChancesConfig.set("epic", epicChances);
+			plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
+
+		} else if (typeChances == legendaryChances) {
+			if (!(legendaryChances.size() <= (tier - 1))) {
+				legendaryChances.set(tier - 1, legendaryChances.get(tier - 1) + amount);
+			} else {
+				legendaryChances.add(amount);
+			}
+			plugin.dropChancesConfig.set("legendary", legendaryChances);
+			plugin.saveCustomYml(plugin.dropChancesConfig, plugin.dropChances);
 		}
 	}
 
