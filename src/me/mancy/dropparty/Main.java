@@ -25,6 +25,9 @@ public class Main extends JavaPlugin {
 	public File itemsFile = new File(this.getDataFolder() + "/itemlists.yml");
 	public FileConfiguration itemsConfig = YamlConfiguration.loadConfiguration(itemsFile);
 	
+	public File dropChances = new File(this.getDataFolder() + "/dropchances.yml");
+	public FileConfiguration dropChancesConfig = YamlConfiguration.loadConfiguration(dropChances);
+	
 	public File dropLocsFile = new File(this.getDataFolder() + "/droplocations.yml");
 	public FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
 
@@ -37,6 +40,7 @@ public class Main extends JavaPlugin {
 		loadTokens();
 		loadLocations();
 		loadItemLists();
+		loadDropChanceLists();
 		DropParty.isActiveDropParty = false;
 		System.out.println(ChatColor.GREEN + "DropPartyAlpha Enabled!");
 	}
@@ -45,6 +49,45 @@ public class Main extends JavaPlugin {
 	public void onDisable() {
 		saveTokens();
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
+	}
+	
+	private void loadDropChanceLists() {
+		if (dropChancesConfig.contains("common")) {
+			for (String s : dropChancesConfig.getStringList("common")) {
+				Double d = Double.parseDouble(s);
+				if (!(DropParty.commonChances.contains(d))) {
+				DropParty.commonChances.add(d);
+				}
+			}
+		} else if (dropChancesConfig.contains("uncommon")) {
+			for (String s : dropChancesConfig.getStringList("uncommon")) {
+				Double d = Double.parseDouble(s);
+				if (!(DropParty.uncommonChances.contains(d))) {
+				DropParty.uncommonChances.add(d);
+				}
+			}
+		} else if (dropChancesConfig.contains("rare")) {
+			for (String s : dropChancesConfig.getStringList("rare")) {
+				Double d = Double.parseDouble(s);
+				if (!(DropParty.rareChances.contains(d))) {
+				DropParty.rareChances.add(d);
+				}
+			}
+		} else if (dropChancesConfig.contains("epic")) {
+			for (String s : dropChancesConfig.getStringList("epic")) {
+				Double d = Double.parseDouble(s);
+				if (!(DropParty.epicChances.contains(d))) {
+				DropParty.epicChances.add(d);
+				}
+			}
+		} else if (dropChancesConfig.contains("legendary")) {
+			for (String s : dropChancesConfig.getStringList("legendary")) {
+				Double d = Double.parseDouble(s);
+				if (!(DropParty.legendaryChances.contains(d))) {
+				DropParty.legendaryChances.add(d);
+				}
+			}
+		}
 	}
 	
 	private void loadItemLists() {
