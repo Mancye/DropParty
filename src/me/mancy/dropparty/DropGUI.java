@@ -191,8 +191,12 @@ public class DropGUI implements Listener, Runnable {
 		List<String> decreaseFourLore = new ArrayList<String>();
 		decreaseFourMeta.setDisplayName(ChatColor.GRAY + "Tier 4");
 		decreaseFourLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Decrease Drop Chance");
-		
-		
+
+		ItemStack back = new ItemStack(Material.BOOK);
+		ItemMeta backMeta = back.getItemMeta();
+		backMeta.setDisplayName(ChatColor.RED + "Back");
+		back.setItemMeta(backMeta);
+		menu.setItem(17, back);
 		switch (selected) {
 		case "common":
 			increaseOneLore.add("Current: " + DropParty.dropParty.commonChances.get(0));
@@ -334,35 +338,30 @@ public class DropGUI implements Listener, Runnable {
 		
 		int slot = event.getSlot();
 		event.setCancelled(true);
+		p.sendMessage("Click happened");
 		switch (slot) {
 		case 0:
 			DropParty.dropParty.modifyChances(dropChancesList, 1, 1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 9:
 			DropParty.dropParty.modifyChances(dropChancesList, 1, -1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 1:
 			DropParty.dropParty.modifyChances(dropChancesList, 2, 1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 10:
 			DropParty.dropParty.modifyChances(dropChancesList, 2, -1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 2:
 			DropParty.dropParty.modifyChances(dropChancesList, 3, 1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 11:
 			DropParty.dropParty.modifyChances(dropChancesList, 3, -1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
 		case 3:
@@ -370,13 +369,17 @@ public class DropGUI implements Listener, Runnable {
 			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
-		case 12:
+		case 12: {
 			DropParty.dropParty.modifyChances(dropChancesList, 4, -1);
-			p.closeInventory();
 			p.openInventory(editChances(selected));
 			break;
-		default:
-			break;
+		}
+		case 17: {
+			p.openInventory(getDropChancesMenu());
+		}
+
+
+
 		}
 		
 	}
