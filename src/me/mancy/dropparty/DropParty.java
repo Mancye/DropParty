@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
 
 public class DropParty implements Listener {
 	
@@ -95,6 +97,26 @@ public class DropParty implements Listener {
 		case 4:
 			break;
 		}
+	}
+
+	private void tierOne() {
+		int amtToDrop = Bukkit.getServer().getOnlinePlayers().size() / 2;
+		List <ItemStack> itemsToDrop = new ArrayList<>(amtToDrop);
+		// 10;
+		/*
+			.75
+			.1
+			.1
+			.05
+			0
+			7.5 + 1 + 1 + .5 + 0 = 10
+		 */
+		double commonPerentage = commonChances.get(0) / 100; // 75 = .75
+		double uncommonPercentage = uncommonChances.get(0) / 100; // 10 = .1
+		double rarePercentage = rareChances.get(0) / 100; // 10 = .1
+		double epicPercentage = epicChances.get(0) / 100; // 5 = .05
+		double legendaryPercentage = legendaryChances.get(0) / 100; // 0
+
 	}
 
 	

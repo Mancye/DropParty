@@ -7,7 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da38d2f0-6031-481b-8f07-878772262c1a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dropchances.yml" beforeDir="false" afterPath="$PROJECT_DIR$/dropchances.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -49,9 +50,10 @@
       <file leaf-file-name="DropParty.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+            <state relative-caret-position="674">
+              <caret line="113" column="72" lean-forward="true" selection-start-line="113" selection-start-column="72" selection-end-line="113" selection-end-column="72" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="e#335#354#0" expanded="true" />
               </folding>
             </state>
@@ -61,8 +63,8 @@
       <file leaf-file-name="dropchances.yml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dropchances.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="17" column="6" lean-forward="true" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+            <state relative-caret-position="221">
+              <caret line="13" column="6" lean-forward="true" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -93,7 +95,7 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1598">
+            <state relative-caret-position="-1802">
               <caret line="34" column="28" lean-forward="true" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
             </state>
           </provider>
@@ -111,8 +113,8 @@
       <file leaf-file-name="DropGUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="497">
-              <caret line="237" column="78" selection-start-line="237" selection-start-column="78" selection-end-line="238" selection-end-column="78" />
+            <state relative-caret-position="174">
+              <caret line="239" column="18" lean-forward="true" selection-start-line="239" selection-start-column="18" selection-end-line="239" selection-end-column="18" />
               <folding>
                 <element signature="e#16381#16382#0" expanded="true" />
                 <element signature="e#16412#16413#0" expanded="true" />
@@ -132,17 +134,17 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropItems.java" />
-        <option value="$PROJECT_DIR$/dropchances.yml" />
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java" />
-        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" />
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/Main.java" />
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" />
+        <option value="$PROJECT_DIR$/dropchances.yml" />
+        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="63" />
-    <option name="y" value="29" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="956" />
+    <option name="y" value="230" />
     <option name="width" value="1403" />
     <option name="height" value="999" />
   </component>
@@ -254,12 +256,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="956" y="230" width="1403" height="999" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Messages" order="7" sideWeight="0.49947917" visible="true" weight="0.07757705" />
+      <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.49947917" visible="true" weight="0.08257919" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
@@ -270,7 +272,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1015625" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1405912" />
       <window_info id="Learn" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -649,34 +651,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
-          <folding>
-            <element signature="e#335#354#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dropchances.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="6" lean-forward="true" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+        <state relative-caret-position="221">
+          <caret line="13" column="6" lean-forward="true" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1598">
+        <state relative-caret-position="-1802">
           <caret line="34" column="28" lean-forward="true" selection-start-line="34" selection-start-column="28" selection-end-line="34" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="674">
+          <caret line="113" column="72" lean-forward="true" selection-start-line="113" selection-start-column="72" selection-end-line="113" selection-end-column="72" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#335#354#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="237" column="78" selection-start-line="237" selection-start-column="78" selection-end-line="238" selection-end-column="78" />
+        <state relative-caret-position="174">
+          <caret line="239" column="18" lean-forward="true" selection-start-line="239" selection-start-column="18" selection-end-line="239" selection-end-column="18" />
           <folding>
             <element signature="e#16381#16382#0" expanded="true" />
             <element signature="e#16412#16413#0" expanded="true" />
