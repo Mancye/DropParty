@@ -1,7 +1,11 @@
 package me.mancy.dropparty;
 
+import de.slikey.effectlib.EffectManager;
+import de.slikey.effectlib.effect.ExplodeEffect;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -12,8 +16,7 @@ public class DropParty implements Listener {
 	
 	public static DropParty dropParty;
 	
-	public Map<Integer, Location> dropLocations = new HashMap<Integer, Location>();
-	public int numDropLocs;
+	public Map<Integer, Location> dropLocations;
 	public boolean isActiveDropParty;
 	
 	public List<Double> commonChances;
@@ -23,7 +26,9 @@ public class DropParty implements Listener {
 	public List<Double> legendaryChances;
 	
 	private Main plugin;
-	
+
+	private Location locToDrop;
+
 	public DropParty(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -33,7 +38,8 @@ public class DropParty implements Listener {
 		rareChances = new ArrayList<>();
 		epicChances = new ArrayList<>();
 		legendaryChances = new ArrayList<>();
-	}
+        dropLocations = new HashMap<>();
+    }
 
 	public void modifyChances(List<Double> typeChances, int tier, double amount) {
 		if (typeChances == commonChances) {
@@ -86,13 +92,16 @@ public class DropParty implements Listener {
 	public void startDropParty(int type) {
 		switch (type) {
 		case 1:
-			
+			dropParty(1);
 			break;
 		case 2:
+		    dropParty(2);
 			break;
 		case 3:
+		    dropParty(3);
 			break;
 		case 4:
+		    dropParty(4);
 			break;
 		}
 	}
@@ -112,17 +121,17 @@ public class DropParty implements Listener {
 - 1 second delay after each iteration of the loop
 
  */
-	private void tierOne() {
+	private void dropParty(int tier) {
         float playerCount = (float) Bukkit.getServer().getOnlinePlayers().size();
 		int amtToDrop = Math.round(playerCount * 1.5f);
 
 		List <ItemStack> itemsToDrop = new ArrayList<>();
 
-		Double commonPercentage = commonChances.get(0) / 100; // 75 = .75
-		Double uncommonPercentage = uncommonChances.get(0) / 100; // 10 = .1
-		Double rarePercentage = rareChances.get(0) / 100; // 10 = .1
-		Double epicPercentage = epicChances.get(0) / 100; // 5 = .05
-		Double legendaryPercentage = legendaryChances.get(0) / 100; // 0
+		Double commonPercentage = commonChances.get(tier - 1) / 100; // 75 = .75
+		Double uncommonPercentage = uncommonChances.get(tier - 1) / 100; // 10 = .1
+		Double rarePercentage = rareChances.get(tier - 1) / 100; // 10 = .1
+		Double epicPercentage = epicChances.get(tier - 1) / 100; // 5 = .05
+		Double legendaryPercentage = legendaryChances.get(tier - 1) / 100; // 0
 
 		int amtCommonItems = commonPercentage.intValue() * amtToDrop;
         int amtUncommonItems = uncommonPercentage.intValue() * amtToDrop;
@@ -142,20 +151,51 @@ public class DropParty implements Listener {
         generateItemLists(epicItems, amtEpicItems, itemsToDrop, DropItems.dropItems.epicItems);
         generateItemLists(legendaryItems, amtLegendaryItems, itemsToDrop, DropItems.dropItems.legendaryItems);
 
-        List<Location> dropLocs = new ArrayList<>();
         int amtDropLocs =  Math.round(playerCount / 10f);
         int currentDropIndex = 0;
         //TODO Add fireworks
+        EffectManager em = new EffectManager(plugin);
 
         for (int x = 0; x < itemsToDrop.size(); x++) {
-
+            ExplodeEffect effect = new ExplodeEffect(em);
             ItemStack itemToDrop = itemsToDrop.get(x);
+            if (commonItems.contains(itemToDrop)) {
+                effect.color = Color.WHITE;
+            } else if (uncommonItems.contains(itemToDrop)) {
+                effect.color = Color.GREEN;
+            } else if (rareItems.contains(itemToDrop)) {
+                effect.color = Color.BLUE;
+            } else if (rareItems.contains(itemToDrop)) {
+                effect.color = Color.YELLOW;
+            } else if (rareItems.contains(itemToDrop)) {
+                effect.color = Color.RED;
+            } else {
+                effect.color = Color.BLACK;
+            }
+
             if (currentDropIndex <= amtDropLocs) {
-                Location locToDrop = dropLocations.get(currentDropIndex);
+                locToDrop = dropLocations.get(currentDropIndex);
+                currentDropIndex++;
             } else {
                 currentDropIndex = 0;
-                Location locToDrop = dropLocations.get(currentDropIndex);
             }
+
+                World world = locToDrop.getWorld();
+                // Add a callback to the effect
+                effect.callback = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        world.dropItemNaturally(locToDrop, itemToDrop);
+                    }
+
+                };
+                // Bleeding takes 15 seconds
+                // period * iterations = time of effect
+                effect.iterations = 2 * 20;
+                effect.start();
+
+
         }
 
         //TODO Add colored explosions

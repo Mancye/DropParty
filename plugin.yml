@@ -1,3 +1,4 @@
+depend: [EffectLib]
 main: me.mancy.dropparty.Main
 name: DropPartyAlpha
 version: 1.0
