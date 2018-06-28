@@ -15,7 +15,7 @@ import java.util.*;
 public class DropParty implements Listener {
 	
 	public static DropParty dropParty;
-	
+	public int numDropLocs;
 	public Map<Integer, Location> dropLocations;
 	public boolean isActiveDropParty;
 	
