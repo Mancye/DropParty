@@ -1,14 +1,12 @@
 package me.mancy.dropparty;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.*;
 
 public class DropParty implements Listener {
 	
@@ -98,26 +96,90 @@ public class DropParty implements Listener {
 			break;
 		}
 	}
+/*
+- Calculate total amount of items to drop(Player count / 2)
+- Retrieve drop chances for each item category for the selected tier drop party, store these in variables
+- Generate list of itemstacks, itemsToDrop
+- Get amount of items for item category(In this case, common) (In this case, 6 common items, 1 uncommon, 1 rare, 1 epic, 1 legendary)
+- Loop through item list(common) contents X(6) by generating a new random number between 1 and inv size and checking if the slot is empty or not, if not then add it to a list of just that category of item
+- Repeat this for each item category to take a random item from the item list at the specified quantity
+- Loop through each item category list and add each one to the itemsToDrop list to generate the final list of all the items that need to be dropped
+- Loop through each element of itemsToDrop
+- Increment a simple counter starting at 0
+- Set location to drop = dropLocations.get(counter)
+- Drop item at location to drop
+- Check if the counter is greater than dropLocations.size(), if so then reset to 0 to cycle again through locations
+- 1 second delay after each iteration of the loop
 
+ */
 	private void tierOne() {
-		int amtToDrop = Bukkit.getServer().getOnlinePlayers().size() / 2;
-		List <ItemStack> itemsToDrop = new ArrayList<>(amtToDrop);
-		// 10;
-		/*
-			.75
-			.1
-			.1
-			.05
-			0
-			7.5 + 1 + 1 + .5 + 0 = 10
-		 */
-		double commonPerentage = commonChances.get(0) / 100; // 75 = .75
-		double uncommonPercentage = uncommonChances.get(0) / 100; // 10 = .1
-		double rarePercentage = rareChances.get(0) / 100; // 10 = .1
-		double epicPercentage = epicChances.get(0) / 100; // 5 = .05
-		double legendaryPercentage = legendaryChances.get(0) / 100; // 0
+        float playerCount = (float) Bukkit.getServer().getOnlinePlayers().size();
+		int amtToDrop = Math.round(playerCount * 1.5f);
+
+		List <ItemStack> itemsToDrop = new ArrayList<>();
+
+		Double commonPercentage = commonChances.get(0) / 100; // 75 = .75
+		Double uncommonPercentage = uncommonChances.get(0) / 100; // 10 = .1
+		Double rarePercentage = rareChances.get(0) / 100; // 10 = .1
+		Double epicPercentage = epicChances.get(0) / 100; // 5 = .05
+		Double legendaryPercentage = legendaryChances.get(0) / 100; // 0
+
+		int amtCommonItems = commonPercentage.intValue() * amtToDrop;
+        int amtUncommonItems = uncommonPercentage.intValue() * amtToDrop;
+        int amtRareItems = rarePercentage.intValue() * amtToDrop;
+        int amtEpicItems = epicPercentage.intValue() * amtToDrop;
+        int amtLegendaryItems = legendaryPercentage.intValue() * amtToDrop;
+
+        List <ItemStack> commonItems = new ArrayList<>();
+        List <ItemStack> uncommonItems = new ArrayList<>();
+        List <ItemStack> rareItems = new ArrayList<>();
+        List <ItemStack> epicItems = new ArrayList<>();
+        List <ItemStack> legendaryItems = new ArrayList<>();
+
+        generateItemLists(commonItems, amtCommonItems, itemsToDrop, DropItems.dropItems.commonItems);
+        generateItemLists(uncommonItems, amtUncommonItems, itemsToDrop, DropItems.dropItems.uncommonItems);
+        generateItemLists(rareItems, amtRareItems, itemsToDrop, DropItems.dropItems.rareItems);
+        generateItemLists(epicItems, amtEpicItems, itemsToDrop, DropItems.dropItems.epicItems);
+        generateItemLists(legendaryItems, amtLegendaryItems, itemsToDrop, DropItems.dropItems.legendaryItems);
+
+        List<Location> dropLocs = new ArrayList<>();
+        int amtDropLocs =  Math.round(playerCount / 10f);
+        int currentDropIndex = 0;
+        //TODO Add fireworks
+
+        for (int x = 0; x < itemsToDrop.size(); x++) {
+
+            ItemStack itemToDrop = itemsToDrop.get(x);
+            if (currentDropIndex <= amtDropLocs) {
+                Location locToDrop = dropLocations.get(currentDropIndex);
+            } else {
+                currentDropIndex = 0;
+                Location locToDrop = dropLocations.get(currentDropIndex);
+            }
+        }
+
+        //TODO Add colored explosions
 
 	}
 
-	
+	private void generateItemLists(List<ItemStack> itemsList, int amtToAdd, List<ItemStack> finalListItems, Inventory itemInv) {
+	    Random rand = new Random();
+        int x = 0;
+        int randNum;
+	    while (itemsList.size() < amtToAdd) {
+
+	        randNum = rand.nextInt(1) + 53;
+
+           if (itemsList.get(x) == null) {
+               if (itemInv.getItem(randNum) != null) {
+                   itemsList.add(itemInv.getItem(randNum));
+               }
+           }
+           x++;
+	    }
+
+        for (ItemStack i : itemsList) {
+            finalListItems.add(i);
+        }
+    }
 }
