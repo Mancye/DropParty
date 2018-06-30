@@ -1,6 +1,5 @@
 package me.mancy.dropparty;
 
-import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.ExplodeEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -10,13 +9,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DropParty implements Listener {
 	
 	public static DropParty dropParty;
 	public int numDropLocs;
-	public Map<Integer, Location> dropLocations;
+	public Map<Integer, Location> dropLocations = new HashMap<>();;
 	public boolean isActiveDropParty;
 	
 	public List<Double> commonChances;
@@ -27,7 +29,7 @@ public class DropParty implements Listener {
 	
 	private Main plugin;
 
-	private Location locToDrop;
+	private Location locToDrop = null;
 
 	public DropParty(Main main) {
 		this.plugin = main;
@@ -38,7 +40,7 @@ public class DropParty implements Listener {
 		rareChances = new ArrayList<>();
 		epicChances = new ArrayList<>();
 		legendaryChances = new ArrayList<>();
-        dropLocations = new HashMap<>();
+
     }
 
 	public void modifyChances(List<Double> typeChances, int tier, double amount) {
@@ -121,53 +123,58 @@ public class DropParty implements Listener {
 - 1 second delay after each iteration of the loop
 
  */
+
+	List <ItemStack> commonItems;
+	List <ItemStack> uncommonItems;
+	List <ItemStack> rareItems;
+	List <ItemStack> epicItems;
+	List <ItemStack> legendaryItems;
+	List <ItemStack> itemsToDrop;
 	private void dropParty(int tier) {
         float playerCount = (float) Bukkit.getServer().getOnlinePlayers().size();
-		int amtToDrop = Math.round(playerCount * 1.5f);
+		int amtToDrop = Math.round(playerCount * 20.5f);
+		itemsToDrop = new ArrayList<>();
+		int currentDropIndex = 1;
+		float commonPercentage = (commonChances.get(tier - 1).floatValue()) / 100f; // 75 = .75
+		float uncommonPercentage = (uncommonChances.get(tier - 1).floatValue()) / 100f; // 10 = .1
+		float rarePercentage = (rareChances.get(tier - 1).floatValue()) / 100f; // 10 = .1
+		float epicPercentage = (epicChances.get(tier - 1).floatValue()) / 100f; // 5 = .05
+		float legendaryPercentage = (legendaryChances.get(tier - 1).floatValue()) / 100f; // 0
 
-		List <ItemStack> itemsToDrop = new ArrayList<>();
+		int amtCommonItems = (int) (commonPercentage * amtToDrop);
+        int amtUncommonItems = (int) (uncommonPercentage * amtToDrop);
+        int amtRareItems =(int) (rarePercentage * amtToDrop);
+        int amtEpicItems = (int) (epicPercentage * amtToDrop);
+        int amtLegendaryItems = (int) (legendaryPercentage * amtToDrop);
 
-		Double commonPercentage = commonChances.get(tier - 1) / 100; // 75 = .75
-		Double uncommonPercentage = uncommonChances.get(tier - 1) / 100; // 10 = .1
-		Double rarePercentage = rareChances.get(tier - 1) / 100; // 10 = .1
-		Double epicPercentage = epicChances.get(tier - 1) / 100; // 5 = .05
-		Double legendaryPercentage = legendaryChances.get(tier - 1) / 100; // 0
+        commonItems = new ArrayList<>();
+        uncommonItems = new ArrayList<>();
+        rareItems = new ArrayList<>();
+        epicItems = new ArrayList<>();
+        legendaryItems = new ArrayList<>();
 
-		int amtCommonItems = commonPercentage.intValue() * amtToDrop;
-        int amtUncommonItems = uncommonPercentage.intValue() * amtToDrop;
-        int amtRareItems = rarePercentage.intValue() * amtToDrop;
-        int amtEpicItems = epicPercentage.intValue() * amtToDrop;
-        int amtLegendaryItems = legendaryPercentage.intValue() * amtToDrop;
+        generateItemLists("common", amtCommonItems, DropItems.dropItems.commonItems);
+        generateItemLists("uncommon", amtUncommonItems, DropItems.dropItems.uncommonItems);
+        generateItemLists("rare", amtRareItems, DropItems.dropItems.rareItems);
+        generateItemLists("epic", amtEpicItems, DropItems.dropItems.epicItems);
+        generateItemLists("legendary", amtLegendaryItems, DropItems.dropItems.legendaryItems);
 
-        List <ItemStack> commonItems = new ArrayList<>();
-        List <ItemStack> uncommonItems = new ArrayList<>();
-        List <ItemStack> rareItems = new ArrayList<>();
-        List <ItemStack> epicItems = new ArrayList<>();
-        List <ItemStack> legendaryItems = new ArrayList<>();
+        int amtDropLocs =  Math.round(dropLocations.size() / 2f);
 
-        generateItemLists(commonItems, amtCommonItems, itemsToDrop, DropItems.dropItems.commonItems);
-        generateItemLists(uncommonItems, amtUncommonItems, itemsToDrop, DropItems.dropItems.uncommonItems);
-        generateItemLists(rareItems, amtRareItems, itemsToDrop, DropItems.dropItems.rareItems);
-        generateItemLists(epicItems, amtEpicItems, itemsToDrop, DropItems.dropItems.epicItems);
-        generateItemLists(legendaryItems, amtLegendaryItems, itemsToDrop, DropItems.dropItems.legendaryItems);
-
-        int amtDropLocs =  Math.round(playerCount / 10f);
-        int currentDropIndex = 0;
         //TODO Add fireworks
-        EffectManager em = new EffectManager(plugin);
 
-        for (int x = 0; x < itemsToDrop.size(); x++) {
-            ExplodeEffect effect = new ExplodeEffect(em);
-            ItemStack itemToDrop = itemsToDrop.get(x);
-            if (commonItems.contains(itemToDrop)) {
+        for (ItemStack i : itemsToDrop) {
+            ExplodeEffect effect = new ExplodeEffect(plugin.effectManager);
+
+            if (commonItems.contains(i)) {
                 effect.color = Color.WHITE;
-            } else if (uncommonItems.contains(itemToDrop)) {
+            } else if (uncommonItems.contains(i)) {
                 effect.color = Color.GREEN;
-            } else if (rareItems.contains(itemToDrop)) {
+            } else if (rareItems.contains(i)) {
                 effect.color = Color.BLUE;
-            } else if (rareItems.contains(itemToDrop)) {
+            } else if (rareItems.contains(i)) {
                 effect.color = Color.YELLOW;
-            } else if (rareItems.contains(itemToDrop)) {
+            } else if (rareItems.contains(i)) {
                 effect.color = Color.RED;
             } else {
                 effect.color = Color.BLACK;
@@ -177,23 +184,24 @@ public class DropParty implements Listener {
                 locToDrop = dropLocations.get(currentDropIndex);
                 currentDropIndex++;
             } else {
-                currentDropIndex = 0;
+                currentDropIndex = 1;
+				locToDrop = dropLocations.get(currentDropIndex);
             }
 
-                World world = locToDrop.getWorld();
+            World world = locToDrop.getWorld();
+            if (locToDrop == null) {
+            	Bukkit.getServer().broadcastMessage("gotjcj");
+			}
+			if (i == null) {
+            	Bukkit.getServer().broadcastMessage("how");
+			}
+			effect.setLocation(locToDrop);
+			effect.start();
+			world.dropItemNaturally(locToDrop, i);
                 // Add a callback to the effect
-                effect.callback = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        world.dropItemNaturally(locToDrop, itemToDrop);
-                    }
-
-                };
                 // Bleeding takes 15 seconds
                 // period * iterations = time of effect
-                effect.iterations = 2 * 20;
-                effect.start();
+
 
 
         }
@@ -202,24 +210,45 @@ public class DropParty implements Listener {
 
 	}
 
-	private void generateItemLists(List<ItemStack> itemsList, int amtToAdd, List<ItemStack> finalListItems, Inventory itemInv) {
-	    Random rand = new Random();
-        int x = 0;
-        int randNum;
-	    while (itemsList.size() < amtToAdd) {
+	private void generateItemLists(String itemType, int amtToAdd, Inventory itemInv) {
+        List<ItemStack> itemsList = null;
+        switch (itemType) {
+			case "common": {
+				itemsList = commonItems;
+				break;
+			}
+			case "uncommon": {
+				itemsList = uncommonItems;
+				break;
+			}
+			case "rare": {
+				itemsList = rareItems;
+				break;
+			}
+			case "epic": {
+				itemsList = epicItems;
+				break;
+			}
+			case "legendary": {
+				itemsList = legendaryItems;
+				break;
+			}
 
-	        randNum = rand.nextInt(1) + 53;
+		}
 
-           if (itemsList.get(x) == null) {
-               if (itemInv.getItem(randNum) != null) {
-                   itemsList.add(itemInv.getItem(randNum));
-               }
-           }
-           x++;
+	    for (ItemStack item : itemInv.getContents()) {
+        	if (itemInv != null) {
+				if (item != null) {
+					itemsList.add(item);
+				}
+			}
 	    }
 
         for (ItemStack i : itemsList) {
-            finalListItems.add(i);
+        	if (itemsList.size() >= amtToAdd) {
+        		break;
+			}
+            itemsToDrop.add(i);
         }
     }
 }

@@ -1,8 +1,5 @@
 package me.mancy.dropparty;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,6 +11,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DropGUI implements Listener, Runnable {
 	private Main plugin;
@@ -430,7 +430,7 @@ public class DropGUI implements Listener, Runnable {
 	        time = amount;
 	    }
 	
-	 public void startTimer() {
+	 public void startTimer(int dropTier) {
 	        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 	        taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
 	            @Override
@@ -439,6 +439,7 @@ public class DropGUI implements Listener, Runnable {
 	            		Bukkit.broadcastMessage("          --DROP PARTY--          ");
 	                    Bukkit.broadcastMessage(ChatColor.GREEN + "DROP PARTY HAS BEGUN! USE " + ChatColor.ITALIC + "/warp drop");
 	                    Bukkit.broadcastMessage("                                   ");
+	                    DropParty.dropParty.startDropParty(dropTier);
 	                    stopTimer();
 	                    return;
 	                }
@@ -473,8 +474,8 @@ public class DropGUI implements Listener, Runnable {
 						DropParty.dropParty.startDropParty(1);
 						TokenManager.subtractTokens(p, 1);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
-						setTimer(900);
-						startTimer();
+						setTimer(10);
+						startTimer(1);
 						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 							online.sendMessage("");
 							online.sendMessage("");
@@ -492,7 +493,7 @@ public class DropGUI implements Listener, Runnable {
 						TokenManager.subtractTokens(p, 5);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
 						setTimer(900);
-						startTimer();
+						startTimer(2);
 						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 							online.sendMessage("");
 							online.sendMessage("");
@@ -510,7 +511,7 @@ public class DropGUI implements Listener, Runnable {
 						TokenManager.subtractTokens(p, 10);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
 						setTimer(900);
-						startTimer();
+						startTimer(3);
 						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 							online.sendMessage("");
 							online.sendMessage("");
@@ -528,7 +529,7 @@ public class DropGUI implements Listener, Runnable {
 						TokenManager.subtractTokens(p, 15);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
 						setTimer(900);
-						startTimer();
+						startTimer(4);
 						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 							online.sendMessage("");
 							online.sendMessage("");

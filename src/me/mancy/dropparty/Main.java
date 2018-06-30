@@ -1,11 +1,6 @@
 package me.mancy.dropparty;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,6 +10,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 
 public class Main extends JavaPlugin {
@@ -31,8 +32,11 @@ public class Main extends JavaPlugin {
 	public File dropLocsFile = new File(this.getDataFolder() + "/droplocations.yml");
 	public FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
 
+	public EffectManager effectManager;
+
 	@Override
 	public void onEnable() {
+		effectManager = new EffectManager(this);
 		this.getCommand("drop").setExecutor(new DropCommand(this));
 		new DropGUI(this);
 		new TokenManager(this);
@@ -48,6 +52,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		effectManager.dispose();
 		saveTokens();
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
 	}
@@ -56,7 +61,7 @@ public class Main extends JavaPlugin {
 		if (dropChancesConfig.contains("common")) {
 			for (Double d : dropChancesConfig.getDoubleList("common")) {
 				DropParty.dropParty.commonChances.add(d);
-
+                System.out.println("Found" + d);
 			}
 		}
 		if (dropChancesConfig.contains("uncommon")) {
@@ -133,7 +138,6 @@ public class Main extends JavaPlugin {
 
 		    String[] raw = rawData.split(":");
 		    TokenManager.tokens.put(UUID.fromString(raw[0]), Integer.valueOf(raw[1]));
-
 		}
 	}
 
