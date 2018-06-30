@@ -1,9 +1,5 @@
 package me.mancy.dropparty;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,11 +8,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class TokenManager implements Listener, Runnable {
 
 	private Main plugin;
 	
-	public static Map<UUID, Integer> tokens = new HashMap<UUID, Integer>();
+	public static Map<UUID, Integer> tokens = new HashMap<>();
 	
 	public TokenManager(Main main) {
 		this.plugin = main;
@@ -43,10 +43,10 @@ public class TokenManager implements Listener, Runnable {
 	}
 	
 	public static int getTokens(Player p) {
-		if (!(tokens.containsKey(p.getUniqueId()))) {
-			setTokens(p, 0);
+		if (tokens.containsKey(p.getUniqueId())) {
+			return tokens.get(p.getUniqueId());
 		}
-		return tokens.get(p.getUniqueId());
+		return -99999;
 	}
 	
 	public static void addTokens(Player p, int amount) {
@@ -61,11 +61,8 @@ public class TokenManager implements Listener, Runnable {
 	}
 	
 	public static void subtractTokens(Player p, int amount) {
-		if (tokens.containsKey(p.getUniqueId())) {
-			tokens.remove(p.getUniqueId());
-			tokens.put(p.getUniqueId(), getTokens(p) - amount);
-			
-		}
+		tokens.put(p.getUniqueId(), getTokens(p) - amount);
+
 	}
 
 	@Override

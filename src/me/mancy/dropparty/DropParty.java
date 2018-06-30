@@ -1,13 +1,12 @@
 package me.mancy.dropparty;
 
 import de.slikey.effectlib.effect.ExplodeEffect;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.entity.Firework;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,18 +122,43 @@ public class DropParty implements Listener {
 - 1 second delay after each iteration of the loop
 
  */
-
-	List <ItemStack> commonItems;
-	List <ItemStack> uncommonItems;
-	List <ItemStack> rareItems;
-	List <ItemStack> epicItems;
-	List <ItemStack> legendaryItems;
-	List <ItemStack> itemsToDrop;
+	private List<ItemStack> itemsToDrop;
 	private void dropParty(int tier) {
-        float playerCount = (float) Bukkit.getServer().getOnlinePlayers().size();
-		int amtToDrop = Math.round(playerCount * 20.5f);
-		itemsToDrop = new ArrayList<>();
+
+		int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 20.5f);
+		int amtDropLocs =  Math.round(dropLocations.size() / 2f);
 		int currentDropIndex = 1;
+
+		if (currentDropIndex <= amtDropLocs) {
+			locToDrop = dropLocations.get(currentDropIndex);
+			currentDropIndex++;
+		} else {
+			currentDropIndex = 1;
+			locToDrop = dropLocations.get(currentDropIndex);
+		}
+		for (int x = 1; x <= amtDropLocs; x++) {
+			Firework f = (Firework) dropLocations.get(x).getWorld().spawn(dropLocations.get(x), Firework.class);
+
+			FireworkMeta fm = f.getFireworkMeta();
+			fm.addEffect(FireworkEffect.builder()
+					.flicker(false)
+					.trail(true)
+					.with(FireworkEffect.Type.CREEPER)
+					.withColor(Color.GREEN)
+					.withFade(Color.BLUE)
+					.build());
+			fm.setPower(3);
+			f.setFireworkMeta(fm);
+		}
+		try {
+			Thread.sleep(2000);
+		}
+		catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		itemsToDrop = new ArrayList<>();
+
+
 		float commonPercentage = (commonChances.get(tier - 1).floatValue()) / 100f; // 75 = .75
 		float uncommonPercentage = (uncommonChances.get(tier - 1).floatValue()) / 100f; // 10 = .1
 		float rarePercentage = (rareChances.get(tier - 1).floatValue()) / 100f; // 10 = .1
@@ -147,11 +171,7 @@ public class DropParty implements Listener {
         int amtEpicItems = (int) (epicPercentage * amtToDrop);
         int amtLegendaryItems = (int) (legendaryPercentage * amtToDrop);
 
-        commonItems = new ArrayList<>();
-        uncommonItems = new ArrayList<>();
-        rareItems = new ArrayList<>();
-        epicItems = new ArrayList<>();
-        legendaryItems = new ArrayList<>();
+
 
         generateItemLists("common", amtCommonItems, DropItems.dropItems.commonItems);
         generateItemLists("uncommon", amtUncommonItems, DropItems.dropItems.uncommonItems);
@@ -159,34 +179,24 @@ public class DropParty implements Listener {
         generateItemLists("epic", amtEpicItems, DropItems.dropItems.epicItems);
         generateItemLists("legendary", amtLegendaryItems, DropItems.dropItems.legendaryItems);
 
-        int amtDropLocs =  Math.round(dropLocations.size() / 2f);
-
-        //TODO Add fireworks
-
         for (ItemStack i : itemsToDrop) {
             ExplodeEffect effect = new ExplodeEffect(plugin.effectManager);
 
-            if (commonItems.contains(i)) {
+            if (DropItems.dropItems.commonItems.contains(i)) {
                 effect.color = Color.WHITE;
-            } else if (uncommonItems.contains(i)) {
+            } else if (DropItems.dropItems.uncommonItems.contains(i)) {
                 effect.color = Color.GREEN;
-            } else if (rareItems.contains(i)) {
+            } else if (DropItems.dropItems.rareItems.contains(i)) {
                 effect.color = Color.BLUE;
-            } else if (rareItems.contains(i)) {
+            } else if (DropItems.dropItems.epicItems.contains(i)) {
                 effect.color = Color.YELLOW;
-            } else if (rareItems.contains(i)) {
+            } else if (DropItems.dropItems.legendaryItems.contains(i)) {
                 effect.color = Color.RED;
             } else {
                 effect.color = Color.BLACK;
             }
 
-            if (currentDropIndex <= amtDropLocs) {
-                locToDrop = dropLocations.get(currentDropIndex);
-                currentDropIndex++;
-            } else {
-                currentDropIndex = 1;
-				locToDrop = dropLocations.get(currentDropIndex);
-            }
+
 
             World world = locToDrop.getWorld();
             if (locToDrop == null) {
@@ -195,57 +205,28 @@ public class DropParty implements Listener {
 			if (i == null) {
             	Bukkit.getServer().broadcastMessage("how");
 			}
-			effect.setLocation(locToDrop);
-			effect.start();
-			world.dropItemNaturally(locToDrop, i);
-                // Add a callback to the effect
-                // Bleeding takes 15 seconds
-                // period * iterations = time of effect
+			try {
+				effect.setLocation(locToDrop);
+				effect.visibleRange = 100f;
+				effect.amount = 20;
+				effect.start();
+				effect.cancel();
+				world.dropItemNaturally(locToDrop, i);
 
-
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+            	e.printStackTrace();
+			}
 
         }
-
-        //TODO Add colored explosions
 
 	}
 
 	private void generateItemLists(String itemType, int amtToAdd, Inventory itemInv) {
-        List<ItemStack> itemsList = null;
-        switch (itemType) {
-			case "common": {
-				itemsList = commonItems;
-				break;
-			}
-			case "uncommon": {
-				itemsList = uncommonItems;
-				break;
-			}
-			case "rare": {
-				itemsList = rareItems;
-				break;
-			}
-			case "epic": {
-				itemsList = epicItems;
-				break;
-			}
-			case "legendary": {
-				itemsList = legendaryItems;
-				break;
-			}
+        ItemStack[] items = itemInv.getContents();
 
-		}
-
-	    for (ItemStack item : itemInv.getContents()) {
-        	if (itemInv != null) {
-				if (item != null) {
-					itemsList.add(item);
-				}
-			}
-	    }
-
-        for (ItemStack i : itemsList) {
-        	if (itemsList.size() >= amtToAdd) {
+        for (ItemStack i : items) {
+        	if (items.length >= amtToAdd) {
         		break;
 			}
             itemsToDrop.add(i);
