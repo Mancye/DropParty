@@ -34,7 +34,6 @@ public class DropGUI implements Listener, Runnable {
 		dropgui = this;
 	}
 
-	
 
 	private void fillDropGUI() {
 		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
@@ -426,11 +425,11 @@ public class DropGUI implements Listener, Runnable {
 	}
 
 	
-	 public void setTimer(int amount) {
+	 private void setTimer(int amount) {
 	        time = amount;
 	    }
 	
-	 public void startTimer(int dropTier) {
+	 private void startTimer(int dropTier) {
 	        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 	        taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
 	            @Override
@@ -471,7 +470,6 @@ public class DropGUI implements Listener, Runnable {
 
 				case 10:
 					if (TokenManager.getTokens(p) >= 1) {
-						DropParty.dropParty.startDropParty(1);
 						TokenManager.subtractTokens(p, 1);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
 						setTimer(10);
@@ -487,9 +485,9 @@ public class DropGUI implements Listener, Runnable {
 					} else {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 					}
+					break;
 				case 12:
 					if (TokenManager.getTokens(p) >= 5) {
-						DropParty.dropParty.startDropParty(2);
 						TokenManager.subtractTokens(p, 5);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
 						setTimer(900);
@@ -505,9 +503,9 @@ public class DropGUI implements Listener, Runnable {
 					} else {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 					}
+					break;
 				case 14:
 					if (TokenManager.getTokens(p) >= 10) {
-						DropParty.dropParty.startDropParty(3);
 						TokenManager.subtractTokens(p, 10);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
 						setTimer(900);
@@ -523,9 +521,9 @@ public class DropGUI implements Listener, Runnable {
 					} else {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 					}
+					break;
 				case 16:
 					if (TokenManager.getTokens(p) >= 15) {
-						DropParty.dropParty.startDropParty(4);
 						TokenManager.subtractTokens(p, 15);
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
 						setTimer(900);
@@ -542,6 +540,9 @@ public class DropGUI implements Listener, Runnable {
 					} else {
 						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 					}
+					break;
+
+
 
 				}
 

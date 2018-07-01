@@ -61,7 +61,6 @@ public class Main extends JavaPlugin {
 		if (dropChancesConfig.contains("common")) {
 			for (Double d : dropChancesConfig.getDoubleList("common")) {
 				DropParty.dropParty.commonChances.add(d);
-                System.out.println("Found" + d);
 			}
 		}
 		if (dropChancesConfig.contains("uncommon")) {
