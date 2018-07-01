@@ -1,18 +1,21 @@
 package me.mancy.dropparty;
 
-import de.slikey.effectlib.effect.ExplodeEffect;
-import org.bukkit.*;
+import net.minecraft.server.v1_12_R1.EnumParticle;
+import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DropParty implements Listener {
 
@@ -140,8 +143,9 @@ public class DropParty implements Listener {
             fm.addEffect(FireworkEffect.builder()
                     .flicker(false)
                     .trail(true)
-                    .with(FireworkEffect.Type.CREEPER)
-                    .withColor(Color.GREEN)
+                    .withColor(Color.fromBGR(255, 0, 0))
+                    .with(FireworkEffect.Type.BALL_LARGE)
+                    .withColor(Color.ORANGE)
                     .withFade(Color.BLUE)
                     .build());
             fm.setPower(3);
@@ -172,24 +176,41 @@ public class DropParty implements Listener {
         int amtDropped = 0;
 
 
-        for (ItemStack i : itemsToDrop) {
+        for (int x = 0; x < itemsToDrop.size(); x++) {
+            final ItemStack i = itemsToDrop.get(x);
+            i.setAmount(1);
             bukkitScheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
                 public void run() {
-                    ExplodeEffect effect = new ExplodeEffect(plugin.effectManager);
+
+                    float red;
+                    float green;
+                    float blue;
 
                     if (DropItems.dropItems.commonItems.contains(i)) {
-                        effect.color = Color.WHITE;
+                        red = 255;
+                        green = 255;
+                        blue = 255;
                     } else if (DropItems.dropItems.uncommonItems.contains(i)) {
-                        effect.color = Color.GREEN;
+                        red = 21;
+                        green = 255;
+                        blue = 0;
                     } else if (DropItems.dropItems.rareItems.contains(i)) {
-                        effect.color = Color.BLUE;
+                        red = 0;
+                        green = 72;
+                        blue = 255;
                     } else if (DropItems.dropItems.epicItems.contains(i)) {
-                        effect.color = Color.YELLOW;
+                        red = 255;
+                        green = 225;
+                        blue = 0;
                     } else if (DropItems.dropItems.legendaryItems.contains(i)) {
-                        effect.color = Color.RED;
+                        red = 255;
+                        green = 0;
+                        blue = 0;
                     } else {
-                        effect.color = Color.BLACK;
+                        red = 0;
+                        green = 0;
+                        blue = 0;
                     }
 
                     if (currentDropIndex <= amtDropLocs) {
@@ -198,19 +219,29 @@ public class DropParty implements Listener {
                     } else {
                         currentDropIndex = 1;
                         locToDrop = dropLocations.get(currentDropIndex);
+                        locToDrop.setY(locToDrop.getY() + 5);
                     }
 
-                    effect.setLocation(locToDrop);
-                    effect.visibleRange = 100f;
-                    effect.amount = 20;
-                    effect.start();
-                    effect.cancel();
+                    PacketPlayOutWorldParticles particles;
+                    Random random = new Random();
+
+
+                    for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+                        for (int amt = 0; amt < 40; amt++) {
+                            float randX = 0.1f + random.nextFloat() * (1);
+                            float randY = 0.4f + random.nextFloat() * (1);
+                            float randZ = 0.1f + random.nextFloat() * (1);
+                            particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) locToDrop.getX() + randX, (float) locToDrop.getY() + randY, (float) locToDrop.getZ() + randZ, red, green, blue, 255, 0, 10);
+                            ((CraftPlayer) online).getHandle().playerConnection.sendPacket(particles);
+                        }
+                    }
                     locToDrop.getWorld().dropItemNaturally(locToDrop, i);
 
                 }
-            }, 20L);
+            }, 40L * (x + 1));
         }
 
+        DropGUI.dropgui.isActiveDropParty = false;
 
     }
 

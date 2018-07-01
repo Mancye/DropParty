@@ -2,10 +2,9 @@
   <artifact type="jar" name="DropParty">
     <output-path>$USER_HOME$/Desktop/Premade Spigot 1.10/plugins</output-path>
     <root id="archive" name="DropParty.jar">
-      <element id="file-copy" path="$PROJECT_DIR$/dropchances.yml" />
-      <element id="file-copy" path="$USER_HOME$/Desktop/spigot-1.12.2.jar" />
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
       <element id="module-output" name="DropParty" />
+      <element id="file-copy" path="$PROJECT_DIR$/dropchances.yml" />
     </root>
   </artifact>
 </component>

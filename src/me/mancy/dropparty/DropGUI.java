@@ -23,6 +23,8 @@ public class DropGUI implements Listener, Runnable {
 	int time;
 	int taskID;
 
+	public boolean isActiveDropParty = false;
+
 	public DropGUI() {
 
     }
@@ -430,6 +432,7 @@ public class DropGUI implements Listener, Runnable {
 	    }
 	
 	 private void startTimer(int dropTier) {
+		 isActiveDropParty = true;
 	        BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 	        taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
 	            @Override
@@ -469,76 +472,92 @@ public class DropGUI implements Listener, Runnable {
 				switch (slot) {
 
 				case 10:
-					if (TokenManager.getTokens(p) >= 1) {
-						TokenManager.subtractTokens(p, 1);
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
-						setTimer(10);
-						startTimer(1);
-						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-							online.sendMessage("");
-							online.sendMessage("");
-							online.sendMessage(ChatColor.GREEN + "          TIER 1 DROP PARTY         ");
-							online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES");
-							online.sendMessage("");
-							online.sendMessage("");
+					if (!isActiveDropParty) {
+						if (TokenManager.getTokens(p) >= 1) {
+							TokenManager.subtractTokens(p, 1);
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
+							setTimer(10);
+							startTimer(1);
+							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+								online.sendMessage("");
+								online.sendMessage("");
+								online.sendMessage(ChatColor.GREEN + "          TIER 1 DROP PARTY         ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES");
+								online.sendMessage("");
+								online.sendMessage("");
+							}
+						} else {
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 12:
-					if (TokenManager.getTokens(p) >= 5) {
-						TokenManager.subtractTokens(p, 5);
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
-						setTimer(900);
-						startTimer(2);
-						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-							online.sendMessage("");
-							online.sendMessage("");
-							online.sendMessage(ChatColor.GREEN + "          TIER 2 DROP PARTY         ");
-							online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
-							online.sendMessage("");
-							online.sendMessage("");
+					if (!isActiveDropParty) {
+						if (TokenManager.getTokens(p) >= 5) {
+							TokenManager.subtractTokens(p, 5);
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
+							setTimer(10);
+							startTimer(2);
+							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+								online.sendMessage("");
+								online.sendMessage("");
+								online.sendMessage(ChatColor.GREEN + "          TIER 2 DROP PARTY         ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage("");
+								online.sendMessage("");
+							}
+						} else {
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 14:
-					if (TokenManager.getTokens(p) >= 10) {
-						TokenManager.subtractTokens(p, 10);
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
-						setTimer(900);
-						startTimer(3);
-						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-							online.sendMessage("");
-							online.sendMessage("");
-							online.sendMessage(ChatColor.GREEN + "          TIER 3 DROP PARTY         ");
-							online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
-							online.sendMessage("");
-							online.sendMessage("");
+					if (!isActiveDropParty) {
+						if (TokenManager.getTokens(p) >= 10) {
+							TokenManager.subtractTokens(p, 10);
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
+							setTimer(10);
+							startTimer(3);
+							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+								online.sendMessage("");
+								online.sendMessage("");
+								online.sendMessage(ChatColor.GREEN + "          TIER 3 DROP PARTY         ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage("");
+								online.sendMessage("");
+							}
+						} else {
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 16:
-					if (TokenManager.getTokens(p) >= 15) {
-						TokenManager.subtractTokens(p, 15);
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
-						setTimer(900);
-						startTimer(4);
-						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
-							online.sendMessage("");
-							online.sendMessage("");
-							online.sendMessage(ChatColor.GREEN + "          TIER 4 DROP PARTY         ");
-							online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
-							online.sendMessage("");
-							online.sendMessage("");
+					if (!isActiveDropParty) {
+						if (TokenManager.getTokens(p) >= 15) {
+							TokenManager.subtractTokens(p, 15);
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
+							setTimer(10);
+							startTimer(4);
+							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+								online.sendMessage("");
+								online.sendMessage("");
+								online.sendMessage(ChatColor.GREEN + "          TIER 4 DROP PARTY         ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage("");
+								online.sendMessage("");
+							}
+
+						} else {
+							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
 						}
-						
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
 					}
 					break;
 

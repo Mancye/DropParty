@@ -25,9 +25,6 @@ public class DropCommand implements CommandExecutor {
 					
 					DropGUI.dropgui.updateDisplayWithTokens(p);
 					p.openInventory(DropGUI.dropgui.dropGUI);
-					for (int index : DropParty.dropParty.dropLocations.keySet()) {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] " + "Location #" + index + "");
-					}
 					return true;
 				} else {
 					p.sendMessage(ChatColor.RED + "Sorry, you don't have permission to do this!");
@@ -69,6 +66,9 @@ public class DropCommand implements CommandExecutor {
 								int selectedIndex = Integer.parseInt(args[2]);
 								if (DropParty.dropParty.dropLocations.get(selectedIndex) != null) {
 									DropParty.dropParty.dropLocations.remove(selectedIndex);
+									DropParty.dropParty.numDropLocs--;
+									plugin.dropLocsConfig.set("Number Of Drop Locations", DropParty.dropParty.numDropLocs);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									p.sendMessage(ChatColor.AQUA + "[Drop Party] " + ChatColor.GREEN + "Successfully Removed Drop Location #" + selectedIndex);
 								} else {
 									p.sendMessage(ChatColor.AQUA + "[Drop Party] " + ChatColor.RED + "Selected Location Does Not Exist!");

@@ -1,6 +1,5 @@
 package me.mancy.dropparty;
 
-import de.slikey.effectlib.EffectManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,11 +31,8 @@ public class Main extends JavaPlugin {
 	public File dropLocsFile = new File(this.getDataFolder() + "/droplocations.yml");
 	public FileConfiguration dropLocsConfig = YamlConfiguration.loadConfiguration(dropLocsFile);
 
-	public EffectManager effectManager;
-
 	@Override
 	public void onEnable() {
-		effectManager = new EffectManager(this);
 		this.getCommand("drop").setExecutor(new DropCommand(this));
 		new DropGUI(this);
 		new TokenManager(this);
@@ -52,7 +48,6 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		effectManager.dispose();
 		saveTokens();
 		System.out.println(ChatColor.RED + "DropPartyAlpha Disabled!");
 	}
@@ -175,10 +170,11 @@ public class Main extends JavaPlugin {
 
 		if (label.equalsIgnoreCase("testloc")) {
 			p.sendMessage("Num Of Locations: " + DropParty.dropParty.numDropLocs);
-			if (p.getDisplayName().contains("Mancee")) {
-				
-			TokenManager.setTokens(p, 505050);
-			p.sendMessage("Current" + TokenManager.getTokens(p));
+			if (p.hasPermission("dropparty.*")) {
+
+
+				TokenManager.setTokens(p, 505050);
+				p.sendMessage("Current" + TokenManager.getTokens(p));
 			}
 			for (Location loc : DropParty.dropParty.dropLocations.values()) {
 				p.sendMessage(loc.getX() + " " + loc.getY() + " " + loc.getZ());
