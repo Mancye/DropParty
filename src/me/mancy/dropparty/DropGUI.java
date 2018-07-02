@@ -16,9 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropGUI implements Listener, Runnable {
-	private Main plugin;
+	private static Main plugin;
 	public static DropGUI dropgui;
-	public Inventory dropGUI;
+	public static Inventory dropGUI;
+
+	public static int countdownTime = 1;
+
+	public static int tierOneCost;
+	public static int tierTwoCost;
+	public static int tierThreeCost;
+	public static int tierFourCost;
+
+	String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
 
 	int time;
 	int taskID;
@@ -32,20 +41,24 @@ public class DropGUI implements Listener, Runnable {
 	public DropGUI(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		fillDropGUI();
 		dropgui = this;
 	}
 
 
-	private void fillDropGUI() {
-		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
+	public static void fillDropGUI() {
+		tierOneCost = plugin.tokensConfig.getInt("tierOneCost");
+		tierTwoCost = plugin.tokensConfig.getInt("tierTwoCost");
+		tierThreeCost = plugin.tokensConfig.getInt("tierThreeCost");
+		tierFourCost = plugin.tokensConfig.getInt("tierFourCost");
 
+		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
+		System.out.println("TIER ONE COST" + tierOneCost);
 		ItemStack tierOne = new ItemStack(Material.COAL_ORE);
 		ItemMeta tierOneMeta = tierOne.getItemMeta();
 		List<String> tierOneLore = new ArrayList<String>();
 		tierOneMeta.setDisplayName(ChatColor.DARK_GRAY + "Tier 1");
 		tierOneLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Start A Tier One Drop Party!");
-		tierOneLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: 1 Token");
+		tierOneLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: " + tierOneCost +  " Token(s)");
 		tierOneMeta.setLore(tierOneLore);
 		tierOne.setItemMeta(tierOneMeta);
 		dropGUI.setItem(10, tierOne);
@@ -55,7 +68,7 @@ public class DropGUI implements Listener, Runnable {
 		List<String> tierTwoLore = new ArrayList<String>();
 		tierTwoMeta.setDisplayName(ChatColor.GRAY + "Tier 2");
 		tierTwoLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Start A Tier Two Drop Party!");
-		tierTwoLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: 5 Tokens");
+		tierTwoLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: " + tierTwoCost +  " Token(s)");
 		tierTwoMeta.setLore(tierTwoLore);
 		tierTwo.setItemMeta(tierTwoMeta);
 		dropGUI.setItem(12, tierTwo);
@@ -65,7 +78,7 @@ public class DropGUI implements Listener, Runnable {
 		List<String> tierThreeLore = new ArrayList<String>();
 		tierThreeMeta.setDisplayName(ChatColor.GOLD + "Tier 3");
 		tierThreeLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Start A Tier Three Drop Party!");
-		tierThreeLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: 10 Tokens");
+		tierThreeLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: " + tierThreeCost +  " Token(s)");
 		tierThreeMeta.setLore(tierThreeLore);
 		tierThree.setItemMeta(tierThreeMeta);
 		dropGUI.setItem(14, tierThree);
@@ -75,7 +88,7 @@ public class DropGUI implements Listener, Runnable {
 		List<String> tierFourLore = new ArrayList<String>();
 		tierFourMeta.setDisplayName(ChatColor.AQUA + "Tier 4");
 		tierFourLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "Click To Start A Tier Four Drop Party!");
-		tierFourLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: 15 Tokens");
+		tierFourLore.add(ChatColor.RED + ChatColor.ITALIC.toString() + "COST: " + tierFourCost + " Token(s)");
 		tierFourMeta.setLore(tierFourLore);
 		tierFour.setItemMeta(tierFourMeta);
 		dropGUI.setItem(16, tierFour);
@@ -339,7 +352,6 @@ public class DropGUI implements Listener, Runnable {
 		
 		int slot = event.getSlot();
 		event.setCancelled(true);
-		p.sendMessage("Click happened");
 		switch (slot) {
 		case 0:
 			DropParty.dropParty.modifyChances(dropChancesList, 1, 1);
@@ -417,9 +429,12 @@ public class DropGUI implements Listener, Runnable {
 		
 		ItemStack tokens = new ItemStack(Material.BOOK);
 		ItemMeta tokensMeta = tokens.getItemMeta();
-		List<String> tokensLore = new ArrayList<String>();
+		List<String> tokensLore = new ArrayList<>();
 		tokensMeta.setDisplayName(ChatColor.GRAY + "Your Tokens:");
-		tokensLore.add(ChatColor.GREEN + ChatColor.ITALIC.toString() + TokenManager.getTokens(p));
+		tokensLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "Tier One: " + ChatColor.GREEN + TokenManager.getTokens(p, 1));
+		tokensLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "Tier Two: " + ChatColor.GREEN + TokenManager.getTokens(p, 2));
+		tokensLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "Tier Three: " + ChatColor.GREEN + TokenManager.getTokens(p, 3));
+		tokensLore.add(ChatColor.GRAY + ChatColor.ITALIC.toString() + "Tier Four: " + ChatColor.GREEN + TokenManager.getTokens(p, 4));
 		tokensMeta.setLore(tokensLore);
 		tokens.setItemMeta(tokensMeta);
 		dropGUI.setItem(26, tokens);
@@ -445,8 +460,8 @@ public class DropGUI implements Listener, Runnable {
 	                    stopTimer();
 	                    return;
 	                }
-	            	 if(time % 5 == 0) {
-	                     Bukkit.broadcastMessage(ChatColor.RED + "Timer remaining " + time + " seconds");
+	            	 if(time % 5 == 0 && time <= 20) {
+	                     Bukkit.broadcastMessage(prefix + ChatColor.RED + "Time Until Drop Party: " + time + " Seconds!");
 	                 }
 	            	
 	            	 
@@ -466,98 +481,98 @@ public class DropGUI implements Listener, Runnable {
 			if (event.getWhoClicked() instanceof Player) {
 
 				Player p = (Player) event.getWhoClicked();
-
+				String prefix = prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
 				int slot = event.getSlot();
 				event.setCancelled(true);
 				switch (slot) {
 
 				case 10:
 					if (!isActiveDropParty) {
-						if (TokenManager.getTokens(p) >= 1) {
-							TokenManager.subtractTokens(p, 1);
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 1 drop party!");
-							setTimer(10);
+						if (TokenManager.getTokens(p, 1) >= tierOneCost) {
+							TokenManager.subtractTokens(p, 1, tierOneCost);
+							p.sendMessage(prefix + ChatColor.GRAY + "You have started a tier 1 drop party!");
+							setTimer(countdownTime);
 							startTimer(1);
 							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 								online.sendMessage("");
 								online.sendMessage("");
 								online.sendMessage(ChatColor.GREEN + "          TIER 1 DROP PARTY         ");
-								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN " + countdownTime + " SECONDS");
 								online.sendMessage("");
 								online.sendMessage("");
 							}
 						} else {
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+							p.sendMessage(prefix + ChatColor.GRAY + " You do not have enough tier one tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, 1));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
+						p.sendMessage(prefix + ChatColor.GRAY + " There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 12:
 					if (!isActiveDropParty) {
-						if (TokenManager.getTokens(p) >= 5) {
-							TokenManager.subtractTokens(p, 5);
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 2 drop party!");
-							setTimer(10);
+						if (TokenManager.getTokens(p, 2) >= tierTwoCost) {
+							TokenManager.subtractTokens(p, 2, tierTwoCost);
+							p.sendMessage(prefix + ChatColor.GRAY + " You have started a tier 2 drop party!");
+							setTimer(countdownTime);
 							startTimer(2);
 							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 								online.sendMessage("");
 								online.sendMessage("");
 								online.sendMessage(ChatColor.GREEN + "          TIER 2 DROP PARTY         ");
-								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN " + countdownTime + " SECONDS");
 								online.sendMessage("");
 								online.sendMessage("");
 							}
 						} else {
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+							p.sendMessage(prefix + ChatColor.GRAY + " You do not have enough tier two tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, 2));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
+						p.sendMessage(prefix + ChatColor.GRAY + " There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 14:
 					if (!isActiveDropParty) {
-						if (TokenManager.getTokens(p) >= 10) {
-							TokenManager.subtractTokens(p, 10);
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 3 drop party!");
-							setTimer(10);
+						if (TokenManager.getTokens(p, 3) >= tierThreeCost) {
+							TokenManager.subtractTokens(p, 3, tierThreeCost);
+							p.sendMessage(prefix + ChatColor.GRAY + " You have started a tier 3 drop party!");
+							setTimer(countdownTime);
 							startTimer(3);
 							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 								online.sendMessage("");
 								online.sendMessage("");
 								online.sendMessage(ChatColor.GREEN + "          TIER 3 DROP PARTY         ");
-								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN " + countdownTime + " SECONDS");
 								online.sendMessage("");
 								online.sendMessage("");
 							}
 						} else {
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+							p.sendMessage(prefix + ChatColor.GRAY + " You do not have enough tier three tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, 3));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
+						p.sendMessage(prefix + ChatColor.GRAY + " There is already an active drop party, please wait for it to finish");
 					}
 					break;
 				case 16:
 					if (!isActiveDropParty) {
-						if (TokenManager.getTokens(p) >= 15) {
-							TokenManager.subtractTokens(p, 15);
+						if (TokenManager.getTokens(p, 4) >= tierFourCost) {
+							TokenManager.subtractTokens(p, 4, tierFourCost);
 							p.sendMessage(ChatColor.AQUA + "[Drop Party] You have started a tier 4 drop party!");
-							setTimer(10);
+							setTimer(countdownTime);
 							startTimer(4);
 							for (Player online : Bukkit.getServer().getOnlinePlayers()) {
 								online.sendMessage("");
 								online.sendMessage("");
 								online.sendMessage(ChatColor.GREEN + "          TIER 4 DROP PARTY         ");
-								online.sendMessage(ChatColor.AQUA + "           BEGINS IN 15 MINUTES ");
+								online.sendMessage(ChatColor.AQUA + "           BEGINS IN " + countdownTime + " SECONDS");
 								online.sendMessage("");
 								online.sendMessage("");
 							}
 
 						} else {
-							p.sendMessage(ChatColor.AQUA + "[Drop Party] You do not have enough tokens for this! Your tokens: " + TokenManager.getTokens(p));
+							p.sendMessage(prefix + ChatColor.GRAY + " You do not have enough tier four tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, 4));
 						}
 					} else {
-						p.sendMessage(ChatColor.AQUA + "[Drop Party] There is already an active drop party, please wait for it to finish");
+						p.sendMessage(prefix + ChatColor.GRAY + " There is already an active drop party, please wait for it to finish");
 					}
 					break;
 

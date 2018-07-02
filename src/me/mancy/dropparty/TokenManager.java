@@ -1,7 +1,6 @@
 package me.mancy.dropparty;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,8 +15,11 @@ public class TokenManager implements Listener, Runnable {
 
 	private Main plugin;
 	
-	public static Map<UUID, Integer> tokens = new HashMap<>();
-	
+	public static Map<UUID, Integer> tokensOne = new HashMap<>();
+	public static Map<UUID, Integer> tokensTwo = new HashMap<>();
+	public static Map<UUID, Integer> tokensThree = new HashMap<>();
+	public static Map<UUID, Integer> tokensFour = new HashMap<>();
+
 	public TokenManager(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -33,35 +35,105 @@ public class TokenManager implements Listener, Runnable {
 			public void run() {
 				Player p = event.getPlayer();
 				
-				if (!tokens.containsKey(p.getUniqueId())) {
-				  setTokens(p, 0);
+				if (!tokensOne.containsKey(p.getUniqueId())) {
+				  setTokens(p, 1, 0);
 				}
-				p.sendMessage(ChatColor.AQUA + "[Drop Party]" + ChatColor.GREEN + "You have " + tokens.get(p.getUniqueId()) + " Tokens!");
+				if (!(tokensTwo.containsKey(p.getUniqueId()))) {
+					setTokens(p, 2, 0);
+				}
+				if (!(tokensThree.containsKey(p.getUniqueId()))) {
+					setTokens(p, 3, 0);
+				}
+				if (!(tokensFour.containsKey(p.getUniqueId()))) {
+					setTokens(p, 4, 0);
+				}
 			}
 			
 		}, 20L);
 	}
 	
-	public static int getTokens(Player p) {
-		if (tokens.containsKey(p.getUniqueId())) {
-			return tokens.get(p.getUniqueId());
+	public static int getTokens(Player p, int tier) {
+		switch (tier) {
+			case 1: {
+				return tokensOne.get(p.getUniqueId());
+			}
+			case 2: {
+				return tokensTwo.get(p.getUniqueId());
+			}
+			case 3: {
+				return tokensThree.get(p.getUniqueId());
+			}
+			case 4: {
+				return tokensFour.get(p.getUniqueId());
+			}
 		}
-		return -99999;
+		return -1;
 	}
 	
-	public static void addTokens(Player p, int amount) {
-		if (tokens.containsKey(p.getUniqueId())) {
-			tokens.put(p.getUniqueId(), getTokens(p) + amount);
-			
+	public static void addTokens(Player p, int tier, int amount) {
+		switch (tier) {
+			case 1: {
+				tokensOne.put(p.getUniqueId(), getTokens(p, 1) + amount);
+				break;
+			}
+			case 2: {
+				tokensOne.put(p.getUniqueId(), getTokens(p, 2) + amount);
+				break;
+			}
+			case 3: {
+				tokensOne.put(p.getUniqueId(), getTokens(p, 3) + amount);
+				break;
+			}
+			case 4: {
+				tokensOne.put(p.getUniqueId(), getTokens(p, 4) + amount);
+				break;
+			}
 		}
+
 	}
 	
-	public static void setTokens(Player p, int amount) {
-		tokens.put(p.getUniqueId(), amount);
+	public static void setTokens(Player p, int tier, int amount) {
+		switch (tier) {
+			case 1: {
+				tokensOne.put(p.getUniqueId(), amount);
+				break;
+			}
+			case 2: {
+				tokensTwo.put(p.getUniqueId(), amount);
+				break;
+			}
+			case 3: {
+				tokensThree.put(p.getUniqueId(), amount);
+				break;
+			}
+			case 4: {
+				tokensFour.put(p.getUniqueId(), amount);
+				break;
+			}
+		}
+
 	}
 	
-	public static void subtractTokens(Player p, int amount) {
-		tokens.put(p.getUniqueId(), getTokens(p) - amount);
+	public static void subtractTokens(Player p, int tier, int amount) {
+		switch (tier) {
+			case 1: {
+				tokensOne.put(p.getUniqueId(), getTokens(p, 1) - amount);
+				break;
+			}
+			case 2: {
+				tokensTwo.put(p.getUniqueId(), getTokens(p, 2) - amount);
+				break;
+			}
+			case 3: {
+				tokensThree.put(p.getUniqueId(), getTokens(p, 3) - amount);
+				break;
+			}
+			case 4: {
+				tokensFour.put(p.getUniqueId(), getTokens(p, 4) - amount);
+				break;
+			}
+		}
+
 
 	}
 

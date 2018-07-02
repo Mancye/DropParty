@@ -1,12 +1,8 @@
 main: me.mancy.dropparty.Main
-name: DropPartyAlpha
+name: AlphaDrops
 version: 1.0
 author: Mancy
 commands:
   drop:
-    description: Opens the drop party GUI
-    usage: /drop
-  testloc:
-  go:
-  baltokens:
+  tokens:
   

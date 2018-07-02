@@ -4,7 +4,6 @@
     <root id="archive" name="DropParty.jar">
       <element id="file-copy" path="$PROJECT_DIR$/plugin.yml" />
       <element id="module-output" name="DropParty" />
-      <element id="file-copy" path="$PROJECT_DIR$/dropchances.yml" />
     </root>
   </artifact>
 </component>

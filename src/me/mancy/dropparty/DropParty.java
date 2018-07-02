@@ -30,6 +30,9 @@ public class DropParty implements Listener {
     public List<Double> epicChances;
     public List<Double> legendaryChances;
 
+    public double heightToDrop = 1.0;
+    public double radiusToDrop = 1.0;
+
     private Main plugin;
 
     private Location locToDrop = null;
@@ -132,7 +135,7 @@ public class DropParty implements Listener {
 
     private void dropParty(int tier) {
 
-        int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 20.5f);
+        int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 10.5f);
         int amtDropLocs = Math.round(dropLocations.size() / 2f);
 
 
@@ -175,17 +178,43 @@ public class DropParty implements Listener {
 
         int amtDropped = 0;
 
-
         for (int x = 0; x < itemsToDrop.size(); x++) {
             final ItemStack i = itemsToDrop.get(x);
             i.setAmount(1);
             bukkitScheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
                 public void run() {
-
+                    Random random = new Random();
                     float red;
                     float green;
                     float blue;
+
+                    if (currentDropIndex <= amtDropLocs) {
+                        locToDrop = dropLocations.get(currentDropIndex);
+                        currentDropIndex++;
+                    } else {
+                        currentDropIndex = 1;
+                        locToDrop = dropLocations.get(currentDropIndex);
+                    }
+                    double offsetX = .1 * random.nextDouble() * radiusToDrop ;
+                    double offsetZ = .1 * random.nextDouble() * radiusToDrop ;
+                    Location offsetLoc = new Location(locToDrop.getWorld(), locToDrop.getX() + offsetX, locToDrop.getY() + heightToDrop, locToDrop.getZ() + offsetZ);
+                    Location fireWorkLoc = new Location(offsetLoc.getWorld(), offsetLoc.getX(), locToDrop.getY(), offsetLoc.getZ());
+
+                    Firework f = fireWorkLoc.getWorld().spawn(fireWorkLoc, Firework.class);
+
+                    FireworkMeta fm = f.getFireworkMeta();
+                    fm.addEffect(FireworkEffect.builder()
+                            .flicker(false)
+                            .trail(true)
+                            .withColor(Color.LIME)
+                            .with(FireworkEffect.Type.BALL_LARGE)
+                            .withColor(Color.ORANGE)
+                            .withFade(Color.ORANGE)
+                            .build());
+                    fm.setPower(3);
+                    f.setFireworkMeta(fm);
+
 
                     if (DropItems.dropItems.commonItems.contains(i)) {
                         red = 255;
@@ -213,17 +242,7 @@ public class DropParty implements Listener {
                         blue = 0;
                     }
 
-                    if (currentDropIndex <= amtDropLocs) {
-                        locToDrop = dropLocations.get(currentDropIndex);
-                        currentDropIndex++;
-                    } else {
-                        currentDropIndex = 1;
-                        locToDrop = dropLocations.get(currentDropIndex);
-                        locToDrop.setY(locToDrop.getY() + 5);
-                    }
-
                     PacketPlayOutWorldParticles particles;
-                    Random random = new Random();
 
 
                     for (Player online : Bukkit.getServer().getOnlinePlayers()) {
@@ -231,11 +250,11 @@ public class DropParty implements Listener {
                             float randX = 0.1f + random.nextFloat() * (1);
                             float randY = 0.4f + random.nextFloat() * (1);
                             float randZ = 0.1f + random.nextFloat() * (1);
-                            particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) locToDrop.getX() + randX, (float) locToDrop.getY() + randY, (float) locToDrop.getZ() + randZ, red, green, blue, 255, 0, 10);
+                            particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) fireWorkLoc.getX() + randX, (float) fireWorkLoc.getY() + randY, (float) fireWorkLoc.getZ() + randZ, red, green, blue, 255, 0, 10);
                             ((CraftPlayer) online).getHandle().playerConnection.sendPacket(particles);
                         }
                     }
-                    locToDrop.getWorld().dropItemNaturally(locToDrop, i);
+                    offsetLoc.getWorld().dropItemNaturally(offsetLoc, i);
 
                 }
             }, 40L * (x + 1));
