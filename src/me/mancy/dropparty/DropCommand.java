@@ -11,7 +11,7 @@ public class DropCommand implements CommandExecutor {
 	private String prefix;
 	public DropCommand(Main main) {
 		this.plugin = main;
-		prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
+		prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Events" + ChatColor.DARK_GRAY + "]";
 	}
 
 	@Override
@@ -38,12 +38,12 @@ public class DropCommand implements CommandExecutor {
 						if (args[1].equalsIgnoreCase("add")) {
 							if (Integer.parseInt(args[2]) >= 1) {
 								int selectedIndex = Integer.parseInt(args[2]);
-								if (DropParty.dropParty.dropLocations.containsKey(selectedIndex)) {
+								if (DropParty.dropParty.dropLocations.get(selectedIndex - 1) != null) {
 									p.sendMessage(prefix + ChatColor.RED + " There is already a location set for this index! See all drop locations with " + ChatColor.ITALIC +  "/drop locations");
 									return true;
 								} else {
 									
-									DropParty.dropParty.dropLocations.put(selectedIndex, p.getLocation());
+									DropParty.dropParty.dropLocations.add(p.getLocation());
 									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", p.getLocation().getX());
 									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", p.getLocation().getY());
@@ -68,6 +68,9 @@ public class DropCommand implements CommandExecutor {
 								if (DropParty.dropParty.dropLocations.get(selectedIndex) != null) {
 									DropParty.dropParty.dropLocations.remove(selectedIndex);
 									DropParty.dropParty.numDropLocs--;
+									for (int x = 1; x <= DropParty.dropParty.dropLocations.size(); x++) {
+
+									}
 									plugin.dropLocsConfig.set("Number Of Drop Locations", DropParty.dropParty.numDropLocs);
 									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									p.sendMessage(prefix + ChatColor.GREEN + " Successfully Removed Drop Location #" + selectedIndex);
@@ -130,7 +133,7 @@ public class DropCommand implements CommandExecutor {
 								}
 
 							} else {
-								p.sendMessage(prefix + ChatColor.GRAY + "Cost can not be less than 0");
+								p.sendMessage(prefix + ChatColor.GRAY + " Cost can not be less than 0");
 								return false;
 							}
 						} else {
@@ -191,7 +194,7 @@ public class DropCommand implements CommandExecutor {
 					return true;
 				} else if (args[0].equalsIgnoreCase("list")) {
 					if (p.hasPermission("dropparty.listlocations") || p.hasPermission("dropparty.*")) {
-						for (int x = 0; x < DropParty.dropParty.dropLocations.values().size(); x++) {
+						for (int x = 0; x < DropParty.dropParty.dropLocations.size(); x++) {
 							p.sendMessage(prefix + ChatColor.GRAY + " Location #" + (x + 1));
 						}
 						return true;

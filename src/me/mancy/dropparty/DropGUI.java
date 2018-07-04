@@ -27,7 +27,7 @@ public class DropGUI implements Listener, Runnable {
 	public static int tierThreeCost;
 	public static int tierFourCost;
 
-	String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
+	String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Events" + ChatColor.DARK_GRAY + "]";
 
 	int time;
 	int taskID;
@@ -461,7 +461,7 @@ public class DropGUI implements Listener, Runnable {
 	                    return;
 	                }
 	            	 if(time % 5 == 0 && time <= 20) {
-	                     Bukkit.broadcastMessage(prefix + ChatColor.RED + "Time Until Drop Party: " + time + " Seconds!");
+	                     Bukkit.broadcastMessage(prefix + ChatColor.RED + " Time Until Drop Party: " + time + " Seconds!");
 	                 }
 	            	
 	            	 

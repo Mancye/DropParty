@@ -320,16 +320,16 @@ public class Main extends JavaPlugin {
 
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player)) return false;
-		String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
+		String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Events" + ChatColor.DARK_GRAY + "]";
 		Player p = (Player) sender;
 
 		if (args.length == 0) {
 
 			if (label.equalsIgnoreCase("tokens")) {
-				p.sendMessage(prefix + ChatColor.RED + " Tier One Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 1));
-				p.sendMessage(prefix + ChatColor.RED + " Tier Two Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 2));
-				p.sendMessage(prefix + ChatColor.RED + " Tier Three Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 3));
-				p.sendMessage(prefix + ChatColor.RED + " Tier Four Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 4));
+				p.sendMessage(prefix + ChatColor.RED + " Tier 1 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 1));
+				p.sendMessage(prefix + ChatColor.RED + " Tier 2 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 2));
+				p.sendMessage(prefix + ChatColor.RED + " Tier 3 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 3));
+				p.sendMessage(prefix + ChatColor.RED + " Tier 4 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 4));
 				return true;
 			}
 		} else if (args.length == 4) {
@@ -345,21 +345,21 @@ public class Main extends JavaPlugin {
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.addTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GRAY + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("remove")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.subtractTokens(online, tier, amount);
-					online.sendMessage(prefix + " " + ChatColor.GRAY + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + ChatColor.GREEN + online.getDisplayName() + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					online.sendMessage(prefix + " " + ChatColor.GREEN + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("set")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.setTokens(online, tier, amount);
-					online.sendMessage(prefix + ChatColor.GRAY + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					online.sendMessage(prefix + ChatColor.GREEN + " Tier " + tier + ChatColor.GRAY + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
+					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else {
 					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drop help" + ChatColor.GRAY + " To View Available Commands");

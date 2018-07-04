@@ -77,15 +77,15 @@ public class TokenManager implements Listener, Runnable {
 				break;
 			}
 			case 2: {
-				tokensOne.put(p.getUniqueId(), getTokens(p, 2) + amount);
+				tokensTwo.put(p.getUniqueId(), getTokens(p, 2) + amount);
 				break;
 			}
 			case 3: {
-				tokensOne.put(p.getUniqueId(), getTokens(p, 3) + amount);
+				tokensThree.put(p.getUniqueId(), getTokens(p, 3) + amount);
 				break;
 			}
 			case 4: {
-				tokensOne.put(p.getUniqueId(), getTokens(p, 4) + amount);
+				tokensFour.put(p.getUniqueId(), getTokens(p, 4) + amount);
 				break;
 			}
 		}

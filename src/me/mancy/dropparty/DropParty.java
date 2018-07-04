@@ -21,7 +21,7 @@ public class DropParty implements Listener {
 
     public static DropParty dropParty;
     public int numDropLocs;
-    public Map<Integer, Location> dropLocations = new HashMap<>();
+    public List<Location> dropLocations = new ArrayList<>();
     public boolean isActiveDropParty;
 
     public List<Double> commonChances;
@@ -138,10 +138,9 @@ public class DropParty implements Listener {
         int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 10.5f);
         int amtDropLocs = Math.round(dropLocations.size() / 2f);
 
-
+        Bukkit.getServer().broadcastMessage("Drop locs.size = " + dropLocations.size());
         for (int x = 1; x <= amtDropLocs; x++) {
             Firework f = dropLocations.get(x).getWorld().spawn(dropLocations.get(x), Firework.class);
-
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
                     .flicker(false)
@@ -216,6 +215,8 @@ public class DropParty implements Listener {
                     f.setFireworkMeta(fm);
 
 
+
+
                     if (DropItems.dropItems.commonItems.contains(i)) {
                         red = 255;
                         green = 255;
@@ -254,7 +255,10 @@ public class DropParty implements Listener {
                             ((CraftPlayer) online).getHandle().playerConnection.sendPacket(particles);
                         }
                     }
+
+
                     offsetLoc.getWorld().dropItemNaturally(offsetLoc, i);
+
 
                 }
             }, 40L * (x + 1));
