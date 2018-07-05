@@ -481,7 +481,6 @@ public class DropGUI implements Listener, Runnable {
 			if (event.getWhoClicked() instanceof Player) {
 
 				Player p = (Player) event.getWhoClicked();
-				String prefix = prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Party" + ChatColor.DARK_GRAY + "]";
 				int slot = event.getSlot();
 				event.setCancelled(true);
 				switch (slot) {

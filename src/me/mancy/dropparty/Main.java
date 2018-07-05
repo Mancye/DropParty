@@ -46,13 +46,13 @@ public class Main extends JavaPlugin {
 		loadCostsAndTime();
 		DropGUI.fillDropGUI();
 		DropParty.dropParty.isActiveDropParty = false;
-		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[Alpha Drops] Plugin Enabled Successfully");
+		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[alphaDROPS] Plugin Enabled Successfully");
 	}
 
 	@Override
 	public void onDisable() {
 		saveTokens();
-		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[Alpha Drops] Plugin Disabled Successfully");
+		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[alphaDROPS] Plugin Disabled Successfully");
 	}
 
 	private void loadDropChanceLists() {
@@ -273,9 +273,8 @@ public class Main extends JavaPlugin {
 	}
 
 	private void loadLocations() {
-		if (DropParty.dropParty.dropLocations.size() > 0) {
 
-			for (int x = 1; x <= DropParty.dropParty.dropLocations.size(); x++) {
+			for (int x = 0; x <= DropParty.dropParty.dropLocations.size(); x++) {
 
 				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
 				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
@@ -285,7 +284,7 @@ public class Main extends JavaPlugin {
 				Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
 				DropParty.dropParty.dropLocations.add(loc);
 			}
-		}
+
 	}
 
 	private void loadDropModifiers() {
@@ -358,7 +357,7 @@ public class Main extends JavaPlugin {
 					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else {
-					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drop help" + ChatColor.GRAY + " To View Available Commands");
+					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drops help" + ChatColor.GRAY + " To View Available Commands");
 					return false;
 				}
 			} else {
@@ -368,7 +367,7 @@ public class Main extends JavaPlugin {
 
 
 		} else {
-			p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drop help" + ChatColor.GRAY + " To View Available Commands");
+			p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drops help" + ChatColor.GRAY + " To View Available Commands");
 			return false;
 		}
 

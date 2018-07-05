@@ -138,7 +138,7 @@ public class DropParty implements Listener {
         int amtDropLocs = Math.round(dropLocations.size() / 2f);
 
         for (int x = 1; x <= amtDropLocs; x++) {
-            Firework f = dropLocations.get(x).getWorld().spawn(dropLocations.get(x), Firework.class);
+            Firework f = dropLocations.get(x).getWorld().spawn(dropLocations.get(x - 1), Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
                     .flicker(false)
@@ -163,17 +163,67 @@ public class DropParty implements Listener {
         int amtRareItems = (int) (rarePercentage * amtToDrop);
         int amtEpicItems = (int) (epicPercentage * amtToDrop);
         int amtLegendaryItems = (int) (legendaryPercentage * amtToDrop);
+        Random random = new Random();
+        int randOrder = 1 + random.nextInt() * 6;
+        switch (randOrder) {
+            case 1: {
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                break;
+            }
+            case 2: {
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                break;
+            }
+            case 3: {
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                break;
+            }
+            case 4: {
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                break;
+            }
+            case 5: {
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                break;
+            }
+            case 6: {
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                break;
+            }
+            default: {
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
+                generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
+                generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
+                generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+            }
 
-
-        generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
-        generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
-        generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
-        generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
-        generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
-
+        }
         BukkitScheduler bukkitScheduler = Bukkit.getServer().getScheduler();
-
-        int amtDropped = 0;
 
         for (int x = 0; x < itemsToDrop.size(); x++) {
             final ItemStack i = itemsToDrop.get(x);
