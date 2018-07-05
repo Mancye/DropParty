@@ -20,7 +20,6 @@ import java.util.*;
 public class DropParty implements Listener {
 
     public static DropParty dropParty;
-    public int numDropLocs;
     public List<Location> dropLocations = new ArrayList<>();
     public boolean isActiveDropParty;
 
@@ -138,7 +137,6 @@ public class DropParty implements Listener {
         int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 10.5f);
         int amtDropLocs = Math.round(dropLocations.size() / 2f);
 
-        Bukkit.getServer().broadcastMessage("Drop locs.size = " + dropLocations.size());
         for (int x = 1; x <= amtDropLocs; x++) {
             Firework f = dropLocations.get(x).getWorld().spawn(dropLocations.get(x), Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
@@ -195,8 +193,8 @@ public class DropParty implements Listener {
                         currentDropIndex = 1;
                         locToDrop = dropLocations.get(currentDropIndex);
                     }
-                    double offsetX = .1 * random.nextDouble() * radiusToDrop ;
-                    double offsetZ = .1 * random.nextDouble() * radiusToDrop ;
+                    double offsetX = (-radiusToDrop) * random.nextDouble() * radiusToDrop;
+                    double offsetZ = (-radiusToDrop) * random.nextDouble() * radiusToDrop;
                     Location offsetLoc = new Location(locToDrop.getWorld(), locToDrop.getX() + offsetX, locToDrop.getY() + heightToDrop, locToDrop.getZ() + offsetZ);
                     Location fireWorkLoc = new Location(offsetLoc.getWorld(), offsetLoc.getX(), locToDrop.getY(), offsetLoc.getZ());
 

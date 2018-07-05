@@ -1,8 +1,8 @@
 main: me.mancy.dropparty.Main
-name: AlphaDrops
+name: alphaDROPS
 version: 1.0
 author: Mancy
 commands:
-  drop:
+  drops:
   tokens:
   

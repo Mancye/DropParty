@@ -33,7 +33,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.getCommand("drop").setExecutor(new DropCommand(this));
+		this.getCommand("drops").setExecutor(new DropCommand(this));
 		new DropGUI(this);
 		new TokenManager(this);
 		new DropItems(this);
@@ -273,10 +273,9 @@ public class Main extends JavaPlugin {
 	}
 
 	private void loadLocations() {
-		DropParty.dropParty.numDropLocs = dropLocsConfig.getInt("Number Of Drop Locations");
-		if (DropParty.dropParty.numDropLocs > 0) {
+		if (DropParty.dropParty.dropLocations.size() > 0) {
 
-			for (int x = 1; x <= DropParty.dropParty.numDropLocs; x++) {
+			for (int x = 1; x <= DropParty.dropParty.dropLocations.size(); x++) {
 
 				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
 				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
@@ -284,10 +283,7 @@ public class Main extends JavaPlugin {
 				String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 
 				Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
-				DropParty.dropParty.dropLocations.put(x, loc);
-
-
-
+				DropParty.dropParty.dropLocations.add(loc);
 			}
 		}
 	}
@@ -345,21 +341,21 @@ public class Main extends JavaPlugin {
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.addTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GRAY + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("remove")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.subtractTokens(online, tier, amount);
-					online.sendMessage(prefix + " " + ChatColor.GREEN + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					online.sendMessage(prefix + ChatColor.GREEN + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("set")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.setTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GREEN + " Tier " + tier + ChatColor.GRAY + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + " " + ChatColor.GREEN + online.getDisplayName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
 					return true;
 				} else {
 					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drop help" + ChatColor.GRAY + " To View Available Commands");
