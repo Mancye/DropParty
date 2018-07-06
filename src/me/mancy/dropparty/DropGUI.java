@@ -52,7 +52,6 @@ public class DropGUI implements Listener, Runnable {
 		tierFourCost = plugin.tokensConfig.getInt("tierFourCost");
 
 		dropGUI = Bukkit.createInventory(null, 27, ChatColor.RED + "Drop Menu");
-		System.out.println("TIER ONE COST" + tierOneCost);
 		ItemStack tierOne = new ItemStack(Material.COAL_ORE);
 		ItemMeta tierOneMeta = tierOne.getItemMeta();
 		List<String> tierOneLore = new ArrayList<String>();
@@ -461,7 +460,7 @@ public class DropGUI implements Listener, Runnable {
 	                    return;
 	                }
 	            	 if(time % 5 == 0 && time <= 20) {
-	                     Bukkit.broadcastMessage(prefix + ChatColor.GRAY + " Time Until Drop Party " + ChatColor.DARK_GRAY + ": " + ChatColor.RED + time + " Seconds!");
+	                     Bukkit.broadcastMessage(prefix + ChatColor.GRAY + " Time Until Drop Party" + ChatColor.DARK_GRAY + ": " + ChatColor.RED + time + " Seconds!");
 	                 }
 	            	
 	            	 

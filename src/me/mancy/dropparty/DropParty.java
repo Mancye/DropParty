@@ -15,7 +15,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class DropParty implements Listener {
 
@@ -130,7 +132,7 @@ public class DropParty implements Listener {
 
      */
     private List<ItemStack> itemsToDrop = new ArrayList<>();
-    int currentDropIndex = 1;
+    int currentDropIndex = 0;
 
     private void dropParty(int tier) {
 
@@ -138,7 +140,9 @@ public class DropParty implements Listener {
         int amtDropLocs = Math.round(dropLocations.size() / 2f);
 
         for (int x = 1; x <= amtDropLocs; x++) {
-            Firework f = dropLocations.get(x).getWorld().spawn(dropLocations.get(x - 1), Firework.class);
+            Location launchLoc = dropLocations.get(x - 1);
+            launchLoc.setY(launchLoc.getWorld().getHighestBlockYAt(launchLoc));
+            Firework f = launchLoc.getWorld().spawn(launchLoc, Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
                     .flicker(false)
@@ -164,9 +168,11 @@ public class DropParty implements Listener {
         int amtEpicItems = (int) (epicPercentage * amtToDrop);
         int amtLegendaryItems = (int) (legendaryPercentage * amtToDrop);
         Random random = new Random();
-        int randOrder = 1 + random.nextInt() * 6;
+        int randOrder = random.nextInt(6) + 1;
         switch (randOrder) {
             case 1: {
+
+
                 generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
                 generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
                 generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
@@ -175,6 +181,8 @@ public class DropParty implements Listener {
                 break;
             }
             case 2: {
+
+
                 generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
                 generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
                 generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
@@ -183,6 +191,8 @@ public class DropParty implements Listener {
                 break;
             }
             case 3: {
+
+
                 generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
                 generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
                 generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
@@ -191,6 +201,7 @@ public class DropParty implements Listener {
                 break;
             }
             case 4: {
+
                 generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
                 generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
                 generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
@@ -199,6 +210,8 @@ public class DropParty implements Listener {
                 break;
             }
             case 5: {
+
+
                 generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
                 generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
                 generateItemLists(amtUncommonItems, DropItems.dropItems.uncommonItems);
@@ -207,6 +220,8 @@ public class DropParty implements Listener {
                 break;
             }
             case 6: {
+
+
                 generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
                 generateItemLists(amtCommonItems, DropItems.dropItems.commonItems);
                 generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
@@ -220,6 +235,7 @@ public class DropParty implements Listener {
                 generateItemLists(amtRareItems, DropItems.dropItems.rareItems);
                 generateItemLists(amtEpicItems, DropItems.dropItems.epicItems);
                 generateItemLists(amtLegendaryItems, DropItems.dropItems.legendaryItems);
+                break;
             }
 
         }
@@ -228,6 +244,7 @@ public class DropParty implements Listener {
         for (int x = 0; x < itemsToDrop.size(); x++) {
             final ItemStack i = itemsToDrop.get(x);
             i.setAmount(1);
+
             bukkitScheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
                 public void run() {
@@ -235,18 +252,23 @@ public class DropParty implements Listener {
                     float red;
                     float green;
                     float blue;
-
-                    if (currentDropIndex <= amtDropLocs) {
-                        locToDrop = dropLocations.get(currentDropIndex);
-                        currentDropIndex++;
+                    if (amtDropLocs == 1 || dropLocations.size() == 1) {
+                        locToDrop = dropLocations.get(0);
                     } else {
-                        currentDropIndex = 1;
-                        locToDrop = dropLocations.get(currentDropIndex);
+                        if (currentDropIndex <= amtDropLocs) {
+                            locToDrop = dropLocations.get(currentDropIndex);
+                            currentDropIndex++;
+                        } else {
+                            currentDropIndex = 0;
+                            locToDrop = dropLocations.get(currentDropIndex);
+                        }
                     }
-                    double offsetX = (-radiusToDrop) * random.nextDouble() * radiusToDrop;
-                    double offsetZ = (-radiusToDrop) * random.nextDouble() * radiusToDrop;
+
+                    // rangeMin + (rangeMax - rangeMin) * r.nextDouble();
+                    double offsetX = -radiusToDrop + (radiusToDrop + radiusToDrop) * random.nextDouble();
+                    double offsetZ = -radiusToDrop + (radiusToDrop + radiusToDrop) * random.nextDouble();
                     Location offsetLoc = new Location(locToDrop.getWorld(), locToDrop.getX() + offsetX, locToDrop.getY() + heightToDrop, locToDrop.getZ() + offsetZ);
-                    Location fireWorkLoc = new Location(offsetLoc.getWorld(), offsetLoc.getX(), locToDrop.getY(), offsetLoc.getZ());
+                    Location fireWorkLoc = new Location(offsetLoc.getWorld(), offsetLoc.getX(), locToDrop.getWorld().getHighestBlockYAt(locToDrop), offsetLoc.getZ());
 
                     Firework f = fireWorkLoc.getWorld().spawn(fireWorkLoc, Firework.class);
 
@@ -261,8 +283,6 @@ public class DropParty implements Listener {
                             .build());
                     fm.setPower(3);
                     f.setFireworkMeta(fm);
-
-
 
 
                     if (DropItems.dropItems.commonItems.contains(i)) {

@@ -52,6 +52,8 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		saveTokens();
+		dropLocsConfig.set("Amount Drops", DropParty.dropParty.dropLocations.size());
+		saveCustomYml(dropLocsConfig, dropLocsFile);
 		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[alphaDROPS] Plugin Disabled Successfully");
 	}
 
@@ -273,18 +275,20 @@ public class Main extends JavaPlugin {
 	}
 
 	private void loadLocations() {
+			int amtDropLocs = dropLocsConfig.getInt("Amount Drops");
+			if (amtDropLocs > 0) {
 
-			for (int x = 0; x <= DropParty.dropParty.dropLocations.size(); x++) {
+				for (int x = 1; x <= amtDropLocs; x++) {
 
-				double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
-				double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
-				double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Z");
-				String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
+					double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
+					double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
+					double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Z");
+					String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 
-				Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
-				DropParty.dropParty.dropLocations.add(loc);
+					Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
+					DropParty.dropParty.dropLocations.add(loc);
+				}
 			}
-
 	}
 
 	private void loadDropModifiers() {

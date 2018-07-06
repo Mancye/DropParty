@@ -1,6 +1,11 @@
 package me.mancy.dropparty;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -63,7 +68,7 @@ public class DropCommand implements CommandExecutor {
 								switch (tier) {
 									case 1: {
 										DropGUI.tierOneCost = cost;
-										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 1" + ChatColor.GRAY + " Cost To " + DropGUI.tierOneCost + " Tokens");
+										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 1" + ChatColor.GRAY + " Cost To " + cost + " Tokens");
 										plugin.tokensConfig.set("tierOneCost", cost);
 										plugin.saveCustomYml(plugin.tokensConfig, plugin.tokensFile);
 										DropGUI.fillDropGUI();
@@ -71,7 +76,7 @@ public class DropCommand implements CommandExecutor {
 									}
 									case 2: {
 										DropGUI.tierTwoCost = cost;
-										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 2" + ChatColor.GRAY + " Cost To " + DropGUI.tierOneCost + " Tokens");
+										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 2" + ChatColor.GRAY + " Cost To " + cost + " Tokens");
 										plugin.tokensConfig.set("tierTwoCost", cost);
 										plugin.saveCustomYml(plugin.tokensConfig, plugin.tokensFile);
 										DropGUI.fillDropGUI();
@@ -79,7 +84,7 @@ public class DropCommand implements CommandExecutor {
 									}
 									case 3: {
 										DropGUI.tierThreeCost = cost;
-										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 3" + ChatColor.GRAY + " Cost To " + DropGUI.tierOneCost + " Tokens");
+										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 3" + ChatColor.GRAY + " Cost To " + cost + " Tokens");
 										plugin.tokensConfig.set("tierThreeCost", cost);
 										plugin.saveCustomYml(plugin.tokensConfig, plugin.tokensFile);
 										DropGUI.fillDropGUI();
@@ -87,7 +92,7 @@ public class DropCommand implements CommandExecutor {
 									}
 									case 4: {
 										DropGUI.tierFourCost = cost;
-										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 4" + ChatColor.GRAY + " Cost To " + DropGUI.tierOneCost + " Tokens");
+										p.sendMessage(prefix + ChatColor.GRAY + " Set " + ChatColor.GREEN + "Tier 4" + ChatColor.GRAY + " Cost To " + cost + " Tokens");
 										plugin.tokensConfig.set("tierFourCost", cost);
 										plugin.saveCustomYml(plugin.tokensConfig, plugin.tokensFile);
 										DropGUI.fillDropGUI();
@@ -138,10 +143,10 @@ public class DropCommand implements CommandExecutor {
 						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops edititems" + ChatColor.GRAY + " To edit drop item lists");
 					}
 					if (p.hasPermission("dropparty.editheight") || p.hasPermission("dropparty.*")) {
-						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops editheight" + ChatColor.GRAY + " To edit drop height");
+						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops editheight (height in blocks)" + ChatColor.GRAY + " To edit drop height");
 					}
 					if (p.hasPermission("dropparty.editradius") || p.hasPermission("dropparty.*")) {
-						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops editradius" + ChatColor.GRAY + " To edit drop radius");
+						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops editradius (radius in blocks)" + ChatColor.GRAY + " To edit drop radius");
 					}
 					if (p.hasPermission("dropparty.editlocation") || p.hasPermission("dropparty.*")) {
 						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops loc remove (index)" + ChatColor.GRAY + " To remove a selected drop location");
@@ -165,7 +170,12 @@ public class DropCommand implements CommandExecutor {
 				} else if (args[0].equalsIgnoreCase("list")) {
 					if (p.hasPermission("dropparty.listlocations") || p.hasPermission("dropparty.*")) {
 						for (int x = 0; x < DropParty.dropParty.dropLocations.size(); x++) {
-							p.sendMessage(prefix + ChatColor.GRAY + " Location #" + (x + 1));
+							TextComponent message = new TextComponent( prefix + ChatColor.GRAY +  " Location #" + (x + 1));
+							Location loc = DropParty.dropParty.dropLocations.get(x);
+							loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+							message.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/tp " + p.getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ()));
+							message.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click To Go To Location #" + (x + 1)).color(net.md_5.bungee.api.ChatColor.RED).create() ) );
+							p.spigot().sendMessage(message);
 						}
 						return true;
 					} else {
