@@ -32,7 +32,7 @@ public class DropCommand implements CommandExecutor {
 				if (p.hasPermission("dropparty.drop") || p.hasPermission("dropparty.*")) {
 					DropGUI.fillDropGUI();
 					DropGUI.dropgui.updateDisplayWithTokens(p);
-					p.openInventory(DropGUI.dropgui.dropGUI);
+					p.openInventory(DropGUI.dropGUI);
 					return true;
 				} else {
 					p.sendMessage(prefix + ChatColor.GRAY + " Sorry, you don't have permission to do this!");
@@ -41,7 +41,10 @@ public class DropCommand implements CommandExecutor {
 			} else if (args.length == 3) {
 				if (args[0].equalsIgnoreCase("loc") || args[0].equalsIgnoreCase("location")) {
 					if (p.hasPermission("dropparty.editlocation") || p.hasPermission("dropparty.*")) {
-
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 						 if (args[1].equalsIgnoreCase("remove")) {
 							if (Integer.parseInt(args[2]) >= 1) {
 								int selectedIndex = Integer.parseInt(args[2]);
@@ -49,7 +52,7 @@ public class DropCommand implements CommandExecutor {
 									p.sendMessage(prefix + ChatColor.RED + " Location #" + selectedIndex + " doesn't exist");
 									return false;
 								}
-								if (DropParty.dropParty.dropLocations.get(selectedIndex - 1) != null) {
+								if (DropParty.dropLocations.size() >= selectedIndex) {
 									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", null);
 									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", null);
@@ -58,7 +61,10 @@ public class DropCommand implements CommandExecutor {
 									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " World", null);
 									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-									DropParty.dropParty.dropLocations.remove(selectedIndex - 1);
+									DropParty.dropLocations.remove(selectedIndex - 1);
+									if (DropParty.validDropLocations.size() >= selectedIndex) {
+										DropParty.validDropLocations.remove(selectedIndex - 1);
+									}
 									p.sendMessage(prefix + ChatColor.GREEN + " Successfully Removed Drop Location #" + selectedIndex);
 								} else {
 									p.sendMessage(prefix + ChatColor.RED + " Selected Location Does Not Exist!");
@@ -123,7 +129,7 @@ public class DropCommand implements CommandExecutor {
 								return false;
 							}
 						} else {
-							p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drops help" + ChatColor.GRAY + " To View Available Commands");
+							p.sendMessage(prefix + ChatColor.RED + " Invalid Tier, Select 1 - 4");
 							return false;
 						}
 					} else {
@@ -134,6 +140,10 @@ public class DropCommand implements CommandExecutor {
 			} else if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("edititems")) {
 					if (p.hasPermission("dropparty.edititems") || p.hasPermission("dropparty.*")) {
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 						p.openInventory(DropItems.dropItems.openCategoriesMenu());
 						return true;
 					} else {
@@ -142,6 +152,10 @@ public class DropCommand implements CommandExecutor {
 					}
 				} else if (args[0].equalsIgnoreCase("editchances")) {
 				    if (p.hasPermission("dropparty.editchances") || p.hasPermission("dropparty.*")) {
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 				        p.openInventory(DropGUI.dropgui.getDropChancesMenu());
 				        return true;
                     }
@@ -215,6 +229,10 @@ public class DropCommand implements CommandExecutor {
 			} else if (args.length == 2) {
 				if (args[0].equalsIgnoreCase("editheight")) {
 					if (p.hasPermission("dropparty.editheight") || p.hasPermission("dropparty.*")){
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 						if (Double.parseDouble(args[1]) >= 0) {
 							Double height = Double.parseDouble(args[1]);
 							DropParty.dropParty.heightToDrop = height;
@@ -232,6 +250,10 @@ public class DropCommand implements CommandExecutor {
 					}
 				} else if (args[0].equalsIgnoreCase("editradius")) {
 					if (p.hasPermission("dropparty.editradius") || p.hasPermission("dropparty.*")){
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 						if (Double.parseDouble(args[1]) >= 0) {
 							Double radius = Double.parseDouble(args[1]);
 							DropParty.dropParty.radiusToDrop = radius;
@@ -249,6 +271,10 @@ public class DropCommand implements CommandExecutor {
 					}
 				} else if (args[0].equalsIgnoreCase("setcountdown")) {
 					if (p.hasPermission("dropparty.setcountdown") || p.hasPermission("dropparty.*")) {
+						if (DropParty.dropParty.isActiveDropParty) {
+							p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+							return false;
+						}
 						if (Integer.parseInt(args[1]) >= 0) {
 							DropGUI.countdownTime = Integer.parseInt(args[1]);
 							plugin.dropLocsConfig.set("countdowntime", DropGUI.dropgui.countdownTime);
@@ -265,17 +291,24 @@ public class DropCommand implements CommandExecutor {
 				} else if (args[0].equalsIgnoreCase("loc")) {
 					if (args[1].equalsIgnoreCase("add")) {
 						if (p.hasPermission("dropparty.editlocation") || p.hasPermission("dropparty.*")) {
+							if (DropParty.dropParty.isActiveDropParty) {
+								p.sendMessage(prefix + ChatColor.RED + " Please wait until the current drop party has finished before editing");
+								return false;
+							}
 							if (p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.BEACON) {
+								if (DropParty.dropLocations.contains(p.getLocation())) {
+									p.sendMessage(prefix + ChatColor.RED + " A drop location is already set here!");
+								}
 								DropParty.dropLocations.add(p.getLocation());
-								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " X", p.getLocation().getX());
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropLocations.size() + " X", p.getLocation().getX());
 								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Y", p.getLocation().getY());
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropLocations.size() + " Y", p.getLocation().getY());
 								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Z", p.getLocation().getZ());
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropLocations.size() + " Z", p.getLocation().getZ());
 								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " World", p.getWorld().getName());
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropLocations.size() + " World", p.getWorld().getName());
 								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-								p.sendMessage(prefix + ChatColor.GREEN + " Drop Location #" + DropParty.dropParty.dropLocations.size() + " Set At Current Location!");
+								p.sendMessage(prefix + ChatColor.GREEN + " Drop Location #" + DropParty.dropLocations.size() + " Set At Current Location!");
 								p.sendMessage(prefix + ChatColor.RED + " Before this location can be used you MUST place a block on top of the beacon!");
 								return true;
 							} else {

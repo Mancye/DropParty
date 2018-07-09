@@ -471,7 +471,7 @@ public class DropGUI implements Listener, Runnable {
             public void run() {
                 if (time == 0) {
                     Bukkit.broadcastMessage("          --DROP PARTY--          ");
-                    Bukkit.broadcastMessage(ChatColor.GREEN + "DROP PARTY HAS BEGUN! Look for activated beacons!");
+                    Bukkit.broadcastMessage(ChatColor.GREEN + "DROP PARTY HAS BEGUN! Look for activated totems!");
                     Bukkit.broadcastMessage("                                   ");
                     DropParty.dropParty.startDropParty(dropTier);
                     stopTimer();
@@ -501,13 +501,22 @@ public class DropGUI implements Listener, Runnable {
                 Player p = (Player) event.getWhoClicked();
                 int slot = event.getSlot();
                 event.setCancelled(true);
+                if (DropParty.validDropLocations.size() == 0) {
+                    p.sendMessage(prefix + ChatColor.RED + " No valid drop locations set");
+                    return;
+                }
+                if (DropItems.dropItems.commonItems.getContents().length == 0
+                        && DropItems.dropItems.uncommonItems.getContents().length == 0
+                        &&DropItems.dropItems.rareItems.getContents().length == 0
+                        && DropItems.dropItems.epicItems.getContents().length == 0
+                        && DropItems.dropItems.legendaryItems.getContents().length == 0 ) {
+                    p.sendMessage(prefix + ChatColor.RED + " No items to drop");
+                    return;
+                }
                 switch (slot) {
 
                     case 10:
-                        if (DropParty.validDropLocations.size() == 0) {
-                            p.sendMessage(prefix + ChatColor.RED + " No valid drop locations set");
-                            break;
-                        }
+
                         if (!isActiveDropParty) {
                             if (TokenManager.getTokens(p, 1) >= tierOneCost) {
                                 TokenManager.subtractTokens(p, 1, tierOneCost);
@@ -530,10 +539,6 @@ public class DropGUI implements Listener, Runnable {
                         }
                         break;
                     case 12:
-                        if (DropParty.validDropLocations.size() == 0) {
-                            p.sendMessage(prefix + ChatColor.RED + " No valid drop locations set");
-                            break;
-                        }
                         if (!isActiveDropParty) {
                             if (TokenManager.getTokens(p, 2) >= tierTwoCost) {
                                 TokenManager.subtractTokens(p, 2, tierTwoCost);
@@ -556,10 +561,6 @@ public class DropGUI implements Listener, Runnable {
                         }
                         break;
                     case 14:
-                        if (DropParty.validDropLocations.size() == 0) {
-                            p.sendMessage(prefix + ChatColor.RED + " No valid drop locations set");
-                            break;
-                        }
                         if (!isActiveDropParty) {
                             if (TokenManager.getTokens(p, 3) >= tierThreeCost) {
                                 TokenManager.subtractTokens(p, 3, tierThreeCost);
@@ -582,10 +583,6 @@ public class DropGUI implements Listener, Runnable {
                         }
                         break;
                     case 16: {
-                        if (DropParty.validDropLocations.size() == 0) {
-                            p.sendMessage(prefix + ChatColor.RED + " No valid drop locations set");
-                            break;
-                        }
                         if (!isActiveDropParty) {
                             if (TokenManager.getTokens(p, 4) >= tierFourCost) {
                                 TokenManager.subtractTokens(p, 4, tierFourCost);

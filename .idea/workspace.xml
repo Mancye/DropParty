@@ -10,13 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e809a564-1b96-4424-889d-fc1b66f82199" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/plugin.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropItems.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/me/mancy/dropparty/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/me/mancy/dropparty/Main.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -34,8 +30,8 @@
       <file leaf-file-name="DropCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="52" column="52" selection-start-line="52" selection-start-column="52" selection-end-line="52" selection-end-column="52" />
+            <state relative-caret-position="477">
+              <caret line="36" column="24" lean-forward="true" selection-start-line="36" selection-start-column="24" selection-end-line="36" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -43,11 +39,20 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="CommandSender.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/Desktop/spigot-1.12.2.jar!/org/bukkit/command/CommandSender.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="DropParty.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="438">
-              <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
+            <state relative-caret-position="470">
+              <caret line="100" column="69" lean-forward="true" selection-start-line="100" selection-start-column="69" selection-end-line="101" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -100,27 +105,17 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TokenManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/TokenManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1054">
-              <caret line="76" column="22" selection-start-line="76" selection-start-column="22" selection-end-line="76" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
-              <caret line="287" selection-start-line="287" selection-end-line="287" />
+            <state relative-caret-position="986">
+              <caret line="279" column="22" selection-start-line="279" selection-start-column="22" selection-end-line="279" selection-end-column="22" />
               <folding>
                 <element signature="method#loadDropChanceLists#0;class#Main#0" />
                 <element signature="method#loadCostsAndTime#0;class#Main#0" />
                 <element signature="method#loadItemLists#0;class#Main#0" />
                 <element signature="method#saveTokens#0;class#Main#0" />
                 <element signature="method#loadTokens#0;class#Main#0" />
-                <element signature="method#loadDropModifiers#0;class#Main#0" />
                 <element signature="method#saveCustomYml#0;class#Main#0" />
               </folding>
             </state>
@@ -130,8 +125,8 @@
       <file leaf-file-name="DropGUI.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1360">
-              <caret line="93" selection-start-line="93" selection-end-line="93" />
+            <state relative-caret-position="1283">
+              <caret line="472" column="82" lean-forward="true" selection-start-line="472" selection-start-column="82" selection-end-line="472" selection-end-column="82" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#DropGUI#0;class#DropGUI#0" />
@@ -194,17 +189,17 @@
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropItems.java" />
         <option value="$PROJECT_DIR$/plugin.yml" />
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/Main.java" />
-        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" />
-        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java" />
         <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java" />
+        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java" />
+        <option value="$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="43" />
-    <option name="y" value="130" />
-    <option name="width" value="1661" />
-    <option name="height" value="1047" />
+    <option name="x" value="128" />
+    <option name="y" value="31" />
+    <option name="width" value="1260" />
+    <option name="height" value="1008" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -330,7 +325,7 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.4993895" weight="0.24183007" />
+      <window_info anchor="bottom" id="Messages" order="10" sideWeight="0.4993895" weight="0.2551724" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -341,7 +336,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="7" />
       <window_info id="Designer" order="4" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10729167" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10729167" />
       <window_info id="Learn" order="2" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -395,7 +390,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/Downloads/spigot-1.12.2.jar!/org/bukkit/command/CommandExecutor.class" />
     <entry file="file://$PROJECT_DIR$/plugin.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -710,24 +704,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1122">
-          <caret line="287" selection-start-line="287" selection-end-line="287" />
+        <state relative-caret-position="986">
+          <caret line="279" column="22" selection-start-line="279" selection-start-column="22" selection-end-line="279" selection-end-column="22" />
           <folding>
             <element signature="method#loadDropChanceLists#0;class#Main#0" />
             <element signature="method#loadCostsAndTime#0;class#Main#0" />
             <element signature="method#loadItemLists#0;class#Main#0" />
             <element signature="method#saveTokens#0;class#Main#0" />
             <element signature="method#loadTokens#0;class#Main#0" />
-            <element signature="method#loadDropModifiers#0;class#Main#0" />
             <element signature="method#saveCustomYml#0;class#Main#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Desktop/spigot-1.12.2.jar!/org/bukkit/command/CommandSender.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="36" column="24" lean-forward="true" selection-start-line="36" selection-start-column="24" selection-end-line="36" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1360">
-          <caret line="93" selection-start-line="93" selection-end-line="93" />
+        <state relative-caret-position="1283">
+          <caret line="472" column="82" lean-forward="true" selection-start-line="472" selection-start-column="82" selection-end-line="472" selection-end-column="82" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#DropGUI#0;class#DropGUI#0" />
@@ -742,20 +752,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="52" column="52" selection-start-line="52" selection-start-column="52" selection-end-line="52" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/me/mancy/dropparty/DropParty.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="438">
-          <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
+        <state relative-caret-position="470">
+          <caret line="100" column="69" lean-forward="true" selection-start-line="100" selection-start-column="69" selection-end-line="101" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

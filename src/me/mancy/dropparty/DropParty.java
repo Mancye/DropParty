@@ -59,16 +59,18 @@ public class DropParty implements Listener {
             int y = 0;
 
             while (loc.getWorld().getBlockAt(loc.add(0, y, 0)).getType() != Material.AIR) {
-                if (!loc.getWorld().getBlockAt(loc).getType().equals(Material.AIR) && !(loc.getWorld().getBlockAt(loc).getType().equals(Material.STAINED_GLASS)))  {
-                    validDropLocations.add(loc);
+
+                if (!(loc.getWorld().getBlockAt(loc).getType().equals(Material.STAINED_GLASS)))  {
+                    validDropLocations.add(loc.add(0, y, 0));
                     break;
                 }
+
                 if (!loc.getWorld().getBlockAt(loc.add(0, y, 0)).getType().equals(Material.STAINED_GLASS)) {
-                    loc.setY(loc.getWorld().getHighestBlockYAt(loc));
-                    validDropLocations.add(loc);
+                    validDropLocations.add(loc.add(0, y, 0));
                 } else {
                     y++;
                 }
+
             }
         }
 
@@ -98,7 +100,7 @@ public class DropParty implements Listener {
         if (event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*")) {
             if (event.getBlock().getType().equals(Material.BEACON)) {
 
-                for (Location loc : dropLocations) {
+                for (Location loc : validDropLocations) {
                     if (event.getBlock().getX() == loc.getBlockX() && event.getBlock().getZ() == loc.getBlockZ()) {
                         event.setCancelled(true);
                         event.getPlayer().sendMessage(prefix + ChatColor.RED + " You must remove the drop location before destroying the beacon");
@@ -106,10 +108,10 @@ public class DropParty implements Listener {
                 }
 
             } else if (!event.getBlock().getType().equals(Material.STAINED_GLASS)){
-                for (Location loc : dropLocations) {
+                for (Location loc : validDropLocations) {
                     if (loc.getBlockZ() == event.getBlock().getZ() && loc.getBlockX() == event.getBlock().getX()) {
-                        if (validDropLocations.contains(loc)) {
-                            validDropLocations.remove(loc);
+                        if (validDropLocations.contains(event.getBlock().getLocation())) {
+                            validDropLocations.remove(event.getBlock().getLocation());
                             if (capBlocks.containsKey(event.getBlock().getLocation()))
                             capBlocks.remove(event.getBlock().getLocation());
                             event.getPlayer().sendMessage(prefix + ChatColor.RED + " Location unvalidated, you must place a block above the beacon");
@@ -206,8 +208,7 @@ public class DropParty implements Listener {
         }
 
         for (int x = 1; x <= amtDropLocs; x++) {
-            Location launchLoc = validDropLocations.get(x - 1);
-            launchLoc.setY(launchLoc.getWorld().getHighestBlockYAt(launchLoc) + 1);
+            Location launchLoc = validDropLocations.get(x - 1).add(0, 1, 0);
             Firework f = launchLoc.getWorld().spawn(launchLoc, Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
