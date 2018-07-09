@@ -2,27 +2,27 @@ package me.mancy.dropparty;
 
 import net.minecraft.server.v1_12_R1.EnumParticle;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class DropParty implements Listener {
 
     public static DropParty dropParty;
-    public List<Location> dropLocations = new ArrayList<>();
+    public static List<Location> dropLocations = new ArrayList<>();
+    public static List<Location> validDropLocations = new ArrayList<>();
     public boolean isActiveDropParty;
 
     public List<Double> commonChances;
@@ -30,6 +30,9 @@ public class DropParty implements Listener {
     public List<Double> rareChances;
     public List<Double> epicChances;
     public List<Double> legendaryChances;
+
+    private Map<Location, Block> capBlocks = new HashMap<>();
+
 
     public double heightToDrop = 1.0;
     public double radiusToDrop = 1.0;
@@ -48,6 +51,75 @@ public class DropParty implements Listener {
         epicChances = new ArrayList<>();
         legendaryChances = new ArrayList<>();
 
+    }
+    public static void validateDropLocations() {
+        if (dropLocations.size() == 0) return;
+
+        for (Location loc : dropLocations) {
+            int y = 0;
+
+            while (loc.getWorld().getBlockAt(loc.add(0, y, 0)).getType() != Material.AIR) {
+                if (!loc.getWorld().getBlockAt(loc).getType().equals(Material.AIR) && !(loc.getWorld().getBlockAt(loc).getType().equals(Material.STAINED_GLASS)))  {
+                    validDropLocations.add(loc);
+                    break;
+                }
+                if (!loc.getWorld().getBlockAt(loc.add(0, y, 0)).getType().equals(Material.STAINED_GLASS)) {
+                    loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+                    validDropLocations.add(loc);
+                } else {
+                    y++;
+                }
+            }
+        }
+
+    }
+    String prefix = ChatColor.DARK_GRAY + "[" + ChatColor.WHITE + ChatColor.BOLD.toString() + "P" + ChatColor.RED + ChatColor.BOLD.toString() + "A" + ChatColor.DARK_GRAY + ":" + ChatColor.GRAY + "Events" + ChatColor.DARK_GRAY + "]";
+
+    @EventHandler
+    private void locationValidated(BlockPlaceEvent event) {
+        if (!(event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*"))) return;
+        for (Location loc : dropLocations) {
+            if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
+                if (!(event.getBlock().getType().equals(Material.STAINED_GLASS))) {
+                    if (!(validDropLocations.contains(loc))) {
+                        validDropLocations.add(event.getBlock().getLocation());
+                        capBlocks.put(event.getBlock().getLocation(), event.getBlock());
+                        event.getPlayer().sendMessage(prefix + ChatColor.GREEN + " Drop location successfully validated");
+                    }
+                }
+            }
+        }
+
+
+    }
+    @EventHandler
+    private void locationUnvalidated(BlockBreakEvent event) {
+
+        if (event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*")) {
+            if (event.getBlock().getType().equals(Material.BEACON)) {
+
+                for (Location loc : dropLocations) {
+                    if (event.getBlock().getX() == loc.getBlockX() && event.getBlock().getZ() == loc.getBlockZ()) {
+                        event.setCancelled(true);
+                        event.getPlayer().sendMessage(prefix + ChatColor.RED + " You must remove the drop location before destroying the beacon");
+                    }
+                }
+
+            } else if (!event.getBlock().getType().equals(Material.STAINED_GLASS)){
+                for (Location loc : dropLocations) {
+                    if (loc.getBlockZ() == event.getBlock().getZ() && loc.getBlockX() == event.getBlock().getX()) {
+                        if (validDropLocations.contains(loc)) {
+                            validDropLocations.remove(loc);
+                            if (capBlocks.containsKey(event.getBlock().getLocation()))
+                            capBlocks.remove(event.getBlock().getLocation());
+                            event.getPlayer().sendMessage(prefix + ChatColor.RED + " Location unvalidated, you must place a block above the beacon");
+                        }
+                    }
+                }
+            }
+        } else {
+            return;
+        }
     }
 
     public void modifyChances(List<Double> typeChances, int tier, double amount) {
@@ -115,33 +187,27 @@ public class DropParty implements Listener {
         }
     }
 
-    /*
-    - Calculate total amount of items to drop(Player count / 2)
-    - Retrieve drop chances for each item category for the selected tier drop party, store these in variables
-    - Generate list of itemstacks, itemsToDrop
-    - Get amount of items for item category(In this case, common) (In this case, 6 common items, 1 uncommon, 1 rare, 1 epic, 1 legendary)
-    - Loop through item list(common) contents X(6) by generating a new random number between 1 and inv size and checking if the slot is empty or not, if not then add it to a list of just that category of item
-    - Repeat this for each item category to take a random item from the item list at the specified quantity
-    - Loop through each item category list and add each one to the itemsToDrop list to generate the final list of all the items that need to be dropped
-    - Loop through each element of itemsToDrop
-    - Increment a simple counter starting at 0
-    - Set location to drop = dropLocations.get(counter)
-    - Drop item at location to drop
-    - Check if the counter is greater than dropLocations.size(), if so then reset to 0 to cycle again through locations
-    - 1 second delay after each iteration of the loop
-
-     */
     private List<ItemStack> itemsToDrop = new ArrayList<>();
-    int currentDropIndex = 0;
-
+    private int currentDropIndex = 0;
+    int amtDropLocs = 0;
+    int itemsDropped = 0;
     private void dropParty(int tier) {
 
-        int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 10.5f);
-        int amtDropLocs = Math.round(dropLocations.size() / 2f);
+        int amtToDrop = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) * 5f);
+        amtDropLocs = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) / 2f);
+        if (amtDropLocs > validDropLocations.size()) amtDropLocs = validDropLocations.size();
+        for (Location loc : validDropLocations) {
+            Block highest = loc.getWorld().getBlockAt(loc.getWorld().getHighestBlockAt(loc).getLocation().subtract(0, 1, 0));
+            capBlocks.put(highest.getLocation(), highest);
+        }
+
+        for (Location loc : capBlocks.keySet()) {
+            capBlocks.get(loc).setType(Material.AIR);
+        }
 
         for (int x = 1; x <= amtDropLocs; x++) {
-            Location launchLoc = dropLocations.get(x - 1);
-            launchLoc.setY(launchLoc.getWorld().getHighestBlockYAt(launchLoc));
+            Location launchLoc = validDropLocations.get(x - 1);
+            launchLoc.setY(launchLoc.getWorld().getHighestBlockYAt(launchLoc) + 1);
             Firework f = launchLoc.getWorld().spawn(launchLoc, Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
@@ -167,6 +233,7 @@ public class DropParty implements Listener {
         int amtRareItems = (int) (rarePercentage * amtToDrop);
         int amtEpicItems = (int) (epicPercentage * amtToDrop);
         int amtLegendaryItems = (int) (legendaryPercentage * amtToDrop);
+
         Random random = new Random();
         int randOrder = random.nextInt(6) + 1;
         switch (randOrder) {
@@ -248,30 +315,29 @@ public class DropParty implements Listener {
             bukkitScheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
                 @Override
                 public void run() {
+
                     Random random = new Random();
                     float red;
                     float green;
                     float blue;
-                    if (amtDropLocs == 1 || dropLocations.size() == 1) {
-                        locToDrop = dropLocations.get(0);
+                    if (amtDropLocs == 1 || validDropLocations.size() == 1) {
+                        locToDrop = validDropLocations.get(0);
                     } else {
-                        if (currentDropIndex <= amtDropLocs) {
-                            locToDrop = dropLocations.get(currentDropIndex);
+                        if (currentDropIndex < amtDropLocs) {
+
+                            locToDrop = validDropLocations.get(currentDropIndex);
                             currentDropIndex++;
                         } else {
                             currentDropIndex = 0;
-                            locToDrop = dropLocations.get(currentDropIndex);
+                            locToDrop = validDropLocations.get(currentDropIndex);
                         }
                     }
 
-                    // rangeMin + (rangeMax - rangeMin) * r.nextDouble();
                     double offsetX = -radiusToDrop + (radiusToDrop + radiusToDrop) * random.nextDouble();
                     double offsetZ = -radiusToDrop + (radiusToDrop + radiusToDrop) * random.nextDouble();
-                    Location offsetLoc = new Location(locToDrop.getWorld(), locToDrop.getX() + offsetX, locToDrop.getY() + heightToDrop, locToDrop.getZ() + offsetZ);
-                    Location fireWorkLoc = new Location(offsetLoc.getWorld(), offsetLoc.getX(), locToDrop.getWorld().getHighestBlockYAt(locToDrop), offsetLoc.getZ());
+                    Location offsetLoc = new Location(locToDrop.getWorld(), locToDrop.getX() + offsetX, (locToDrop.getWorld().getHighestBlockYAt(locToDrop) + 1) + heightToDrop, locToDrop.getZ() + offsetZ);
 
-                    Firework f = fireWorkLoc.getWorld().spawn(fireWorkLoc, Firework.class);
-
+                    Firework f = offsetLoc.getWorld().spawn(offsetLoc, Firework.class);
                     FireworkMeta fm = f.getFireworkMeta();
                     fm.addEffect(FireworkEffect.builder()
                             .flicker(false)
@@ -319,20 +385,28 @@ public class DropParty implements Listener {
                             float randX = 0.1f + random.nextFloat() * (1);
                             float randY = 0.4f + random.nextFloat() * (1);
                             float randZ = 0.1f + random.nextFloat() * (1);
-                            particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) fireWorkLoc.getX() + randX, (float) fireWorkLoc.getY() + randY, (float) fireWorkLoc.getZ() + randZ, red, green, blue, 255, 0, 10);
+                            particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) offsetLoc.getX() + randX, (float) offsetLoc.getY() + randY, (float) offsetLoc.getZ() + randZ, red, green, blue, 255, 0, 10);
                             ((CraftPlayer) online).getHandle().playerConnection.sendPacket(particles);
                         }
                     }
 
 
                     offsetLoc.getWorld().dropItemNaturally(offsetLoc, i);
-
+                    itemsDropped++;
+                    if (itemsDropped == itemsToDrop.size()) {
+                        DropGUI.dropgui.isActiveDropParty = false;
+                        for (Location loc : capBlocks.keySet()) {
+                            loc.getBlock().setType(Material.STEP);
+                        }
+                        Bukkit.getServer().broadcastMessage(prefix + ChatColor.GRAY + " A Drop Party Has Ended!");
+                    }
 
                 }
+
             }, 40L * (x + 1));
+
         }
 
-        DropGUI.dropgui.isActiveDropParty = false;
 
     }
 
@@ -341,8 +415,11 @@ public class DropParty implements Listener {
         for (ItemStack i : itemInv.getContents()) {
             if (itemsAdded < amtToAdd) {
                 if (i != null) {
-                    itemsToDrop.add(i);
-                    itemsAdded++;
+                    if (!(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+
+                        itemsToDrop.add(i);
+                        itemsAdded++;
+                    }
                 }
             } else {
                 break;

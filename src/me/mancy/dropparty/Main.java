@@ -38,21 +38,22 @@ public class Main extends JavaPlugin {
 		new TokenManager(this);
 		new DropItems(this);
 		new DropParty(this);
-		loadTokens();
 		loadLocations();
+		loadTokens();
 		loadItemLists();
 		loadDropChanceLists();
 		loadDropModifiers();
 		loadCostsAndTime();
 		DropGUI.fillDropGUI();
 		DropParty.dropParty.isActiveDropParty = false;
+		DropParty.validateDropLocations();
 		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[alphaDROPS] Plugin Enabled Successfully");
 	}
 
 	@Override
 	public void onDisable() {
 		saveTokens();
-		dropLocsConfig.set("Amount Drops", DropParty.dropParty.dropLocations.size());
+		dropLocsConfig.set("Amount Drops", DropParty.dropLocations.size());
 		saveCustomYml(dropLocsConfig, dropLocsFile);
 		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[alphaDROPS] Plugin Disabled Successfully");
 	}
@@ -286,7 +287,7 @@ public class Main extends JavaPlugin {
 					String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 
 					Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
-					DropParty.dropParty.dropLocations.add(loc);
+					DropParty.dropLocations.add(loc);
 				}
 			}
 	}
@@ -324,7 +325,7 @@ public class Main extends JavaPlugin {
 
 		if (args.length == 0) {
 
-			if (label.equalsIgnoreCase("tokens")) {
+			if (label.equalsIgnoreCase("dtokens")) {
 				p.sendMessage(prefix + ChatColor.RED + " Tier 1 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 1));
 				p.sendMessage(prefix + ChatColor.RED + " Tier 2 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 2));
 				p.sendMessage(prefix + ChatColor.RED + " Tier 3 Tokens: " + ChatColor.GREEN + TokenManager.getTokens(p, 3));
@@ -344,21 +345,21 @@ public class Main extends JavaPlugin {
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.addTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GRAY + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(online, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("remove")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.subtractTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GREEN + " Tier " + tier + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(online, tier));
 					return true;
 				} else if (args[1].equalsIgnoreCase("set")) {
 					int tier = Integer.parseInt(args[2]);
 					int amount = Integer.parseInt(args[3]);
 					TokenManager.setTokens(online, tier, amount);
 					online.sendMessage(prefix + ChatColor.GREEN + " Tier " + tier + ChatColor.GRAY + " Tokens Balance Changed To: " + TokenManager.getTokens(online, tier));
-					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(p, tier));
+					p.sendMessage(prefix + ChatColor.GREEN + " " + online.getName() + ChatColor.GREEN + "'s" + ChatColor.GRAY + " Tier " + tier + " Tokens Changed To: " + TokenManager.getTokens(online, tier));
 					return true;
 				} else {
 					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drops help" + ChatColor.GRAY + " To View Available Commands");

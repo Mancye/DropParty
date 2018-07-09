@@ -6,6 +6,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,7 +45,19 @@ public class DropCommand implements CommandExecutor {
 						 if (args[1].equalsIgnoreCase("remove")) {
 							if (Integer.parseInt(args[2]) >= 1) {
 								int selectedIndex = Integer.parseInt(args[2]);
+								if (DropParty.dropLocations.size() < selectedIndex) {
+									p.sendMessage(prefix + ChatColor.RED + " Location #" + selectedIndex + " doesn't exist");
+									return false;
+								}
 								if (DropParty.dropParty.dropLocations.get(selectedIndex - 1) != null) {
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", null);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", null);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Z", null);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+									plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " World", null);
+									plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
 									DropParty.dropParty.dropLocations.remove(selectedIndex - 1);
 									p.sendMessage(prefix + ChatColor.GREEN + " Successfully Removed Drop Location #" + selectedIndex);
 								} else {
@@ -161,17 +175,28 @@ public class DropCommand implements CommandExecutor {
 					if (p.hasPermission("dropparty.setcost") || p.hasPermission("dropparty.*")) {
 						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops setcost (tier) (amount)" + ChatColor.GRAY + " To set the cost of drop parties");
 					}
-					p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /tokens" + ChatColor.GRAY + " To view your tokens");
+					p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /dtokens" + ChatColor.GRAY + " To view your tokens");
 
 					if (p.hasPermission("dropparty.edittokens") || p.hasPermission("dropparty.*")) {
-						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /tokens (player name) (add/remove/set) (tier) (amount)" + ChatColor.GRAY + " To modify a player's tokens");
+						p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /dtokens (player name) (add/remove/set) (tier) (amount)" + ChatColor.GRAY + " To modify a player's tokens");
 					}
 					return true;
 				} else if (args[0].equalsIgnoreCase("list")) {
 					if (p.hasPermission("dropparty.listlocations") || p.hasPermission("dropparty.*")) {
-						for (int x = 0; x < DropParty.dropParty.dropLocations.size(); x++) {
-							TextComponent message = new TextComponent( prefix + ChatColor.GRAY +  " Location #" + (x + 1));
-							Location loc = DropParty.dropParty.dropLocations.get(x);
+						p.sendMessage(prefix + ChatColor.RED + " Drop Locations");
+						for (int x = 0; x < DropParty.dropLocations.size(); x++) {
+							TextComponent message = new TextComponent( ChatColor.DARK_GRAY + "-" + ChatColor.GRAY +  " Location #" + (x + 1));
+							Location loc = DropParty.dropLocations.get(x);
+							loc.setY(loc.getWorld().getHighestBlockYAt(loc));
+							message.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/tp " + p.getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ()));
+							message.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click To Go To Location #" + (x + 1)).color(net.md_5.bungee.api.ChatColor.RED).create() ) );
+							p.spigot().sendMessage(message);
+						}
+						p.sendMessage(" ");
+						p.sendMessage(prefix + ChatColor.RED + " Valid Drop Locations ");
+						for (int x = 0; x < DropParty.validDropLocations.size(); x++) {
+							TextComponent message = new TextComponent(ChatColor.DARK_GRAY + "-" + ChatColor.GRAY +  " Location #" + (x + 1));
+							Location loc = DropParty.validDropLocations.get(x);
 							loc.setY(loc.getWorld().getHighestBlockYAt(loc));
 							message.setClickEvent( new ClickEvent( ClickEvent.Action.RUN_COMMAND, "/tp " + p.getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ()));
 							message.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( "Click To Go To Location #" + (x + 1)).color(net.md_5.bungee.api.ChatColor.RED).create() ) );
@@ -201,6 +226,9 @@ public class DropCommand implements CommandExecutor {
 							p.sendMessage(prefix + ChatColor.GRAY + " Please Enter A Height Greater Than Or Equal To 0");
 							return false;
 						}
+					} else {
+						p.sendMessage(prefix + ChatColor.GRAY + " Sorry, you don't have permission to do this!");
+						return false;
 					}
 				} else if (args[0].equalsIgnoreCase("editradius")) {
 					if (p.hasPermission("dropparty.editradius") || p.hasPermission("dropparty.*")){
@@ -215,6 +243,9 @@ public class DropCommand implements CommandExecutor {
 							p.sendMessage(prefix + ChatColor.GRAY + " Please Enter A Radius Greater Than Or Equal To 0");
 							return false;
 						}
+					} else {
+						p.sendMessage(prefix + ChatColor.GRAY + " Sorry, you don't have permission to do this!");
+						return false;
 					}
 				} else if (args[0].equalsIgnoreCase("setcountdown")) {
 					if (p.hasPermission("dropparty.setcountdown") || p.hasPermission("dropparty.*")) {
@@ -227,22 +258,34 @@ public class DropCommand implements CommandExecutor {
 							p.sendMessage(prefix + ChatColor.RED + " Countdown must at least 0");
 							return false;
 						}
+					} else {
+						p.sendMessage(prefix + ChatColor.GRAY + " Sorry, you don't have permission to do this!");
+						return false;
 					}
 				} else if (args[0].equalsIgnoreCase("loc")) {
 					if (args[1].equalsIgnoreCase("add")) {
-
-						DropParty.dropParty.dropLocations.add(p.getLocation());
-						plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " X", p.getLocation().getX());
-						plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-						plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Y", p.getLocation().getY());
-						plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-						plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Z", p.getLocation().getZ());
-						plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-						plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " World", p.getWorld().getName());
-						plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-						p.sendMessage(prefix + ChatColor.GREEN + " Drop Location #" + DropParty.dropParty.dropLocations.size() + " Set At Current Location!");
-						return true;
-
+						if (p.hasPermission("dropparty.editlocation") || p.hasPermission("dropparty.*")) {
+							if (p.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.BEACON) {
+								DropParty.dropLocations.add(p.getLocation());
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " X", p.getLocation().getX());
+								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Y", p.getLocation().getY());
+								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " Z", p.getLocation().getZ());
+								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+								plugin.dropLocsConfig.set("Drop Locations." + DropParty.dropParty.dropLocations.size() + " World", p.getWorld().getName());
+								plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+								p.sendMessage(prefix + ChatColor.GREEN + " Drop Location #" + DropParty.dropParty.dropLocations.size() + " Set At Current Location!");
+								p.sendMessage(prefix + ChatColor.RED + " Before this location can be used you MUST place a block on top of the beacon!");
+								return true;
+							} else {
+								p.sendMessage(prefix + ChatColor.RED + " Must be standing on a beacon to set a location!");
+								return false;
+							}
+						} else {
+							p.sendMessage(prefix + ChatColor.GRAY + " Sorry, you don't have permission to do this!");
+							return false;
+						}
 					}
 				} else {
 					p.sendMessage(prefix + ChatColor.GRAY + " Invalid Arguments, Use " + ChatColor.GREEN + "/drops help" + ChatColor.GRAY + " To View Available Commands");
