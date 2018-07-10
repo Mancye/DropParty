@@ -14,8 +14,6 @@ import org.bukkit.entity.Player;
 
 public class Base implements CommandExecutor {
 
-	private String prefix;
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player))
@@ -83,7 +81,7 @@ public class Base implements CommandExecutor {
 						p.openInventory(EditItems.editItems.openCategoriesMenu());
 						return true;
 					} else {
-						p.sendMessage(prefix + ChatColor.RED + " Sorry, you don't have permission to do this!");
+						MessageUtil.sendNoPermissionMessage(p);
 						return true;
 					}
 				} else if (args[0].equalsIgnoreCase("editchances")) {

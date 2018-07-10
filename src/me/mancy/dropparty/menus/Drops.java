@@ -37,10 +37,6 @@ public class Drops implements Listener, Runnable {
 
     public boolean isActiveDropParty = false;
 
-    public Drops() {
-
-    }
-
     public Drops(Main main) {
         this.plugin = main;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -149,9 +145,24 @@ public class Drops implements Listener, Runnable {
         }, 0L, 20L);
     }
 
-    public void stopTimer() {
+    private void stopTimer() {
         Bukkit.getScheduler().cancelTask(taskID);
     }
+
+
+    private int getAmount(Inventory inv) {
+        int amt = 0;
+        for (ItemStack i : inv.getContents()) {
+            if (i != null) {
+                if (!(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back")))
+                    if (!(i.getType().equals(Material.AIR))) {
+                        amt++;
+                    }
+            }
+        }
+        return amt;
+    }
+
 
     @EventHandler
     private void handleClicks(InventoryClickEvent event) {
@@ -169,14 +180,17 @@ public class Drops implements Listener, Runnable {
                         MessageUtil.sendMessageWithPrefix(p, ChatColor.RED + "No valid drop locations set");
                         return;
                     }
-                    if (EditItems.editItems.commonItems.getContents().length == 0
-                            && EditItems.editItems.uncommonItems.getContents().length == 0
-                            && EditItems.editItems.rareItems.getContents().length == 0
-                            && EditItems.editItems.epicItems.getContents().length == 0
-                            && EditItems.editItems.legendaryItems.getContents().length == 0) {
+
+                    if (getAmount(EditItems.editItems.commonItems) == 0
+                            && getAmount(EditItems.editItems.uncommonItems) == 0
+                            && getAmount(EditItems.editItems.rareItems) == 0
+                            && getAmount(EditItems.editItems.epicItems) == 0
+                            && getAmount(EditItems.editItems.legendaryItems) == 0) {
                         MessageUtil.sendMessageWithPrefix(p, ChatColor.RED + "No items to drop");
                         return;
+
                     }
+
                 }
                 switch (slot) {
 

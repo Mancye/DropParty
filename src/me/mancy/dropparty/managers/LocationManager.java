@@ -36,12 +36,12 @@ public class LocationManager {
                 return;
             }
 
-            allLocations.add(p.getLocation());
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " X", p.getLocation().getX());
+            allLocations.add(new Location(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()));
+            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " X", p.getLocation().getBlockX());
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Y", p.getLocation().getY());
+            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Y", p.getLocation().getBlockY());
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Z", p.getLocation().getZ());
+            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Z", p.getLocation().getBlockZ());
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " World", p.getWorld().getName());
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
@@ -76,7 +76,6 @@ public class LocationManager {
             MessageUtil.sendMessageWithPrefix(p,ChatColor.GREEN + "Successfully Removed Drop Location #" + selectedIndex);
         } else {
             MessageUtil.sendMessageWithPrefix(p,ChatColor.RED + "Selected Location Does Not Exist!" );
-            return;
         }
     }
 

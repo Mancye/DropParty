@@ -44,11 +44,11 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		this.getCommand("drops").setExecutor(new Base());
+		new EditItems(this);
 		new Drops(this);
 		new EditCost(this);
 		new EditDropValues(this);
 		new TokenManager(this);
-		new EditItems(this);
 		new DropParty(this);
 		new DropPartyManager(this);
 		new LocationManager(this);
@@ -94,7 +94,7 @@ public class Main extends JavaPlugin {
 			dropChancesConfig.set("uncommon", defaultUnCommon);
 			saveCustomYml(dropChancesConfig, dropChances);
 		}
-		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("uncommon"));
+		DropPartyManager.uncommonChances.addAll(dropChancesConfig.getDoubleList("uncommon"));
 
 		if (!dropChancesConfig.contains("rare")) {
 			List<Double> defaultRare = new ArrayList<>();
@@ -106,7 +106,7 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("rare"));
+		DropPartyManager.rareChances.addAll(dropChancesConfig.getDoubleList("rare"));
 
 		if (!dropChancesConfig.contains("epic")) {
 			List<Double> defaultEpic = new ArrayList<>();
@@ -118,7 +118,7 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("epic"));
+		DropPartyManager.epicChances.addAll(dropChancesConfig.getDoubleList("epic"));
 
 		if (!dropChancesConfig.contains("legendary")) {
 			List<Double> defaultLegendary = new ArrayList<>();
@@ -130,7 +130,7 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("legendary"));
+		DropPartyManager.legendaryChances.addAll(dropChancesConfig.getDoubleList("legendary"));
 
 	}
 
@@ -285,7 +285,6 @@ public class Main extends JavaPlugin {
 			if (amtDropLocs > 0) {
 
 				for (int x = 1; x <= amtDropLocs; x++) {
-
 					double xCoord = dropLocsConfig.getDouble("Drop Locations." + x + " X");
 					double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
 					double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Z");
@@ -293,6 +292,7 @@ public class Main extends JavaPlugin {
 
 					Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
 					LocationManager.getAllLocations().add(loc);
+
 				}
 			}
 	}

@@ -281,11 +281,11 @@ public class DropParty implements Listener {
                    playParticleEffects(offsetLoc, i);
 
                     offsetLoc.getWorld().dropItemNaturally(offsetLoc, i);
-                    itemsDropped++;
+
                     if (itemsDropped >= itemsToDrop.size()) {
                        replaceBeaconCaps();
                     }
-
+                    itemsDropped++;
                 }
 
             }, 40L * (x + 1));
