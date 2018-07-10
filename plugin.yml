@@ -1,4 +1,4 @@
-main: me.mancy.dropparty.Main
+main: me.mancy.dropparty.main.Main
 name: alphaDROPS
 version: 1.0
 author: Mancy

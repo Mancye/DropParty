@@ -1,5 +1,7 @@
-package me.mancy.dropparty;
+package me.mancy.dropparty.menus;
 
+import me.mancy.dropparty.main.Main;
+import me.mancy.dropparty.utility.InventorySerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,8 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DropItems implements Listener {
-	public static DropItems dropItems;
+public class EditItems implements Listener {
+	public static EditItems editItems;
 	
 	private Main plugin;
 
@@ -27,10 +29,10 @@ public class DropItems implements Listener {
 	public Inventory legendaryItems = Bukkit.createInventory(null, 54, ChatColor.RED + "Legendary Items");
 
 	
-	public DropItems(Main main) {
+	public EditItems(Main main) {
 		this.plugin = main;
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		dropItems = this;
+		editItems = this;
 	}
 
 	

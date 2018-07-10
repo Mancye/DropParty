@@ -1,5 +1,6 @@
-package me.mancy.dropparty;
+package me.mancy.dropparty.managers;
 
+import me.mancy.dropparty.main.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

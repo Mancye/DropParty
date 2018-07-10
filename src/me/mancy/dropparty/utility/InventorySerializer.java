@@ -1,8 +1,4 @@
-package me.mancy.dropparty;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
+package me.mancy.dropparty.utility;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +6,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class InventorySerializer {
 

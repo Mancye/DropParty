@@ -1,5 +1,15 @@
-package me.mancy.dropparty;
+package me.mancy.dropparty.main;
 
+import me.mancy.dropparty.commands.Base;
+import me.mancy.dropparty.commands.EditCost;
+import me.mancy.dropparty.commands.EditDropValues;
+import me.mancy.dropparty.managers.DropPartyManager;
+import me.mancy.dropparty.managers.LocationManager;
+import me.mancy.dropparty.managers.TokenManager;
+import me.mancy.dropparty.menus.EditItems;
+import me.mancy.dropparty.menus.Drops;
+import me.mancy.dropparty.utility.InventorySerializer;
+import me.mancy.dropparty.utility.LocationValidator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,27 +43,31 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		this.getCommand("drops").setExecutor(new DropCommand(this));
-		new DropGUI(this);
+		this.getCommand("drops").setExecutor(new Base());
+		new Drops(this);
+		new EditCost(this);
+		new EditDropValues(this);
 		new TokenManager(this);
-		new DropItems(this);
+		new EditItems(this);
 		new DropParty(this);
+		new DropPartyManager(this);
+		new LocationManager(this);
+		new LocationValidator(this);
 		loadLocations();
 		loadTokens();
 		loadItemLists();
 		loadDropChanceLists();
 		loadDropModifiers();
 		loadCostsAndTime();
-		DropGUI.fillDropGUI();
-		DropParty.dropParty.isActiveDropParty = false;
-		DropParty.validateDropLocations();
+		Drops.fillDropGUI();
+		LocationValidator.validateLocations();
 		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "[alphaDROPS] Plugin Enabled Successfully");
 	}
 
 	@Override
 	public void onDisable() {
 		saveTokens();
-		dropLocsConfig.set("Amount Drops", DropParty.dropLocations.size());
+		dropLocsConfig.set("Amount Drops", LocationManager.getAllLocations().size());
 		saveCustomYml(dropLocsConfig, dropLocsFile);
 		Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[alphaDROPS] Plugin Disabled Successfully");
 	}
@@ -68,9 +82,8 @@ public class Main extends JavaPlugin {
 			dropChancesConfig.set("common", defaultCommon);
 			saveCustomYml(dropChancesConfig, dropChances);
 		}
-		for (Double d : dropChancesConfig.getDoubleList("common")) {
-			DropParty.dropParty.commonChances.add(d);
-		}
+		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("common"));
+
 
 		if (!dropChancesConfig.contains("uncommon")) {
 			List<Double> defaultUnCommon = new ArrayList<>();
@@ -81,9 +94,7 @@ public class Main extends JavaPlugin {
 			dropChancesConfig.set("uncommon", defaultUnCommon);
 			saveCustomYml(dropChancesConfig, dropChances);
 		}
-		for (Double d : dropChancesConfig.getDoubleList("uncommon")) {
-			DropParty.dropParty.uncommonChances.add(d);
-		}
+		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("uncommon"));
 
 		if (!dropChancesConfig.contains("rare")) {
 			List<Double> defaultRare = new ArrayList<>();
@@ -95,9 +106,7 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		for (Double d : dropChancesConfig.getDoubleList("rare")) {
-			DropParty.dropParty.rareChances.add(d);
-		}
+		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("rare"));
 
 		if (!dropChancesConfig.contains("epic")) {
 			List<Double> defaultEpic = new ArrayList<>();
@@ -109,9 +118,7 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		for (Double d : dropChancesConfig.getDoubleList("epic")) {
-			DropParty.dropParty.epicChances.add(d);
-		}
+		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("epic"));
 
 		if (!dropChancesConfig.contains("legendary")) {
 			List<Double> defaultLegendary = new ArrayList<>();
@@ -123,83 +130,81 @@ public class Main extends JavaPlugin {
 			saveCustomYml(dropChancesConfig, dropChances);
 
 		}
-		for (Double d : dropChancesConfig.getDoubleList("legendary")) {
-			DropParty.dropParty.legendaryChances.add(d);
-		}
+		DropPartyManager.commonChances.addAll(dropChancesConfig.getDoubleList("legendary"));
 
 	}
 
 	private void loadCostsAndTime() {
 		if (tokensConfig.contains("tierOneCost")) {
-			DropGUI.tierOneCost = tokensConfig.getInt("tierOneCost");
+			Drops.tierOneCost = tokensConfig.getInt("tierOneCost");
 		} else {
 			tokensConfig.set("tierOneCost", 1);
 			saveCustomYml(tokensConfig, tokensFile);
-			DropGUI.tierOneCost = tokensConfig.getInt("tierOneCost");
+			Drops.tierOneCost = tokensConfig.getInt("tierOneCost");
 		}
 
 		if (tokensConfig.contains("tierTwoCost")) {
-			DropGUI.tierTwoCost = tokensConfig.getInt("tierTwoCost");
+			Drops.tierTwoCost = tokensConfig.getInt("tierTwoCost");
 		} else {
 			tokensConfig.set("tierTwoCost", 1);
 			saveCustomYml(tokensConfig, tokensFile);
-			DropGUI.tierTwoCost = tokensConfig.getInt("tierTwoCost");
+			Drops.tierTwoCost = tokensConfig.getInt("tierTwoCost");
 		}
 
 		if (tokensConfig.contains("tierThreeCost")) {
-			DropGUI.tierThreeCost = tokensConfig.getInt("tierThreeCost");
+			Drops.tierThreeCost = tokensConfig.getInt("tierThreeCost");
 		} else {
 			tokensConfig.set("tierThreeCost", 1);
 			saveCustomYml(tokensConfig, tokensFile);
-			DropGUI.tierThreeCost = tokensConfig.getInt("tierThreeCost");
+			Drops.tierThreeCost = tokensConfig.getInt("tierThreeCost");
 		}
 
 		if (tokensConfig.contains("tierFourCost")) {
-			DropGUI.tierFourCost = tokensConfig.getInt("tierFourCost");
+			Drops.tierFourCost = tokensConfig.getInt("tierFourCost");
 		} else {
 			tokensConfig.set("tierFourCost", 1);
 			saveCustomYml(tokensConfig, tokensFile);
-			DropGUI.tierFourCost = tokensConfig.getInt("tierFourCost");
+			Drops.tierFourCost = tokensConfig.getInt("tierFourCost");
 		}
 
 		if (dropLocsConfig.contains("countdowntime")) {
-			DropGUI.countdownTime = dropLocsConfig.getInt("countdowntime");
+			Drops.countdownTime = dropLocsConfig.getInt("countdowntime");
 		} else {
 			dropLocsConfig.set("countdowntime", 10);
 			saveCustomYml(dropLocsConfig, dropLocsFile);
-			DropGUI.countdownTime = dropLocsConfig.getInt("countdowntime");
+			Drops.countdownTime = dropLocsConfig.getInt("countdowntime");
 		}
 	}
 
 	private void loadItemLists() {
 		if (itemsConfig.contains("common")) {
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("common")) != null) {
-				DropItems.dropItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents());
+				EditItems.editItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents());
 			}
 		}
 		if (itemsConfig.contains("uncommon")) {
 
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")) != null) {
-				DropItems.dropItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents());
+				EditItems.editItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents());
 			}
 		}
 		if (itemsConfig.contains("rare")) {
 
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("rare")) != null) {
-				DropItems.dropItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents());
+				EditItems.editItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents());
 			}
 		}
 
 		if (itemsConfig.contains("epic")) {
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("epic")) != null) {
-				DropItems.dropItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents());
+				EditItems.editItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents());
 			}
 		}
 		if (itemsConfig.contains("legendary")) {
 
 
 			if (InventorySerializer.StringToInventory(itemsConfig.getString("legendary")) != null) {
-				DropItems.dropItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents());
+				EditItems.editItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents());
 			}
 		}
 
@@ -287,24 +292,24 @@ public class Main extends JavaPlugin {
 					String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
 
 					Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
-					DropParty.dropLocations.add(loc);
+					LocationManager.getAllLocations().add(loc);
 				}
 			}
 	}
 
 	private void loadDropModifiers() {
 		if (dropLocsConfig.contains("height")) {
-			DropParty.dropParty.heightToDrop = dropLocsConfig.getDouble("height");
+			DropPartyManager.heightToDrop = dropLocsConfig.getDouble("height");
 		} else {
-			DropParty.dropParty.heightToDrop = 0.0;
-			dropLocsConfig.set("height", DropParty.dropParty.heightToDrop);
+			DropPartyManager.heightToDrop = 0.0;
+			dropLocsConfig.set("height", DropPartyManager.heightToDrop);
 			saveCustomYml(dropLocsConfig, dropLocsFile);
 		}
 		if (dropLocsConfig.contains("radius")) {
-			DropParty.dropParty.radiusToDrop = dropLocsConfig.getDouble("radius");
+			DropPartyManager.radiusToDrop = dropLocsConfig.getDouble("radius");
 		} else {
-			DropParty.dropParty.radiusToDrop = 0.0;
-			dropLocsConfig.set("radius", DropParty.dropParty.radiusToDrop);
+			DropPartyManager.radiusToDrop = 0.0;
+			dropLocsConfig.set("radius", DropPartyManager.radiusToDrop);
 			saveCustomYml(dropLocsConfig, dropLocsFile);
 		}
 
