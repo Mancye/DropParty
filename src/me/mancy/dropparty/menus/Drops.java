@@ -2,6 +2,7 @@ package me.mancy.dropparty.menus;
 
 import me.mancy.dropparty.main.DropParty;
 import me.mancy.dropparty.main.Main;
+import me.mancy.dropparty.managers.DropPartyManager;
 import me.mancy.dropparty.managers.LocationManager;
 import me.mancy.dropparty.managers.TokenManager;
 import me.mancy.dropparty.utility.MessageUtil;
@@ -34,8 +35,6 @@ public class Drops implements Listener, Runnable {
 
     int time;
     int taskID;
-
-    public boolean isActiveDropParty = false;
 
     public Drops(Main main) {
         this.plugin = main;
@@ -123,7 +122,6 @@ public class Drops implements Listener, Runnable {
     }
 
     private void startTimer(int dropTier) {
-        isActiveDropParty = true;
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         taskID = scheduler.scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
@@ -196,7 +194,7 @@ public class Drops implements Listener, Runnable {
 
                     case 10:
 
-                        if (!isActiveDropParty) {
+                        if (!DropPartyManager.isActiveDropParty()) {
                             if (TokenManager.getTokens(p, 1) >= tierOneCost) {
                                 TokenManager.subtractTokens(p, 1, tierOneCost);
                                 MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You have started a" + ChatColor.GREEN + " tier 1 " + ChatColor.GRAY + "drop party!");
@@ -218,7 +216,7 @@ public class Drops implements Listener, Runnable {
                         }
                         break;
                     case 12:
-                        if (!isActiveDropParty) {
+                        if (!DropPartyManager.isActiveDropParty()) {
                             if (TokenManager.getTokens(p, 2) >= tierTwoCost) {
                                 TokenManager.subtractTokens(p, 2, tierTwoCost);
                                 MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You have started a" + ChatColor.GREEN + " tier 2 " + ChatColor.GRAY + "drop party!");
@@ -240,7 +238,7 @@ public class Drops implements Listener, Runnable {
                         }
                         break;
                     case 14:
-                        if (!isActiveDropParty) {
+                        if (!DropPartyManager.isActiveDropParty()) {
                             if (TokenManager.getTokens(p, 3) >= tierThreeCost) {
                                 TokenManager.subtractTokens(p, 3, tierThreeCost);
                                 MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You have started a" + ChatColor.GREEN + " tier 3 " + ChatColor.GRAY + "drop party!");
@@ -262,7 +260,7 @@ public class Drops implements Listener, Runnable {
                         }
                         break;
                     case 16: {
-                        if (!isActiveDropParty) {
+                        if (!DropPartyManager.isActiveDropParty()) {
                             if (TokenManager.getTokens(p, 4) >= tierFourCost) {
                                 TokenManager.subtractTokens(p, 4, tierFourCost);
                                 MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You have started a" + ChatColor.GREEN + " tier 4 " + ChatColor.GRAY + "drop party!");

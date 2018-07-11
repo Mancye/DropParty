@@ -289,7 +289,6 @@ public class Main extends JavaPlugin {
 					double yCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Y");
 					double zCoord = dropLocsConfig.getDouble("Drop Locations." + x + " Z");
 					String worldName = dropLocsConfig.getString("Drop Locations." + x + " World");
-
 					Location loc = new Location(Bukkit.getServer().getWorld(worldName), xCoord, yCoord, zCoord);
 					LocationManager.getAllLocations().add(loc);
 

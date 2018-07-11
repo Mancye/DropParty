@@ -28,18 +28,20 @@ public class LocationValidator implements Listener {
         if (loc == null) return null;
         while (loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ())).getType().equals(Material.STAINED_GLASS) ||
                 loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ())).getType().equals(Material.BEACON)) {
-            y++;
+                y++;
         }
         return loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ()));
     }
 
     public static void validateLocations() {
+        LocationManager.getValidLocations().clear();
         for (Location loc : LocationManager.getAllLocations()) {
             if (loc != null) {
                 if (getHighestBlock(loc).getType() != Material.STAINED_GLASS) {
                     if (getHighestBlock(loc).getType() != Material.BEACON) {
                         if (getHighestBlock(loc).getType() != Material.AIR) {
-
+                            System.out.println(getHighestBlock(loc).getY());
+                            System.out.println(loc.getBlockY());
                             if (!(LocationManager.getValidLocations().contains(loc))) {
                                 LocationManager.getValidLocations().add(loc);
                             }
@@ -55,15 +57,16 @@ public class LocationValidator implements Listener {
         if (!(event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*"))) return;
         if (event.getBlock().getType().equals(Material.STAINED_GLASS)) return;
         for (Location loc : LocationManager.getAllLocations()) {
+            if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
             if (!(LocationManager.getValidLocations().contains(loc))) {
-                if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
+                    validateLocations();
                     MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.GREEN + "Drop location was validated successfully!");
-                    LocationManager.getValidLocations().add(loc);
-                }
 
-            } else {
-                MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.RED + "Drop location was already validated!");
-                return;
+
+                } else {
+                    MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.RED + "Drop location was already validated!");
+                    return;
+                }
             }
         }
 
@@ -75,9 +78,11 @@ public class LocationValidator implements Listener {
             if (!event.getBlock().getType().equals(Material.STAINED_GLASS)){
                 List<Location> locsToRemove = new ArrayList<>();
                 for (Location loc : LocationManager.getValidLocations()) {
-                    if (loc.getBlockZ() == event.getBlock().getLocation().getBlockZ() && loc.getBlockX() == event.getBlock().getLocation().getBlockX() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
-                       locsToRemove.add(loc);
+                    if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
+                       validateLocations();
                        MessageUtil.sendMessageWithPrefix(event.getPlayer(),ChatColor.RED + "Location unvalidated, you must place a block above the beacon");
+                    } else {
+                        event.getPlayer().sendMessage(ChatColor.RED + " NOT SAME COORDS Y BROKEN = " + event.getBlock().getLocation().getBlockY() + " Instead of " + loc.getBlockY());
                     }
                 }
                 LocationManager.getValidLocations().removeAll(locsToRemove);

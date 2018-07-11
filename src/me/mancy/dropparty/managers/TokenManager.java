@@ -56,15 +56,19 @@ public class TokenManager implements Listener, Runnable {
 	public static int getTokens(Player p, int tier) {
 		switch (tier) {
 			case 1: {
+				if (!(tokensOne.containsKey(p.getUniqueId()))) tokensOne.put(p.getUniqueId(), 0);
 				return tokensOne.get(p.getUniqueId());
 			}
 			case 2: {
+				if (!(tokensTwo.containsKey(p.getUniqueId()))) tokensTwo.put(p.getUniqueId(), 0);
 				return tokensTwo.get(p.getUniqueId());
 			}
 			case 3: {
+				if (!(tokensThree.containsKey(p.getUniqueId()))) tokensThree.put(p.getUniqueId(), 0);
 				return tokensThree.get(p.getUniqueId());
 			}
 			case 4: {
+				if (!(tokensFour.containsKey(p.getUniqueId()))) tokensFour.put(p.getUniqueId(), 0);
 				return tokensFour.get(p.getUniqueId());
 			}
 		}

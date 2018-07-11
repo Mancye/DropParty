@@ -3,7 +3,6 @@ package me.mancy.dropparty.main;
 import me.mancy.dropparty.managers.DropPartyManager;
 import me.mancy.dropparty.managers.LocationManager;
 import me.mancy.dropparty.menus.EditItems;
-import me.mancy.dropparty.menus.Drops;
 import me.mancy.dropparty.utility.MessageUtil;
 import net.minecraft.server.v1_12_R1.EnumParticle;
 import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
@@ -142,7 +141,7 @@ public class DropParty implements Listener {
 
     private void startFireworks() {
         for (int x = 1; x <= amtDropLocs; x++) {
-            Location launchLoc = LocationManager.getValidLocations().get(x - 1).add(0, 1, 0);
+            Location launchLoc = LocationManager.getValidLocations().get(x - 1).add(0, 2, 0);
             Firework f = launchLoc.getWorld().spawn(launchLoc, Firework.class);
             FireworkMeta fm = f.getFireworkMeta();
             fm.addEffect(FireworkEffect.builder()
@@ -220,7 +219,7 @@ public class DropParty implements Listener {
     }
 
     private void playDropFireworks(Location offsetLoc) {
-        Firework f = offsetLoc.getWorld().spawn(offsetLoc, Firework.class);
+        Firework f = offsetLoc.getWorld().spawn(offsetLoc.add(0, 2, 0), Firework.class);
         FireworkMeta fm = f.getFireworkMeta();
         fm.addEffect(FireworkEffect.builder()
                 .flicker(false)
@@ -235,7 +234,7 @@ public class DropParty implements Listener {
     }
 
     private void replaceBeaconCaps() {
-        Drops.dropgui.isActiveDropParty = false;
+        DropPartyManager.setIsActiveDropParty(false);
         for (Location loc : capBlocks.keySet()) {
             loc.getBlock().setType(Material.STEP);
         }
@@ -252,7 +251,7 @@ public class DropParty implements Listener {
     public void start() {
         int tier = this.tier;
 
-        DropPartyManager.toggleActiveParty();
+        DropPartyManager.setIsActiveDropParty(true);
 
         amtDropLocs = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) / 2f);
         if (amtDropLocs > LocationManager.getValidLocations().size()) amtDropLocs = LocationManager.getValidLocations().size();
@@ -281,11 +280,11 @@ public class DropParty implements Listener {
                    playParticleEffects(offsetLoc, i);
 
                     offsetLoc.getWorld().dropItemNaturally(offsetLoc, i);
-
+                    itemsDropped++;
                     if (itemsDropped >= itemsToDrop.size()) {
                        replaceBeaconCaps();
                     }
-                    itemsDropped++;
+
                 }
 
             }, 40L * (x + 1));

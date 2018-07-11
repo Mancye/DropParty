@@ -35,22 +35,19 @@ public class LocationManager {
                 MessageUtil.sendMessageWithPrefix(p, ChatColor.RED + " A drop location is already set here!");
                 return;
             }
-
+            plugin.dropLocsConfig.set("Drop Locations." + (allLocations.size() + 1) + " X", p.getLocation().getBlockX());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + (allLocations.size() + 1) + " Y", p.getLocation().getBlockY());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + (allLocations.size() + 1) + " Z", p.getLocation().getBlockZ());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + (allLocations.size() + 1) + " World", p.getWorld().getName());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             allLocations.add(new Location(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()));
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " X", p.getLocation().getBlockX());
-            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Y", p.getLocation().getBlockY());
-            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " Z", p.getLocation().getBlockZ());
-            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Drop Locations." + allLocations.size() + " World", p.getWorld().getName());
-            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-
             MessageUtil.sendMessageWithPrefix(p, ChatColor.GREEN + "Drop Location #" + allLocations.size() + " Set At Current Location!");
             MessageUtil.sendMessageWithPrefix( p, ChatColor.RED + "Before this location can be used you MUST place a block on top of the beacon!");
         } else {
             MessageUtil.sendMessageWithPrefix(p, ChatColor.RED + "Must be standing on a beacon to set a location!");
-            return;
         }
     }
 
@@ -61,6 +58,7 @@ public class LocationManager {
         }
 
         if (selectedIndex <= allLocations.size()) {
+        for (int x = 1; x <= allLocations.size(); x++) {
             plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", null);
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", null);
@@ -69,10 +67,26 @@ public class LocationManager {
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " World", null);
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            allLocations.remove(selectedIndex - 1);
-            if (validLocations.size() >= selectedIndex) {
-                validLocations.remove(selectedIndex - 1);
-            }
+        }
+        allLocations.remove(selectedIndex - 1);
+        if (validLocations.size() >= selectedIndex) {
+            validLocations.remove(selectedIndex - 1);
+        }
+
+        for (int x = 0; x < allLocations.size(); x++) {
+            plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " X", LocationManager.getAllLocations().get(x).getBlockX());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Y", LocationManager.getAllLocations().get(x).getBlockY());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " Z", LocationManager.getAllLocations().get(x).getBlockZ());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+            plugin.dropLocsConfig.set("Drop Locations." + selectedIndex + " World", LocationManager.getAllLocations().get(x).getWorld().getName());
+            plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
+        }
+
+
+
+
             MessageUtil.sendMessageWithPrefix(p,ChatColor.GREEN + "Successfully Removed Drop Location #" + selectedIndex);
         } else {
             MessageUtil.sendMessageWithPrefix(p,ChatColor.RED + "Selected Location Does Not Exist!" );

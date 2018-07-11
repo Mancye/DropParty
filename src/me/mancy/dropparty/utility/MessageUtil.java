@@ -32,7 +32,7 @@ public class MessageUtil {
     }
 
     public static void sendInsufficientTokensMessage(Player p, int tier) {
-        MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You do not have enough " + ChatColor.GREEN + "tier " + tier + ChatColor.GRAY + " tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, 4));
+        MessageUtil.sendMessageWithPrefix(p,ChatColor.GRAY + "You do not have enough " + ChatColor.GREEN + "tier " + tier + ChatColor.GRAY + " tokens for this! Your tokens: " + ChatColor.RED + TokenManager.getTokens(p, tier));
 
     }
 

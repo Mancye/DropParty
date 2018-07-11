@@ -27,8 +27,8 @@ public class DropPartyManager {
     }
 
 
-    public static void toggleActiveParty() {
-        DropPartyManager.isActiveDropParty = !DropPartyManager.isActiveDropParty;
+    public static void setIsActiveDropParty(boolean isActiveDropParty) {
+        DropPartyManager.isActiveDropParty = isActiveDropParty;
     }
 
     public static boolean isActiveDropParty() {
