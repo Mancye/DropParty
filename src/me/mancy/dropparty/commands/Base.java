@@ -104,6 +104,11 @@ public class Base implements CommandExecutor {
 						MessageUtil.sendNoPermissionMessage(p);
 						return false;
 					}
+				} else if (args[0].equalsIgnoreCase("debug")){
+					if (p.hasPermission("dropparty.debug") || p.hasPermission("dropparty.*")) {
+						Debug.debugCommand(p);
+						return true;
+					}
 				} else {
 					MessageUtil.sendInvalidArgsMessage(p);
 					return false;

@@ -280,7 +280,7 @@ public class Main extends JavaPlugin {
 		}
 	}
 
-	private void loadLocations() {
+	public void loadLocations() {
 			int amtDropLocs = dropLocsConfig.getInt("Amount Drops");
 			if (amtDropLocs > 0) {
 

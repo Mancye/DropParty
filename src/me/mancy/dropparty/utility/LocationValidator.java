@@ -11,12 +11,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LocationValidator implements Listener {
 
-    private Main plugin;
+    private static Main plugin;
 
     public LocationValidator(Main main) {
         this.plugin = main;
@@ -40,8 +37,6 @@ public class LocationValidator implements Listener {
                 if (getHighestBlock(loc).getType() != Material.STAINED_GLASS) {
                     if (getHighestBlock(loc).getType() != Material.BEACON) {
                         if (getHighestBlock(loc).getType() != Material.AIR) {
-                            System.out.println(getHighestBlock(loc).getY());
-                            System.out.println(loc.getBlockY());
                             if (!(LocationManager.getValidLocations().contains(loc))) {
                                 LocationManager.getValidLocations().add(loc);
                             }
@@ -56,36 +51,50 @@ public class LocationValidator implements Listener {
     private void locationValidated(BlockPlaceEvent event) {
         if (!(event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*"))) return;
         if (event.getBlock().getType().equals(Material.STAINED_GLASS)) return;
+        boolean willValidate = false;
         for (Location loc : LocationManager.getAllLocations()) {
-            if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
+            if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ()) {
             if (!(LocationManager.getValidLocations().contains(loc))) {
-                    validateLocations();
+                willValidate = true;
+
                     MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.GREEN + "Drop location was validated successfully!");
-
-
                 } else {
                     MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.RED + "Drop location was already validated!");
                     return;
                 }
             }
         }
+        if (willValidate) {
+            LocationManager.getAllLocations().clear();
+            LocationManager.getValidLocations().clear();
+            plugin.loadLocations();
+            validateLocations();
 
+        }
     }
     @EventHandler
     private void locationUnvalidated(BlockBreakEvent event) {
 
         if (event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*")) {
             if (!event.getBlock().getType().equals(Material.STAINED_GLASS)){
-                List<Location> locsToRemove = new ArrayList<>();
+                boolean willValidate = false;
                 for (Location loc : LocationManager.getValidLocations()) {
-                    if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ() && event.getBlock().getLocation().getBlockY() >= loc.getBlockY()) {
-                       validateLocations();
-                       MessageUtil.sendMessageWithPrefix(event.getPlayer(),ChatColor.RED + "Location unvalidated, you must place a block above the beacon");
-                    } else {
-                        event.getPlayer().sendMessage(ChatColor.RED + " NOT SAME COORDS Y BROKEN = " + event.getBlock().getLocation().getBlockY() + " Instead of " + loc.getBlockY());
+                    if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ()) {
+                       if (!event.getBlock().getType().equals(Material.STAINED_GLASS) && !event.getBlock().getType().equals(Material.BEACON) && !event.getBlock().getType().equals(Material.AIR)) {
+                           willValidate = true;
+                       }
+
                     }
                 }
-                LocationManager.getValidLocations().removeAll(locsToRemove);
+                if (willValidate) {
+                    event.getBlock().breakNaturally();
+                    LocationManager.getAllLocations().clear();
+                    LocationManager.getValidLocations().clear();
+                    plugin.loadLocations();
+                    validateLocations();
+                    MessageUtil.sendMessageWithPrefix(event.getPlayer(),ChatColor.RED + "Location unvalidated, you must place a block above the beacon");
+                }
+
             }
         }
     }
