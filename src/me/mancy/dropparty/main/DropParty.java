@@ -24,7 +24,7 @@ public class DropParty implements Listener {
     private Location locToDrop = null;
     private int tier;
 
-    public DropParty(Main main) {
+    DropParty(Main main) {
         this.plugin = main;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         dropParty = this;

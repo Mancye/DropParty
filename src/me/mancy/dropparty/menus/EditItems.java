@@ -1,7 +1,6 @@
 package me.mancy.dropparty.menus;
 
 import me.mancy.dropparty.main.Main;
-import me.mancy.dropparty.utility.InventorySerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -120,20 +119,51 @@ public class EditItems implements Listener {
 		Inventory inv = event.getInventory();
 		
 		if (inv.getName().contains("Common Items")) {
-			plugin.itemsConfig.set("common", InventorySerializer.InventoryToString(commonItems));
-			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+			int x = 0;
+			for (ItemStack i : inv.getContents()) {
+				if (i != null && !(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+					plugin.itemsConfig.set("common. " + x, i);
+					plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+					x++;
+				}
+			}
+
 		} else if (inv.getName().contains("Uncommon Items")) {
-			plugin.itemsConfig.set("uncommon", InventorySerializer.InventoryToString(uncommonItems));
-			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+			int x = 0;
+			for (ItemStack i : inv.getContents()) {
+				if (i != null && !(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+					plugin.itemsConfig.set("uncommon. " + x, i);
+					plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+					x++;
+				}
+			}
 		} else if (inv.getName().contains("Rare Items")) {
-			plugin.itemsConfig.set("rare", InventorySerializer.InventoryToString(rareItems));
-			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+			int x = 0;
+			for (ItemStack i : inv.getContents()) {
+				if (i != null && !(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+					plugin.itemsConfig.set("rare. " + x, i);
+					plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+					x++;
+				}
+			}
 		} else if (inv.getName().contains("Epic Items")) {
-			plugin.itemsConfig.set("epic", InventorySerializer.InventoryToString(epicItems));
-			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+			int x = 0;
+			for (ItemStack i : inv.getContents()) {
+				if (i != null && !(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+					plugin.itemsConfig.set("epic. " + x, i);
+					plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+					x++;
+				}
+			}
 		} else if (inv.getName().contains("Legendary Items")) {
-			plugin.itemsConfig.set("legendary", InventorySerializer.InventoryToString(legendaryItems));
-			plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+			int x = 0;
+			for (ItemStack i : inv.getContents()) {
+				if (i != null && !(i.hasItemMeta() && i.getItemMeta().hasDisplayName() && i.getItemMeta().getDisplayName().contains("Back"))) {
+					plugin.itemsConfig.set("legendary. " + x, i);
+					plugin.saveCustomYml(plugin.itemsConfig, plugin.itemsFile);
+					x++;
+				}
+			}
 		}
 	}
 

@@ -9,7 +9,6 @@ import me.mancy.dropparty.managers.TokenManager;
 import me.mancy.dropparty.menus.Drops;
 import me.mancy.dropparty.menus.EditChances;
 import me.mancy.dropparty.menus.EditItems;
-import me.mancy.dropparty.utility.InventorySerializer;
 import me.mancy.dropparty.utility.LocationValidator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -180,33 +180,46 @@ public class Main extends JavaPlugin {
 
 	private void loadItemLists() {
 		if (itemsConfig.contains("common")) {
-			if (InventorySerializer.StringToInventory(itemsConfig.getString("common")) != null) {
-				EditItems.editItems.commonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("common")).getContents());
+			for (int x = 0; x < EditItems.editItems.commonItems.getContents().length; x++) {
+				ItemStack i = itemsConfig.getItemStack("common. " + x);
+				if (i != null) {
+					EditItems.editItems.commonItems.addItem(i);
+				}
 			}
 		}
 		if (itemsConfig.contains("uncommon")) {
 
-			if (InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")) != null) {
-				EditItems.editItems.uncommonItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("uncommon")).getContents());
+			for (int x = 0; x < EditItems.editItems.uncommonItems.getContents().length; x++) {
+				ItemStack i = itemsConfig.getItemStack("uncommon. " + x);
+				if (i != null) {
+					EditItems.editItems.uncommonItems.addItem(i);
+				}
 			}
 		}
 		if (itemsConfig.contains("rare")) {
 
-			if (InventorySerializer.StringToInventory(itemsConfig.getString("rare")) != null) {
-				EditItems.editItems.rareItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("rare")).getContents());
+			for (int x = 0; x < EditItems.editItems.rareItems.getContents().length; x++) {
+				ItemStack i = itemsConfig.getItemStack("rare. " + x);
+				if (i != null) {
+					EditItems.editItems.rareItems.addItem(i);
+				}
 			}
 		}
 
 		if (itemsConfig.contains("epic")) {
-			if (InventorySerializer.StringToInventory(itemsConfig.getString("epic")) != null) {
-				EditItems.editItems.epicItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("epic")).getContents());
+			for (int x = 0; x < EditItems.editItems.epicItems.getContents().length; x++) {
+				ItemStack i = itemsConfig.getItemStack("epic. " + x);
+				if (i != null) {
+					EditItems.editItems.epicItems.addItem(i);
+				}
 			}
 		}
 		if (itemsConfig.contains("legendary")) {
-
-
-			if (InventorySerializer.StringToInventory(itemsConfig.getString("legendary")) != null) {
-				EditItems.editItems.legendaryItems.setContents(InventorySerializer.StringToInventory(itemsConfig.getString("legendary")).getContents());
+			for (int x = 0; x < EditItems.editItems.legendaryItems.getContents().length; x++) {
+				ItemStack i = itemsConfig.getItemStack("legendary. " + x);
+				if (i != null) {
+					EditItems.editItems.legendaryItems.addItem(i);
+				}
 			}
 		}
 

@@ -1,4 +1,5 @@
 main: me.mancy.dropparty.main.Main
+api-version: 1.13
 name: alphaDROPS
 version: 1.0
 author: Mancy
