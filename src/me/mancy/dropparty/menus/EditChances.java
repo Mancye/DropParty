@@ -309,18 +309,23 @@ public class EditChances implements Listener {
         Inventory inv = event.getInventory();
 
         if (inv.getName().contains("COMMON DROP CHANCES") && !inv.getName().contains("UNCOMMON")) {
+            event.setCancelled(true);
             dropChancesList = DropPartyManager.commonChances;
             selected = "common";
         } else if (inv.getName().contains("UNCOMMON DROP CHANCES")) {
+            event.setCancelled(true);
             dropChancesList = DropPartyManager.uncommonChances;
             selected = "uncommon";
         } else if (inv.getName().contains("RARE DROP CHANCES")) {
+            event.setCancelled(true);
             dropChancesList = DropPartyManager.rareChances;
             selected = "rare";
         } else if (inv.getName().contains("EPIC DROP CHANCES")) {
+            event.setCancelled(true);
             dropChancesList = DropPartyManager.epicChances;
             selected = "epic";
         } else if (inv.getName().contains("LEGENDARY DROP CHANCES")) {
+            event.setCancelled(true);
             dropChancesList = DropPartyManager.legendaryChances;
             selected = "legendary";
         } else {
@@ -332,7 +337,6 @@ public class EditChances implements Listener {
 
 
         int slot = event.getSlot();
-        event.setCancelled(true);
         switch (slot) {
             case 0:
                 modifyChances(dropChancesList, 1, 1);

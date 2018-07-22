@@ -24,7 +24,7 @@ public class Help {
         }
         if (p.hasPermission("dropparty.editlocation") || p.hasPermission("dropparty.*")) {
             p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops loc remove (index)" + ChatColor.GRAY + " To remove a selected drop location");
-            p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + "/drops loc add" + ChatColor.GRAY + " To add a new drop location at your position");
+            p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops loc add" + ChatColor.GRAY + " To add a new drop location at your position");
         }
         if (p.hasPermission("dropparty.listlocations") || p.hasPermission("dropparty.*")) {
             p.sendMessage(helpPrefix + ChatColor.GREEN + ChatColor.ITALIC.toString() + " /drops list" + ChatColor.GRAY + " To list all current drop locations");

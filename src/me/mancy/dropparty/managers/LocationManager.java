@@ -43,7 +43,7 @@ public class LocationManager {
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             plugin.dropLocsConfig.set("Drop Locations." + (allLocations.size() + 1) + " World", p.getWorld().getName());
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
-            plugin.dropLocsConfig.set("Amount Drops", allLocations.size());
+            plugin.dropLocsConfig.set("Amount Drops", (allLocations.size() + 1));
             plugin.saveCustomYml(plugin.dropLocsConfig, plugin.dropLocsFile);
             allLocations.add(new Location(p.getWorld(), p.getLocation().getBlockX(), p.getLocation().getBlockY(), p.getLocation().getBlockZ()));
             MessageUtil.sendMessageWithPrefix(p, ChatColor.GREEN + "Drop Location #" + allLocations.size() + " Set At Current Location!");

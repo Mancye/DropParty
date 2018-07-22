@@ -6,8 +6,9 @@ import me.mancy.dropparty.commands.EditDropValues;
 import me.mancy.dropparty.managers.DropPartyManager;
 import me.mancy.dropparty.managers.LocationManager;
 import me.mancy.dropparty.managers.TokenManager;
-import me.mancy.dropparty.menus.EditItems;
 import me.mancy.dropparty.menus.Drops;
+import me.mancy.dropparty.menus.EditChances;
+import me.mancy.dropparty.menus.EditItems;
 import me.mancy.dropparty.utility.InventorySerializer;
 import me.mancy.dropparty.utility.LocationValidator;
 import org.bukkit.Bukkit;
@@ -47,6 +48,7 @@ public class Main extends JavaPlugin {
 		new EditItems(this);
 		new Drops(this);
 		new EditCost(this);
+		new EditChances(this);
 		new EditDropValues(this);
 		new TokenManager(this);
 		new DropParty(this);

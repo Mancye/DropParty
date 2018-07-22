@@ -23,7 +23,7 @@ public class LocationValidator implements Listener {
     private static Block getHighestBlock(Location loc) {
         int y = 0;
         if (loc == null) return null;
-        while (loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ())).getType().equals(Material.STAINED_GLASS) ||
+        while (loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ())).getType().name().contains("STAINED_GLASS") ||
                 loc.getWorld().getBlockAt(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + y, loc.getBlockZ())).getType().equals(Material.BEACON)) {
                 y++;
         }
@@ -34,7 +34,7 @@ public class LocationValidator implements Listener {
         LocationManager.getValidLocations().clear();
         for (Location loc : LocationManager.getAllLocations()) {
             if (loc != null) {
-                if (getHighestBlock(loc).getType() != Material.STAINED_GLASS) {
+                if (!getHighestBlock(loc).getType().name().contains("STAINED_GLASS")) {
                     if (getHighestBlock(loc).getType() != Material.BEACON) {
                         if (getHighestBlock(loc).getType() != Material.AIR) {
                             if (!(LocationManager.getValidLocations().contains(loc))) {
@@ -50,14 +50,12 @@ public class LocationValidator implements Listener {
     @EventHandler
     private void locationValidated(BlockPlaceEvent event) {
         if (!(event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*"))) return;
-        if (event.getBlock().getType().equals(Material.STAINED_GLASS)) return;
+        if (event.getBlock().getType().name().contains("STAINED_GLASS")) return;
         boolean willValidate = false;
         for (Location loc : LocationManager.getAllLocations()) {
             if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ()) {
             if (!(LocationManager.getValidLocations().contains(loc))) {
                 willValidate = true;
-
-                    MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.GREEN + "Drop location was validated successfully!");
                 } else {
                     MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.RED + "Drop location was already validated!");
                     return;
@@ -66,21 +64,20 @@ public class LocationValidator implements Listener {
         }
         if (willValidate) {
             LocationManager.getAllLocations().clear();
-            LocationManager.getValidLocations().clear();
             plugin.loadLocations();
             validateLocations();
-
+            MessageUtil.sendMessageWithPrefix(event.getPlayer(), ChatColor.GREEN + "Drop location was validated successfully!");
         }
     }
     @EventHandler
     private void locationUnvalidated(BlockBreakEvent event) {
 
         if (event.getPlayer().hasPermission("dropparty.editlocation") || event.getPlayer().hasPermission("dropparty.*")) {
-            if (!event.getBlock().getType().equals(Material.STAINED_GLASS)){
+            if (!event.getBlock().getType().name().contains("STAINED_GLASS")){
                 boolean willValidate = false;
                 for (Location loc : LocationManager.getValidLocations()) {
                     if (event.getBlock().getLocation().getBlockX() == loc.getBlockX() && event.getBlock().getLocation().getBlockZ() == loc.getBlockZ()) {
-                       if (!event.getBlock().getType().equals(Material.STAINED_GLASS) && !event.getBlock().getType().equals(Material.BEACON) && !event.getBlock().getType().equals(Material.AIR)) {
+                       if (!event.getBlock().getType().name().contains("STAINED_GLASS") && !event.getBlock().getType().equals(Material.BEACON) && !event.getBlock().getType().equals(Material.AIR)) {
                            willValidate = true;
                        }
 

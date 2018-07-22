@@ -19,9 +19,9 @@ public class InventorySerializer {
 	     for (int i = 0; i < invInventory.getSize(); i++) {
 	       ItemStack is = invInventory.getItem(i);
 	       if (is != null) {
-	         String serializedItemStack = new String();
+	         String serializedItemStack = "";
 
-	         String isType = String.valueOf(is.getType().getId());
+	         String isType = String.valueOf(is.getType().name());
 	         serializedItemStack += "t@" + isType;
 
 	         if (is.getDurability() != 0) {
@@ -50,7 +50,7 @@ public class InventorySerializer {
 	         Map<Enchantment, Integer> isEnch = is.getEnchantments();
 	         if (isEnch.size() > 0) {
 	           for (Entry<Enchantment, Integer> ench : isEnch.entrySet()) {
-	             serializedItemStack += ":e@" + ench.getKey().getId()
+	             serializedItemStack += ":e@" + ench.getKey()
 	                 + "@" + ench.getValue();
 	           }
 	         }
@@ -84,8 +84,7 @@ public class InventorySerializer {
 	       for (String itemInfo : serializedItemStack) {
 	         String[] itemAttribute = itemInfo.split("@");
 	         if (itemAttribute[0].equals("t")) {
-	           is = new ItemStack(Material.getMaterial(Integer
-	               .valueOf(itemAttribute[1])));
+	           is = new ItemStack(Material.getMaterial(itemAttribute[1]));
 	           createdItemStack = true;
 	         } else if (itemAttribute[0].equals("d") && createdItemStack) {
 	           is.setDurability(Short.valueOf(itemAttribute[1]));
@@ -106,8 +105,7 @@ public class InventorySerializer {
 	           isM.setLore(l);
 	           is.setItemMeta(isM);
 	         } else if (itemAttribute[0].equals("e") && createdItemStack) {
-	           is.addEnchantment(Enchantment.getById(Integer
-	               .valueOf(itemAttribute[1])), Integer
+	           is.addEnchantment(Enchantment.getByName(itemAttribute[1]), Integer
 	               .valueOf(itemAttribute[2]));
 	         }
 	       }

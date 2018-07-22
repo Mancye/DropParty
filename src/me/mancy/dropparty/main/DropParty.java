@@ -4,11 +4,9 @@ import me.mancy.dropparty.managers.DropPartyManager;
 import me.mancy.dropparty.managers.LocationManager;
 import me.mancy.dropparty.menus.EditItems;
 import me.mancy.dropparty.utility.MessageUtil;
-import net.minecraft.server.v1_12_R1.EnumParticle;
-import net.minecraft.server.v1_12_R1.PacketPlayOutWorldParticles;
+import net.minecraft.server.v1_13_R1.PacketPlayOutWorldParticles;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -39,9 +37,16 @@ public class DropParty implements Listener {
     }
 
     private void removeBeaconCaps() {
+        int amtDone = 0;
+
         for (Location loc : LocationManager.getValidLocations()) {
-            Block highest = loc.getWorld().getBlockAt(loc.getWorld().getHighestBlockAt(loc).getLocation().subtract(0, 1, 0));
-            capBlocks.put(highest.getLocation(), highest);
+            if (amtDone < amtDropLocs) {
+                Block highest = loc.getWorld().getBlockAt(loc.getWorld().getHighestBlockAt(loc).getLocation().subtract(0, 1, 0));
+                capBlocks.put(highest.getLocation(), highest);
+                amtDone++;
+            } else {
+                break;
+            }
         }
 
         for (Location loc : capBlocks.keySet()) {
@@ -212,8 +217,7 @@ public class DropParty implements Listener {
                 float randX = 0.1f + random.nextFloat() * (1);
                 float randY = 0.4f + random.nextFloat() * (1);
                 float randZ = 0.1f + random.nextFloat() * (1);
-                particles = new PacketPlayOutWorldParticles(EnumParticle.SPELL_MOB, true, (float) offsetLoc.getX() + randX, (float) offsetLoc.getY() + randY, (float) offsetLoc.getZ() + randZ, red, green, blue, 255, 0, 10);
-                ((CraftPlayer) online).getHandle().playerConnection.sendPacket(particles);
+                online.spawnParticle(Particle.SPELL_MOB,offsetLoc.getX() + randX, offsetLoc.getY() + randY,offsetLoc.getZ() + randZ, 50);
             }
         }
     }
@@ -236,14 +240,14 @@ public class DropParty implements Listener {
     private void replaceBeaconCaps() {
         DropPartyManager.setIsActiveDropParty(false);
         for (Location loc : capBlocks.keySet()) {
-            loc.getBlock().setType(Material.STEP);
+            loc.getBlock().setType(Material.STONE_SLAB);
         }
         Bukkit.getServer().broadcastMessage(MessageUtil.getPrefix() + ChatColor.GRAY + " A Drop Party Has Ended!");
     }
 
     private List<ItemStack> itemsToDrop = new ArrayList<>();
     private int currentDropIndex = 0;
-    private int amtDropLocs = 0;
+    private int amtDropLocs = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) / 2f);
     private int itemsDropped = 0;
 
     private Map<Location, Block> capBlocks = new HashMap<>();
@@ -253,7 +257,7 @@ public class DropParty implements Listener {
 
         DropPartyManager.setIsActiveDropParty(true);
 
-        amtDropLocs = Math.round(((float) Bukkit.getServer().getOnlinePlayers().size()) / 2f);
+
         if (amtDropLocs > LocationManager.getValidLocations().size()) amtDropLocs = LocationManager.getValidLocations().size();
 
         removeBeaconCaps();

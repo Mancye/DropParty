@@ -172,7 +172,7 @@ public class Drops implements Listener, Runnable {
                 Player p = (Player) event.getWhoClicked();
                 int slot = event.getSlot();
                 event.setCancelled(true);
-                if (slot != 18 && slot != 26) {
+                if (slot != 18 && slot != 26 && event.getClickedInventory().getItem(slot) == null) {
 
                     if (LocationManager.getValidLocations().size() == 0) {
                         MessageUtil.sendMessageWithPrefix(p, ChatColor.RED + "No valid drop locations set");
